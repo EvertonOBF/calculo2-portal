@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal - Cálculo 2</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Portal Cálculo 2">
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 50px 20px 20px 20px;
+            color: #444444;
+            box-sizing: border-box;
+        }
+
+        .header {
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+            margin-bottom: 40px;
+        }
+
+        h1 { 
+            color: #2c3e50; 
+            margin-bottom: 10px; 
+            font-weight: 600;
+        }
+
+        p.subtitle { 
+            color: #7f8c8d; 
+            font-size: 1.1em;
+            margin-top: 0;
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 30px 20px;
+            text-align: center;
+            text-decoration: none;
+            color: #333333;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border-top: 6px solid #2563eb;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .card h2 {
+            margin: 0 0 10px 0;
+            font-size: 1.5rem;
+            color: #2c3e50;
+        }
+
+        .card p {
+            margin: 0;
+            color: #7f8c8d;
+            font-size: 0.95rem;
+        }
+
+        .card.active:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            border-top-color: #1d4ed8;
+        }
+
+        .card.active:active {
+            transform: scale(0.98);
+        }
+
+        /* Estilos para os botões desativados */
+        .card.disabled {
+            border-top-color: #bdc3c7;
+            cursor: not-allowed;
+            background-color: #fafafa;
+        }
+
+        .card.disabled h2 {
+            color: #95a5a6;
+        }
+        
+        .card.disabled p {
+            color: #bdc3c7;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Cálculo 2</h1>
+        <p class="subtitle">Bem-vindo ao portal de estudos. Selecione a etapa desejada:</p>
+    </div>
+
+    <div class="cards-container">
+        <!-- Etapa 1: ATIVA -->
+        <a href="etapa1/etapa1.html" class="card active">
+            <h2>1ª Etapa</h2>
+            <p>A Antiderivada e a Integral</p>
+        </a>
+
+        <!-- Etapa 2: BLOQUEADA -->
+        <a href="#" class="card disabled" onclick="return false;">
+            <h2>2ª Etapa</h2>
+            <p>Técnicas de Integração</p>
+        </a>
+
+        <!-- Etapa 3: BLOQUEADA -->
+        <a href="#" class="card disabled" onclick="return false;">
+            <h2>3ª Etapa</h2>
+            <p>Aplicações da Integral Definida</p>
+        </a>
+    </div>
+    
+    <footer style="margin-top: auto; padding-top: 40px; text-align: center; color: #95a5a6; font-size: 0.85em; width: 100%;">
+        <p>&copy; 2026 - Cálculo 2 | Desenvolvido por Everton Castro</p>
+    </footer>
+
+</body>
+</html>

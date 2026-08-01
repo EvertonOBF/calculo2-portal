@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Etapa 1 - Cálculo 2</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Cálculo 2">
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            min-height: 100vh;
+            margin: 0 auto;
+            max-width: 800px;
+            padding: 40px 20px;
+            color: #444444;
+        }
+        h1 { 
+            color: #2c3e50; 
+            margin-bottom: 10px; 
+            text-align: justify; 
+            font-weight: normal;
+            border-bottom: 2px solid #2563eb; /* Azul para a Etapa 1 */
+            padding-bottom: 10px;
+            width: 100%;
+        }
+        p { 
+            color: #555555; 
+            margin-bottom: 40px; 
+            text-align: justify; 
+            font-size: 1.1em;
+        }
+        .menu-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 20px;
+            background-color: #ffffff;
+            color: #444444;
+            text-decoration: none;
+            font-size: 1.1rem;
+            border: 1px solid #e0e0e0;
+            border-left: 6px solid #2563eb; /* Borda azul combinando com o portal */
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            text-align: justify;
+            box-sizing: border-box;
+        }
+        .btn:hover {
+            background-color: #eff6ff;
+            border-left-color: #1d4ed8; /* Azul mais escuro no hover */
+            transform: translateX(5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            color: #1e3a8a;
+        }
+        .btn:active { 
+            transform: scale(0.98); 
+        }
+        .btn-back {
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: #7f8c8d;
+            font-weight: bold;
+            display: inline-block;
+        }
+        .btn-back:hover { color: #2c3e50; }
+    </style>
+</head>
+<body>
+
+    <a href="../index.html" class="btn-back">← Voltar ao Menu Principal</a>
+
+    <h1>1ª Etapa: A Antiderivada e a Integral</h1>
+    <p>Escolha a aula que deseja acessar:</p>
+
+    <div class="menu-container">
+        
+        <!-- Link para a aula que acabamos de criar -->
+        <a href="apresentacao.html" class="btn">Apresentação da disciplina</a>
+        <a href="aula1_integrais.html" class="btn">Aula 1: Da Derivada à Antiderivada (O Problema da Área)</a>
+        <a href="simulado_aula1.html" class="btn">Simulado: Conceitos da Aula 1</a>
+        <a href="aula2.html" class="btn">Aula 2: Integrais Indefinidas e Regras Básicas</a>
+        <a href="simulado_aula2.html" class="btn">Questões: Prática de Integração Básica</a>
+        <a href="aula3.html" class="btn">Aula 3: O Teorema Fundamental do Cálculo</a>
+    
+    </div>
+    
+</body>
+</html>

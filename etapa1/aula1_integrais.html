@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo 2 - Aula 1: Da Derivada à Antiderivada</title>
+    
+    <!-- Configuração do MathJax (Sempre usando window.MathJax para evitar erros de escopo) -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    
+    <!-- CARREGAMENTO SINCRONO: Removido o 'async' para o Plotly não quebrar ao procurá-lo -->
+    <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <!-- Biblioteca Plotly.js para gráficos científicos -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e293b;
+            --accent-color: #059669;
+            --purple-accent: #8b5cf6;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        p, li {
+            text-align: justify;
+        }
+
+        p {
+            margin-bottom: 16px;
+        }
+
+        ul {
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        ul li {
+            margin-bottom: 16px;
+        }
+
+        ul li:last-child {
+            margin-bottom: 0;
+        }
+
+        .navbar {
+            background-color: var(--secondary-color);
+            padding: 15px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: #93c5fd;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .content-section {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 35px;
+            margin-bottom: 35px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-left: 6px solid var(--primary-color);
+        }
+
+        h1 {
+            color: var(--secondary-color);
+            font-size: 2.2rem;
+            margin-top: 0;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .highlight-box {
+            background-color: #eff6ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .canvas-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+
+        .side-by-side {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            width: 100%;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .formula-display {
+            font-size: 1.2rem;
+            background: #f1f5f9;
+            padding: 15px 25px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            min-width: 250px;
+            text-align: center;
+        }
+
+        canvas {
+            background-color: #fafafa;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+        }
+
+        .controls {
+            margin-top: 15px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            font-weight: 600;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        input[type="range"] {
+            cursor: pointer;
+        }
+
+        input[type="number"], select {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            background-color: white;
+            font-family: inherit;
+            font-size: 1rem;
+            color: var(--text-color);
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        .shape-buttons button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 5px;
+            font-weight: bold;
+        }
+
+        .shape-buttons button:hover {
+            background-color: #1d4ed8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="etapa1.html">← Voltar ao Menu da Disciplina</a>
+        <span>Cálculo 2 - Etapa 1</span>
+    </div>
+
+    <div class="container">
+
+        <!-- MÓDULO 1: REVISÃO DE DERIVADA -->
+        <div class="content-section">
+            <h1>1. Relembrando o Conceito de Derivada</h1>
+            
+            <p>O conceito de derivada foi desenvolvido de forma independente por <strong>Isaac Newton</strong> e <strong>Gottfried Wilhelm Leibniz</strong> no final do século XVII. Enquanto Newton formulou suas teorias motivado por problemas da física (estudando o movimento e as "fluxões"), Leibniz se aprofundou pelo caminho da geometria, buscando entender as tangentes às curvas. Leibniz também introduziu grande parte da notação moderna que usamos hoje, como $\frac{dy}{dx}$.</p>
+
+            <p>De maneira geral, a derivada possui duas interpretações principais:</p>
+            <ul>
+                <li><strong>Geométrica:</strong> É a inclinação da reta tangente ao gráfico da função em um determinado ponto.</li>
+                <li><strong>Física:</strong> É a taxa de mudança instantânea de uma grandeza em relação a outra (como a velocidade em relação ao tempo, ou a vazão de um reservatório).</li>
+            </ul>
+
+            <div class="controls" style="justify-content: flex-start; margin-bottom: 20px;">
+                <label for="derivSelect">Escolha um fenômeno para interagir: </label>
+                <select id="derivSelect">
+                    <option value="fisica">Exemplo 1 (Cinemática): Lançamento Vertical</option>
+                    <option value="tanque">Exemplo 2 (Hidráulica): Esvaziamento de um Tanque</option>
+                </select>
+            </div>
+            
+            <div id="dynamicDerivEq" style="text-align: center; font-size: 1.3rem; margin: 25px 0; color: navy;">
+                <!-- Preenchido via JS -->
+            </div>
+
+            <div class="canvas-container" style="border: none; padding: 0;">
+                <div id="derivPlot" style="width: 100%; height: 500px;"></div>
+                
+                <div class="controls" style="width: 80%; margin-top: 15px;">
+                    <label id="derivLabel" style="min-width: 160px;" for="derivSlider">Tempo t [s]: <span id="derivVal">1.00</span></label>
+                    <input type="range" id="derivSlider" style="flex-grow: 1;" min="0" max="3.95" value="1.0" step="0.05">
+                </div>
+            </div>
+        </div>
+
+        <!-- MÓDULO 2: ÁREAS PLANAS NOS EIXOS -->
+        <div class="content-section" style="border-left-color: var(--accent-color);">
+            <h2>2. Áreas Sob Funções Lineares no Plano Cartesiano</h2>
+            <p>Na geometria elementar, áreas sob retas podem ser calculadas diretamente através das fórmulas clássicas que já conhecemos:</p>
+            
+            <div class="canvas-container">
+                <div class="controls shape-buttons" style="margin-bottom: 15px;">
+                    <button onclick="drawShape('rectangle')">Retângulo: $f(x) = k$</button>
+                    <button onclick="drawShape('triangle')">Triângulo: $f(x) = m \cdot x$</button>
+                    <button onclick="drawShape('trapezoid')">Trapézio: $f(x) = m \cdot x + c$</button>
+                </div>
+                
+                <div class="side-by-side">
+                    <div id="shapePlot" style="width: 450px; height: 300px;"></div>
+                    <div class="formula-display" id="formulaContainer"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MÓDULO 3: MÉTODO DOS RETÂNGULOS -->
+        <div class="content-section" style="border-left-color: #d97706;">
+            <h2>3. O MÉTODO DOS RETÂNGULOS PARA ENCONTRAR ÁREAS</h2>
+            
+            <p>Uma abordagem ao problema da área é a utilização do método de exaustão de Arquimedes da seguinte maneira:</p>
+
+            <ul>
+                <li><strong>Dividir o intervalo $[a, b]$ em $n$ subintervalos iguais</strong> e, em cada um deles, construir um retângulo que se estende desde o eixo $x$ até algum ponto na curva $y = f(x)$ acima do subintervalo; o ponto particular não interessa, podendo ser o que estiver acima do centro, acima dos extremos ou acima de qualquer outro ponto no subintervalo.</li>
+                <li><strong>Para cada $n$, a área total dos retângulos</strong> pode ser vista como uma <em>aproximação</em> à área exata sob a curva acima do intervalo $[a, b]$. Além disso, fica intuitivamente evidente que, quando $n$ cresce, essas aproximações irão se tornar cada vez melhores e tender à área exata como um limite. Assim, se $A$ denota a área exata sob a curva e $A_n$ denota a aproximação de $A$ usando $n$ retângulos, então:</li>
+            </ul>
+
+            <div class="highlight-box" style="text-align: center; border-left-color: #d97706; font-size: 1.5rem; color: #d97706;">
+                $$A = \lim_{n \to +\infty} A_n$$
+            </div>
+
+            <div class="canvas-container">
+                <!-- Gráfico Grande Ampliado (750x450) -->
+                <canvas id="riemannCanvas" width="750" height="450" style="max-width: 100%; height: auto;"></canvas>
+                
+                <div class="controls">
+                    <label for="funcType">Função:</label>
+                    <select id="funcType">
+                        <option value="x2">f(x) = x²</option>
+                        <option value="x3">f(x) = x³</option>
+                        <option value="sqrtx">f(x) = √x</option>
+                        <option value="trig">f(x) = 0.5 + 0.4·sin(2πx)</option>
+                    </select>
+
+                    <label for="nInput" style="margin-left: 15px;">Nº de Retângulos ($n$):</label>
+                    <input type="number" id="nInput" min="0" max="100" value="0" style="width: 70px; text-align: center;">
+                    
+                    <label for="sumType" style="margin-left: 15px;">Tipo:</label>
+                    <select id="sumType">
+                        <option value="right">Direita</option>
+                        <option value="left">Esquerda</option>
+                    </select>
+                </div>
+                <p style="margin-top: 15px; font-size: 1.1rem; text-align: center;">Aproximação da Área: <strong id="areaVal" style="color: #d97706;">0.0000</strong> | Área Exata: <strong id="exactAreaVal">0.3333...</strong></p>
+            </div>
+        </div>
+
+        <!-- MÓDULO 4: O MÉTODO DA ANTIDERIVADA -->
+        <div class="content-section" style="border-left-color: var(--purple-accent);">
+            <h2 style="color: var(--purple-accent);">4. O MÉTODO DA ANTIDERIVADA PARA ENCONTRAR ÁREAS</h2>
+
+            <p>Embora o método dos retângulos seja muito intuitivo, calcular o limite de somas infinitas é extremamente difícil (ou até inviável) para a maioria das funções. Por esse motivo, o problema da área permaneceu sem grande avanço até a segunda metade do século XVII.</p>
+
+            <p>A grande revolução ocorreu quando <strong>Isaac Newton</strong> e <strong>Gottfried Leibniz</strong> descobriram, de forma independente, uma relação direta e profunda entre o cálculo de áreas e as derivadas.</p>
+
+            <div class="highlight-box" style="border-left-color: var(--purple-accent); background-color: #f5f3ff;">
+                <p style="margin-top: 0; font-size: 1.1rem;"><strong>A Descoberta Fundamental:</strong></p>
+                <p>Se $f(x)$ for uma função contínua e não negativa no intervalo $[a, b]$, e chamarmos de $A(x)$ a função que calcula a <strong>área acumulada</strong> sob a curva de $a$ até $x$, então a taxa de variação dessa área é dada pela própria altura da função:</p>
+                
+                <div style="text-align: center; font-size: 1.5rem; color: var(--purple-accent); margin: 20px 0;">
+                    $$A'(x) = f(x)$$
+                </div>
+
+                <p style="margin-bottom: 0;">Em suma: <strong>a derivada da função área é a curva original</strong>. Isso significa que, para determinar a área exata sob $f(x)$, não precisamos somar infinitos retângulos — basta encontrar a sua <strong>antiderivada</strong>!</p>
+            </div>
+        </div>
+
+        <!-- MÓDULO 5: EXERCÍCIO PRÁTICO DA ANTIDERIVADA -->
+        <div class="content-section" style="border-left-color: #0284c7;">
+            <h2 style="color: #0284c7;">5. Exercício Prático: Encontrando $A(x)$ e Confirmando $A'(x) = f(x)$</h2>
+            
+            <p>Para cada uma das funções $f$, vamos encontrar a função de área $A(x)$ sob o gráfico no intervalo $[a, x] = [-1, x]$ e verificar que a sua derivada $A'(x)$ resulta exatamente na função original $f(x)$.</p>
+
+            <div class="controls" style="justify-content: flex-start; margin-bottom: 20px;">
+                <label for="exSelect">Escolha o Exemplo: </label>
+                <select id="exSelect">
+                    <option value="a">Exemplo (a): f(x) = 2</option>
+                    <option value="b">Exemplo (b): f(x) = x + 1</option>
+                </select>
+            </div>
+
+            <div class="canvas-container">
+                <div id="exPlot" style="width: 100%; height: 420px;"></div>
+
+                <div class="controls" style="width: 80%; margin-top: 15px;">
+                    <label for="xSlider">Limite superior do intervalo ($x$): <span id="xSliderVal" style="color: #0284c7;">2.50</span></label>
+                    <input type="range" id="xSlider" style="flex-grow: 1;" min="-0.8" max="3.5" value="2.5" step="0.1">
+                </div>
+            </div>
+
+            <!-- Solução Matemática em Destaque -->
+            <div class="highlight-box" id="exSolutionBox" style="border-left-color: #0284c7; background-color: #f0f9ff;">
+                <!-- Preenchido via JS -->
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Fila de Promessas do MathJax para atualizações dinâmicas seguras
+        let mathPromise = Promise.resolve();
+        function updateMath(element) {
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                mathPromise = mathPromise.then(() => {
+                    MathJax.typesetClear([element]);
+                    return MathJax.typesetPromise([element]);
+                }).catch(err => console.log('Erro no MathJax:', err));
+            }
+        }
+
+        // --- ANIMAÇÃO 1: DERIVADA (EXEMPLOS CONTEXTUALIZADOS) ---
+        const derivSelect = document.getElementById('derivSelect');
+        const derivSlider = document.getElementById('derivSlider');
+        const derivVal = document.getElementById('derivVal');
+        const derivLabel = document.getElementById('derivLabel');
+        const dynamicDerivEq = document.getElementById('dynamicDerivEq');
+
+        const v0 = 19.6;
+        const g = 9.8;
+        const t_max_fisica = 2.0 * v0 / g;
+
+        function simularDerivada() {
+            let type = derivSelect.value;
+            let val_atual = parseFloat(derivSlider.value);
+            derivVal.textContent = val_atual.toFixed(2);
+
+            let traceCurva, traceTangente, tracePonto, layout;
+
+            if (type === 'fisica') {
+                dynamicDerivEq.innerHTML = "<strong>Altura do Projétil:</strong> $$s(t) = 19{,}6t - 4{,}9t^2 \\quad [\\text{Metros}]$$";
+                derivLabel.innerHTML = `Tempo t [s]: <span id="derivVal">${val_atual.toFixed(2)}</span>`;
+                
+                let s = (t) => v0 * t - 0.5 * g * (t * t);
+                let v = (t) => v0 - g * t;
+                
+                let s_atual = s(val_atual);
+                let v_atual = v(val_atual);
+
+                let arr_x = [], arr_y = [];
+                for (let t = 0; t <= t_max_fisica; t += 0.05) {
+                    arr_x.push(t);
+                    arr_y.push(s(t));
+                }
+
+                let arr_tang_x = [], arr_tang_y = [];
+                let min_tang = Math.max(0, val_atual - 0.8);
+                let max_tang = Math.min(t_max_fisica, val_atual + 0.8);
+                for (let t = min_tang; t <= max_tang; t += 0.1) {
+                    arr_tang_x.push(t);
+                    arr_tang_y.push(v_atual * (t - val_atual) + s_atual);
+                }
+
+                traceCurva = { x: arr_x, y: arr_y, mode: 'lines', name: 'Altura s(t)', line: { color: '#1f77b4', width: 3 } };
+                traceTangente = { x: arr_tang_x, y: arr_tang_y, mode: 'lines', name: 'Reta Tangente', line: { color: '#dc2626', width: 3.5 } };
+                tracePonto = { x: [val_atual], y: [s_atual], mode: 'markers', name: 'Posição (t)', marker: { color: '#dc2626', size: 10 } };
+
+                layout = {
+                    title: { text: `Instante t = ${val_atual.toFixed(2)} s   |   Altura = ${s_atual.toFixed(2)} m   |   Velocidade = ${v_atual.toFixed(2)} m/s`, font: { size: 13, color: '#dc2626' } },
+                    xaxis: { title: 'Tempo t [segundos]', range: [0, t_max_fisica] },
+                    yaxis: { title: 'Altura s(t) [metros]', range: [-1.0, 22.0] },
+                    showlegend: false, margin: { t: 50, l: 60, r: 20, b: 50 }
+                };
+            } 
+            else if (type === 'tanque') {
+                dynamicDerivEq.innerHTML = "<strong>Volume de Água:</strong> $$V(t) = 100 - 20t + t^2 \\quad [\\text{Litros}]$$";
+                derivLabel.innerHTML = `Tempo t [min]: <span id="derivVal">${val_atual.toFixed(2)}</span>`;
+
+                let V = (t) => 100 - 20 * t + (t * t);
+                let dV = (t) => -20 + 2 * t;
+                
+                let V_atual = V(val_atual);
+                let vazao_atual = dV(val_atual);
+
+                let arr_x = [], arr_y = [];
+                for (let t = 0; t <= 10; t += 0.1) {
+                    arr_x.push(t);
+                    arr_y.push(V(t));
+                }
+
+                let arr_tang_x = [], arr_tang_y = [];
+                let min_tang = Math.max(0, val_atual - 2.0);
+                let max_tang = Math.min(10, val_atual + 2.0);
+                for (let t = min_tang; t <= max_tang; t += 0.1) {
+                    arr_tang_x.push(t);
+                    arr_tang_y.push(vazao_atual * (t - val_atual) + V_atual);
+                }
+
+                traceCurva = { x: arr_x, y: arr_y, mode: 'lines', name: 'Volume V(t)', line: { color: '#0284c7', width: 3 } };
+                traceTangente = { x: arr_tang_x, y: arr_tang_y, mode: 'lines', name: 'Reta Tangente (Vazão)', line: { color: '#dc2626', width: 3.5 } };
+                tracePonto = { x: [val_atual], y: [V_atual], mode: 'markers', name: 'Volume no tempo t', marker: { color: '#dc2626', size: 10 } };
+
+                layout = {
+                    title: { text: `Tempo t = ${val_atual.toFixed(2)} min   |   Volume = ${V_atual.toFixed(1)} L   |   Vazão = ${vazao_atual.toFixed(1)} L/min`, font: { size: 13, color: '#dc2626' } },
+                    xaxis: { title: 'Tempo t [minutos]', range: [0, 10] },
+                    yaxis: { title: 'Volume V(t) [litros]', range: [-5.0, 110.0] },
+                    showlegend: false, margin: { t: 50, l: 60, r: 20, b: 50 }
+                };
+            }
+
+            Plotly.react('derivPlot', [traceCurva, traceTangente, tracePonto], layout, {displayModeBar: false});
+            updateMath(dynamicDerivEq);
+        }
+
+        derivSelect.addEventListener('change', () => {
+            if (derivSelect.value === 'fisica') {
+                derivSlider.min = 0;
+                derivSlider.max = 3.95;
+                derivSlider.step = 0.05;
+                derivSlider.value = 1.0;
+            } else {
+                derivSlider.min = 0;
+                derivSlider.max = 9.9;
+                derivSlider.step = 0.1;
+                derivSlider.value = 2.0;
+            }
+            simularDerivada();
+        });
+        
+        derivSlider.addEventListener('input', simularDerivada);
+        simularDerivada();
+
+
+        // --- ANIMAÇÃO 2: FORMAS GEOMÉTRICAS NO PLOTLY (CARTESIANO) ---
+        function drawShape(type) {
+            let trace = {};
+            let layout = {
+                xaxis: { title: 'Eixo x', range: [0, 10], gridcolor: 'rgba(0,0,0,0.1)', zeroline: true },
+                yaxis: { title: 'Eixo y ( f(x) )', range: [0, 8], gridcolor: 'rgba(0,0,0,0.1)', zeroline: true },
+                margin: { t: 20, l: 50, r: 20, b: 40 },
+                showlegend: false, plot_bgcolor: '#fafafa', paper_bgcolor: '#ffffff'
+            };
+            
+            let formulaHTML = "";
+
+            if (type === 'rectangle') {
+                trace = { x: [2, 2, 8, 8, 2], y: [0, 5, 5, 0, 0], fill: 'toself', fillcolor: 'rgba(5, 150, 105, 0.2)', line: { color: '#059669', width: 2 }, mode: 'lines' };
+                formulaHTML = `<p style="margin:0; font-weight:bold; color:#059669; text-align:center;">Área do Retângulo</p>$$A = \\text{Base} \\cdot \\text{Altura}$$`;
+            } else if (type === 'triangle') {
+                trace = { x: [0, 6, 6, 0], y: [0, 6, 0, 0], fill: 'toself', fillcolor: 'rgba(5, 150, 105, 0.2)', line: { color: '#059669', width: 2 }, mode: 'lines' };
+                formulaHTML = `<p style="margin:0; font-weight:bold; color:#059669; text-align:center;">Área do Triângulo</p>$$A = \\frac{\\text{Base} \\cdot \\text{Altura}}{2}$$`;
+            } else if (type === 'trapezoid') {
+                trace = { x: [2, 2, 8, 8, 2], y: [0, 3, 6, 0, 0], fill: 'toself', fillcolor: 'rgba(5, 150, 105, 0.2)', line: { color: '#059669', width: 2 }, mode: 'lines' };
+                formulaHTML = `<p style="margin:0; font-weight:bold; color:#059669; text-align:center;">Área do Trapézio</p>$$A = \\frac{(\\text{B} + \\text{b}) \\cdot \\text{h}}{2}$$`;
+            }
+
+            Plotly.react('shapePlot', [trace], layout, {staticPlot: true});
+            const formulaContainer = document.getElementById('formulaContainer');
+            formulaContainer.innerHTML = formulaHTML;
+            updateMath(formulaContainer);
+        }
+        drawShape('rectangle');
+
+
+        // --- ANIMAÇÃO 3: SOMA DE RIEMANN ---
+        const rCanvas = document.getElementById('riemannCanvas');
+        const rCtx = rCanvas.getContext('2d');
+        const nInput = document.getElementById('nInput');
+        const sumTypeSelect = document.getElementById('sumType');
+        const funcTypeSelect = document.getElementById('funcType');
+        const areaVal = document.getElementById('areaVal');
+        const exactAreaVal = document.getElementById('exactAreaVal');
+
+        function drawRiemann() {
+            let n = parseInt(nInput.value);
+            if (isNaN(n) || n < 0) n = 0;
+            if (n > 100) {
+                n = 100;
+                nInput.value = 100;
+            }
+
+            const sumType = sumTypeSelect.value;
+            const fSelect = funcTypeSelect.value;
+            
+            let f;
+            if (fSelect === 'x2') { 
+                f = x => x * x; 
+                exactAreaVal.textContent = "0.3333..."; 
+            } else if (fSelect === 'x3') { 
+                f = x => x * x * x; 
+                exactAreaVal.textContent = "0.2500"; 
+            } else if (fSelect === 'sqrtx') { 
+                f = x => Math.sqrt(x); 
+                exactAreaVal.textContent = "0.6666..."; 
+            } else if (fSelect === 'trig') {
+                f = x => 0.5 + 0.4 * Math.sin(2 * Math.PI * x);
+                exactAreaVal.textContent = "0.5000";
+            }
+
+            rCtx.clearRect(0, 0, rCanvas.width, rCanvas.height);
+
+            const toPxX = x => 100 + x * 550;
+            const toPxY = y => 380 - y * 300;
+
+            rCtx.strokeStyle = '#94a3b8';
+            rCtx.lineWidth = 1;
+            rCtx.beginPath();
+            rCtx.moveTo(60, 380); rCtx.lineTo(700, 380); 
+            rCtx.moveTo(100, 40); rCtx.lineTo(100, 420); 
+            rCtx.stroke();
+
+            rCtx.fillStyle = '#1e293b';
+            rCtx.font = '16px sans-serif';
+            rCtx.fillText("x = 0", toPxX(0) - 15, 405);
+            rCtx.fillText("x = 1", toPxX(1) - 15, 405);
+
+            const a = 0, b = 1;
+            const dx = n > 0 ? (b - a) / n : 0;
+            let totalArea = 0;
+
+            rCtx.fillStyle = 'rgba(217, 119, 6, 0.35)';
+            rCtx.strokeStyle = '#d97706';
+            rCtx.lineWidth = n > 50 ? 0.5 : 1.5;
+
+            if (n > 0) {
+                for (let i = 1; i <= n; i++) {
+                    let x_eval = (sumType === 'right') ? (a + i * dx) : (a + (i - 1) * dx);
+                    const h = f(x_eval);
+                    totalArea += h * dx;
+                    
+                    const xPx = toPxX(a + (i - 1) * dx);
+                    const wPx = dx * 550;
+                    const yPx = toPxY(h);
+                    const hPx = h * 300; 
+
+                    rCtx.fillRect(xPx, yPx, wPx, hPx);
+                    rCtx.strokeRect(xPx, yPx, wPx, hPx);
+                }
+            }
+
+            areaVal.textContent = totalArea.toFixed(4);
+
+            rCtx.strokeStyle = '#1e293b';
+            rCtx.lineWidth = 3;
+            rCtx.beginPath();
+            for (let x = 0; x <= 1.02; x += 0.005) {
+                const px = toPxX(x);
+                const py = toPxY(f(x));
+                if (x === 0) rCtx.moveTo(px, py);
+                else rCtx.lineTo(px, py);
+            }
+            rCtx.stroke();
+        }
+
+        nInput.addEventListener('input', drawRiemann);
+        sumTypeSelect.addEventListener('change', drawRiemann);
+        funcTypeSelect.addEventListener('change', drawRiemann);
+
+        drawRiemann();
+
+
+        // --- ANIMAÇÃO 5: EXERCÍCIO PRÁTICO (EXEMPLOS A e B) ---
+        const exSelect = document.getElementById('exSelect');
+        const xSlider = document.getElementById('xSlider');
+        const xSliderVal = document.getElementById('xSliderVal');
+        const exSolutionBox = document.getElementById('exSolutionBox');
+
+        function renderExercicio() {
+            const ex = exSelect.value;
+            const xVal = parseFloat(xSlider.value);
+            xSliderVal.textContent = xVal.toFixed(2);
+
+            let traceCurva, traceArea, layout, solHTML;
+
+            if (ex === 'a') {
+                const base = xVal - (-1);
+                const h = 2;
+                const areaCalculada = h * base;
+
+                traceCurva = {
+                    x: [-4, 5],
+                    y: [2, 2],
+                    mode: 'lines',
+                    name: 'y = 2',
+                    line: { color: '#0284c7', width: 3 }
+                };
+
+                traceArea = {
+                    x: [-1, xVal, xVal, -1, -1],
+                    y: [0, 0, 2, 2, 0],
+                    fill: 'toself',
+                    fillcolor: 'rgba(186, 230, 253, 0.65)',
+                    line: { color: '#0284c7', width: 1.5 },
+                    name: 'Área A(x)'
+                };
+
+                layout = {
+                    title: { text: `f(x) = 2   |   Intervalo [-1, ${xVal.toFixed(2)}]   |   Área A(${xVal.toFixed(2)}) = ${areaCalculada.toFixed(2)}`, font: { size: 14, color: '#0284c7' } },
+                    xaxis: { title: 'Eixo x', range: [-4.5, 4.5], zeroline: true, zerolinecolor: '#475569' },
+                    yaxis: { title: 'Eixo y', range: [-0.5, 3.5], zeroline: true, zerolinecolor: '#475569' },
+                    annotations: [
+                        { x: -1, y: -0.3, text: '-1', showarrow: false, font: { size: 12, color: '#0284c7' } },
+                        { x: xVal, y: -0.3, text: `x = ${xVal.toFixed(2)}`, showarrow: false, font: { size: 12, color: '#0284c7' } },
+                        { x: (-1 + xVal)/2, y: 1, text: `Base: x + 1 = ${(base).toFixed(2)}`, showarrow: false, font: { size: 13, color: '#0369a1' } },
+                        { x: xVal + 0.4, y: 1, text: 'Altura = 2', showarrow: false, font: { size: 12, color: '#0369a1' } }
+                    ],
+                    showlegend: false,
+                    margin: { t: 40, l: 50, r: 30, b: 50 }
+                };
+
+                solHTML = `
+                    <h3 style="margin-top:0; color:#0284c7;">Solução do Exemplo (a): $f(x) = 2$</h3>
+                    <p>A região sob $f(x) = 2$ no intervalo $[-1, x]$ forma um <strong>retângulo</strong> de altura $2$ e base $x - (-1) = x + 1$.</p>
+                    <p>A função área é dada pela fórmula da área do retângulo:</p>
+                    <div style="text-align:center; font-size:1.3rem; margin:15px 0;">
+                        $$A(x) = 2 \\cdot (x - (-1)) = 2(x + 1) = 2x + 2$$
+                    </div>
+                    <p>Calculando a derivada da função área $A(x)$ em relação a $x$:</p>
+                    <div style="text-align:center; font-size:1.4rem; color:#0284c7; margin:15px 0;">
+                        $$A'(x) = \\frac{d}{dx}(2x + 2) = 2 = f(x)$$
+                    </div>
+                    <p style="margin-bottom:0;"><strong>Conclusão:</strong> A derivada da função área $A'(x)$ é exatamente a função original $f(x) = 2$.</p>
+                `;
+            } 
+            else if (ex === 'b') {
+                const base = xVal - (-1);
+                const h = xVal + 1;
+                const areaCalculada = 0.5 * base * h;
+
+                let arr_x = [], arr_y = [];
+                for (let t = -3; t <= 4; t += 0.1) {
+                    arr_x.push(t);
+                    arr_y.push(t + 1);
+                }
+
+                traceCurva = {
+                    x: arr_x,
+                    y: arr_y,
+                    mode: 'lines',
+                    name: 'y = x + 1',
+                    line: { color: '#0284c7', width: 3 }
+                };
+
+                traceArea = {
+                    x: [-1, xVal, xVal, -1],
+                    y: [0, 0, xVal + 1, 0],
+                    fill: 'toself',
+                    fillcolor: 'rgba(186, 230, 253, 0.65)',
+                    line: { color: '#0284c7', width: 1.5 },
+                    name: 'Área A(x)'
+                };
+
+                layout = {
+                    title: { text: `f(x) = x + 1   |   Intervalo [-1, ${xVal.toFixed(2)}]   |   Área A(${xVal.toFixed(2)}) = ${areaCalculada.toFixed(2)}`, font: { size: 14, color: '#0284c7' } },
+                    xaxis: { title: 'Eixo x', range: [-4.5, 4.5], zeroline: true, zerolinecolor: '#475569' },
+                    yaxis: { title: 'Eixo y', range: [-1.0, 5.0], zeroline: true, zerolinecolor: '#475569' },
+                    annotations: [
+                        { x: -1, y: -0.4, text: '-1', showarrow: false, font: { size: 12, color: '#0284c7' } },
+                        { x: xVal, y: -0.4, text: `x = ${xVal.toFixed(2)}`, showarrow: false, font: { size: 12, color: '#0284c7' } },
+                        { x: (-1 + xVal)/2, y: -0.2, text: `Base: x + 1 = ${(base).toFixed(2)}`, showarrow: false, font: { size: 12, color: '#0369a1' } },
+                        { x: xVal + 0.5, y: (xVal + 1)/2, text: `Altura: x + 1 = ${(h).toFixed(2)}`, showarrow: false, font: { size: 12, color: '#0369a1' } }
+                    ],
+                    showlegend: false,
+                    margin: { t: 40, l: 50, r: 30, b: 50 }
+                };
+
+                solHTML = `
+                    <h3 style="margin-top:0; color:#0284c7;">Solução do Exemplo (b): $f(x) = x + 1$</h3>
+                    <p>A região sob $f(x) = x + 1$ no intervalo $[-1, x]$ forma um <strong>triângulo retângulo</strong> de base $x - (-1) = x + 1$ e altura $f(x) = x + 1$.</p>
+                    <p>A função área é dada pela fórmula da área do triângulo:</p>
+                    <div style="text-align:center; font-size:1.3rem; margin:15px 0;">
+                        $$A(x) = \\frac{\\text{Base} \\cdot \\text{Altura}}{2} = \\frac{(x + 1)(x + 1)}{2} = \\frac{(x + 1)^2}{2} = \\frac{1}{2}x^2 + x + \\frac{1}{2}$$
+                    </div>
+                    <p>Calculando a derivada da função área $A(x)$ em relação a $x$:</p>
+                    <div style="text-align:center; font-size:1.4rem; color:#0284c7; margin:15px 0;">
+                        $$A'(x) = \\frac{d}{dx}\\left(\\frac{1}{2}x^2 + x + \\frac{1}{2}\\right) = x + 1 = f(x)$$
+                    </div>
+                    <p style="margin-bottom:0;"><strong>Conclusão:</strong> Novamente, a derivada da função área $A'(x)$ resulta exatamente na função curva $f(x) = x + 1$.</p>
+                `;
+            }
+
+            Plotly.react('exPlot', [traceCurva, traceArea], layout, {displayModeBar: false});
+            exSolutionBox.innerHTML = solHTML;
+            updateMath(exSolutionBox);
+        }
+
+        exSelect.addEventListener('change', renderExercicio);
+        xSlider.addEventListener('input', renderExercicio);
+        
+        // Inicializar Exercício
+        renderExercicio();
+    </script>
+</body>
+</html>

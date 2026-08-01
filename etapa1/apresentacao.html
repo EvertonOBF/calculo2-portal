@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apresentação da Disciplina - Cálculo 2</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 40px 20px;
+            color: #444444;
+            box-sizing: border-box;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-top: 6px solid #2563eb;
+            box-sizing: border-box;
+        }
+
+        h1 { 
+            color: #2c3e50; 
+            margin-top: 0;
+            margin-bottom: 20px; 
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: #1d4ed8;
+            font-size: 1.3rem;
+            margin-top: 35px;
+            margin-bottom: 15px;
+        }
+
+        h3 {
+            color: #2c3e50;
+            font-size: 1.1rem;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+
+        p { 
+            line-height: 1.6;
+            color: #555555; 
+            text-align: justify; 
+            font-size: 1.05em;
+        }
+
+        ul {
+            line-height: 1.6;
+            color: #555555;
+            font-size: 1.05em;
+        }
+
+        ol {
+            line-height: 1.6;
+            color: #555555;
+            font-size: 1.05em;
+            background-color: #f9fafb;
+            padding: 20px 20px 20px 40px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        ol li {
+            margin-bottom: 8px;
+        }
+
+        ol li:last-child {
+            margin-bottom: 0;
+        }
+
+        .dates-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .dates-list li {
+            background-color: #f8fafc;
+            border-left: 4px solid #2563eb;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.05em;
+        }
+
+        .dates-list li strong {
+            color: #2c3e50;
+        }
+
+        .highlight-box {
+            background-color: #eff6ff;
+            border-left: 4px solid #2563eb;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.15em;
+            color: #1e3a8a;
+        }
+
+        .btn-back {
+            align-self: flex-start;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: #7f8c8d;
+            font-weight: bold;
+            display: inline-block;
+            transition: color 0.3s ease;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .btn-back:hover { 
+            color: #2563eb; 
+        }
+
+    </style>
+</head>
+<body>
+
+    <a href="etapa1.html" class="btn-back">← Voltar ao Menu Principal</a>
+
+    <div class="container">
+        <h1>Apresentação da Disciplina</h1>
+
+        <h2>Sobre o Professor</h2>
+        <p><strong>Prof. Everton Santos Castro</strong></p>
+        <p>Possui Doutorado em Recursos Hídricos pela Universidade Federal do Ceará (2023), Mestrado Acadêmico em Ciências Físicas Aplicadas pela Universidade Estadual do Ceará (2016), Licenciatura plena em Física pela Universidade Estadual do Ceará (2012) e MBA em Data Science pela Universidade de São Paulo (2025). Atua nas áreas de ensino de Física e Ciência de Dados.</p>
+
+        <h2>Calendário de Avaliações</h2>
+        <p>Programe-se para as datas das provas escritas regulares aplicadas ao longo do semestre:</p>
+        
+        <ul class="dates-list">
+            <li>
+                <span><strong>NP1 - 1ª Avaliação Parcial:</strong></span>
+                <span>21/09 (Segunda-feira)</span>
+            </li>
+            <li>
+                <span><strong>NP2 - 2ª Avaliação Parcial:</strong></span>
+                <span>09/11 (Segunda-feira)</span>
+            </li>
+            <li>
+                <span><strong>NP3 - 3ª Avaliação Parcial:</strong></span>
+                <span>14/12 (Segunda-feira)</span>
+            </li>
+        </ul>
+
+        <h2>Critérios de Avaliação</h2>
+        <p>A composição das notas da disciplina ocorrerá da seguinte forma:</p>
+        <ul>
+            <li><strong>Nota Parcial 1 (NP1):</strong> Prova escrita regular aplicada individualmente ao discente.</li>
+            <li><strong>Nota Parcial 2 (NP2):</strong> Prova escrita regular aplicada individualmente ao discente.</li>
+            <li><strong>Nota Parcial 3 (NP3):</strong> Prova escrita regular aplicada individualmente ao discente.</li>
+        </ul>
+
+        <div class="highlight-box">
+            <strong>Nota Final (NF) = (NP1 + NP2 + NP3) / 3</strong>
+        </div>
+
+        <h3>Condições para Aprovação</h3>
+        <p>Para obter aprovação na disciplina, o aluno deve atender às três condições listadas abaixo:</p>
+        <ol>
+            <li><strong>Mínimo de 75%</strong> de presença na disciplina.</li>
+            <li><strong>NF</strong> maior ou igual a <strong>5,0</strong>.</li>
+            <li><strong>NP3</strong> maior ou igual a <strong>4,0</strong>.</li>
+        </ol>
+
+    </div>
+
+</body>
+</html>
