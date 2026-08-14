@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo 2 - Lista 2: Aplicações de Integrais</title>
+    
+    <!-- Configuração do MathJax -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Chart.js para Renderização dos Gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e293b;
+            --accent-color: #059669;
+            --graph-btn-color: #0284c7;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        p, li {
+            text-align: justify;
+        }
+
+        p {
+            margin-bottom: 16px;
+        }
+
+        .navbar {
+            background-color: var(--secondary-color);
+            padding: 15px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: #93c5fd;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .content-section {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 35px;
+            margin-bottom: 35px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-left: 6px solid var(--primary-color);
+        }
+
+        h1 {
+            color: var(--secondary-color);
+            font-size: 2.2rem;
+            margin-top: 0;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        /* Cards dos Exercícios */
+        .exercise-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            margin-top: 25px;
+        }
+
+        .exercise-card {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+        }
+
+        .exercise-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+        }
+
+        .exercise-header {
+            padding: 20px 25px;
+            background: #f8fafc;
+        }
+
+        .exercise-title {
+            font-size: 1.05rem;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+            text-align: justify; /* Adicionado para justificar os enunciados */
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-graph {
+            background-color: var(--graph-btn-color);
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-graph:hover {
+            background-color: #0369a1;
+        }
+
+        .btn-solution {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-solution:hover {
+            background-color: #1d4ed8;
+        }
+
+        /* Painel do Gráfico */
+        .graph-container {
+            display: none;
+            padding: 20px;
+            background-color: #f1f5f9;
+            border-top: 1px solid #cbd5e1;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            max-width: 100%;
+            height: 320px;
+            margin: 0 auto;
+        }
+
+        /* Painel da Solução */
+        .solution-container {
+            display: none;
+            padding: 25px;
+            background-color: #f0fdf4;
+            border-top: 2px dashed #86efac;
+            text-align: justify; /* Adicionado para justificar os conteúdos da solução */
+        }
+
+        .solution-container h4 {
+            margin-top: 0;
+            color: var(--accent-color);
+            font-size: 1.15rem;
+            border-bottom: 1px solid #bbf7d0;
+            padding-bottom: 8px;
+            text-align: left; /* Mantém o título da solução alinhado à esquerda para contraste */
+        }
+
+        .step-title {
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-top: 15px;
+            text-align: justify;
+        }
+
+        .final-answer {
+            background-color: #dcfce7;
+            border: 1px solid #86efac;
+            color: #166534;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center; /* Mantém a resposta final centralizada para destaque */
+            font-size: 1.15rem;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div>
+           <a href="etapa1.html">← Voltar ao Menu Principal</a>
+        </div>
+        <span>Cálculo 2 - Exercícios Aplicados</span>
+    </div>
+
+    <div class="container">
+
+        <div class="content-section">
+            <h1>Cálculo 2 – Lista 2: Aplicações</h1>
+            <p style="font-size: 1.15rem; font-weight: 500;">Calcule os problemas aplicados abaixo.</p>
+
+            <div class="exercise-grid">
+
+                <!-- EXERCÍCIO 3 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-title">
+                            <strong>1.</strong> Um tanque de armazenamento de petróleo sofre uma ruptura em $t = 0$ e o petróleo vaza do tanque a uma taxa de $r(t) = 100e^{-0{,}01t}$ litros por minuto. Quanto petróleo vazou na primeira hora?
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-graph" onclick="toggleGraph('graph3', initChart3)">Ver gráfico</button>
+                            <button class="btn-solution" onclick="toggleSolution('sol3')">Ver solução</button>
+                        </div>
+                    </div>
+
+                    <div class="graph-container" id="graph3">
+                        <div class="chart-wrapper">
+                            <canvas id="chart3"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="solution-container" id="sol3">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Modelar a integral definida</p>
+                        <p>Como a taxa de vazamento é dada em litros por minuto e desejamos a quantidade vazada na primeira hora ($60$ minutos), calculamos a integral de $t = 0$ até $t = 60$:</p>
+                        $$Q = \int_{0}^{60} 100e^{-0{,}01t} \, dt$$
+
+                        <p class="step-title">Passo 2: Encontrar a primitiva da função</p>
+                        $$\int 100e^{-0{,}01t} \, dt = \frac{100}{-0{,}01}e^{-0{,}01t} = -10\,000 e^{-0{,}01t}$$
+
+                        <p class="step-title">Passo 3: Aplicar o Teorema Fundamental do Cálculo no intervalo $[0, 60]$</p>
+                        $$Q = \left[ -10\,000 e^{-0{,}01t} \right]_{0}^{60} = -10\,000 e^{-0{,}6} - (-10\,000 e^{0})$$
+                        $$Q = 10\,000 \left( 1 - e^{-0{,}6} \right)$$
+
+                        <p class="step-title">Passo 4: Calcular o valor numérico</p>
+                        <p>Como $e^{-0{,}6} \approx 0{,}5488116$:</p>
+                        $$Q \approx 10\,000 \left( 1 - 0{,}5488116 \right) = 10\,000 \cdot 0{,}4511884 \approx 4\,511{,}88 \text{ Litros}$$
+
+                        <div class="final-answer">Resultado Final: $10\,000(1 - e^{-0{,}6}) \approx 4\,511{,}88 \text{ Litros}$</div>
+                    </div>
+                </div>
+
+                <!-- EXERCÍCIO 4 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-title">
+                            <strong>2.</strong> Uma população de bactérias tem inicialmente $400$ bactérias e cresce a uma taxa de $r(t) = (450{,}268)e^{1{,}12567t}$ bactérias por hora. Quantas bactérias existirão após $3$ horas?
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-graph" onclick="toggleGraph('graph4', initChart4)">Ver gráfico</button>
+                            <button class="btn-solution" onclick="toggleSolution('sol4')">Ver solução</button>
+                        </div>
+                    </div>
+
+                    <div class="graph-container" id="graph4">
+                        <div class="chart-wrapper">
+                            <canvas id="chart4"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="solution-container" id="sol4">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Formular a população total $P(3)$</p>
+                        <p>A população total após $3$ horas é a população inicial mais o acúmulo decorrente da taxa de crescimento:</p>
+                        $$P(3) = P(0) + \int_{0}^{3} r(t) \, dt = 400 + \int_{0}^{3} 450{,}268 e^{1{,}12567t} \, dt$$
+
+                        <p class="step-title">Passo 2: Integrar a taxa de crescimento</p>
+                        <p>Note que $\frac{450{,}268}{1{,}12567} = 400$. Logo:</p>
+                        $$\int 450{,}268 e^{1{,}12567t} \, dt = \frac{450{,}268}{1{,}12567} e^{1{,}12567t} = 400 e^{1{,}12567t}$$
+
+                        <p class="step-title">Passo 3: Avaliar a integral de $t = 0$ a $t = 3$</p>
+                        $$\int_{0}^{3} 450{,}268 e^{1{,}12567t} \, dt = \left[ 400 e^{1{,}12567t} \right]_{0}^{3} = 400 e^{3{,}37701} - 400$$
+
+                        <p class="step-title">Passo 4: Somar a população inicial</p>
+                        $$P(3) = 400 + \left( 400 e^{3{,}37701} - 400 \right) = 400 e^{3{,}37701}$$
+                        <p>Como $e^{3{,}37701} \approx 29{,}2826$:</p>
+                        $$P(3) \approx 400 \cdot 29{,}2826 \approx 11\,713 \text{ bactérias}$$
+
+                        <div class="final-answer">Resultado Final: $\approx 11\,713 \text{ bactérias}$</div>
+                    </div>
+                </div>
+
+                <!-- EXERCÍCIO 5 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-title">
+                            <strong>3.</strong> A respiração é cíclica e o ciclo completo respiratório desde o início da inalação até o fim da expiração demora cerca de $5\text{ s}$. A taxa máxima de fluxo de ar nos pulmões é de cerca de $0{,}5\text{ L/s}$. Isso explica, em partes, por que a função $f(t) = \frac{1}{2}\sin\left(\frac{2\pi t}{5}\right)$ tem sido frequentemente utilizada para modelar a taxa de fluxo de ar nos pulmões. Use esse modelo para encontrar o volume de ar inalado nos pulmões no instante $t$.
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-graph" onclick="toggleGraph('graph5', initChart5)">Ver gráfico</button>
+                            <button class="btn-solution" onclick="toggleSolution('sol5')">Ver solução</button>
+                        </div>
+                    </div>
+
+                    <div class="graph-container" id="graph5">
+                        <div class="chart-wrapper">
+                            <canvas id="chart5"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="solution-container" id="sol5">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Definir a integral para o volume acumulado $V(t)$</p>
+                        <p>Assumindo volume inicial $V(0) = 0$, o volume total inalado até um instante $t$ é a integral da taxa $f(s)$ de $0$ a $t$:</p>
+                        $$V(t) = \int_{0}^{t} \frac{1}{2}\sin\left(\frac{2\pi s}{5}\right) \, ds$$
+
+                        <p class="step-title">Passo 2: Resolver a integral indefinida</p>
+                        <p>Usando a regra da substituição com $k = \frac{2\pi}{5}$:</p>
+                        $$\int \frac{1}{2}\sin\left(\frac{2\pi s}{5}\right) \, ds = \frac{1}{2} \cdot \left( -\frac{5}{2\pi} \cos\left(\frac{2\pi s}{5}\right) \right) = -\frac{5}{4\pi}\cos\left(\frac{2\pi s}{5}\right)$$
+
+                        <p class="step-title">Passo 3: Aplicar os limites de $0$ a $t$</p>
+                        $$V(t) = \left[ -\frac{5}{4\pi}\cos\left(\frac{2\pi s}{5}\right) \right]_{0}^{t} = -\frac{5}{4\pi}\cos\left(\frac{2\pi t}{5}\right) - \left( -\frac{5}{4\pi}\cos(0) \right)$$
+                        <p>Como $\cos(0) = 1$:</p>
+                        $$V(t) = \frac{5}{4\pi} \left[ 1 - \cos\left(\frac{2\pi t}{5}\right) \right] \text{ Litros}$$
+
+                        <div class="final-answer">Resultado Final: $V(t) = \frac{5}{4\pi}\left(1 - \cos\left(\frac{2\pi t}{5}\right)\right) \text{ L}$</div>
+                    </div>
+                </div>
+
+                <!-- EXERCÍCIO 6 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-title">
+                            <strong>4.</strong> A Alabama Instruments Company preparou uma linha de montagem para fabricar uma nova calculadora. A taxa de produção dessas calculadoras após $t$ semanas é $\frac{dx}{dt} = 5\,000 \left(1 - \frac{100}{(t + 10)^2}\right)$ calculadoras/semana. Encontre o número de calculadoras produzidas no começo da terceira semana até o fim da quarta semana.
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-graph" onclick="toggleGraph('graph6', initChart6)">Ver gráfico</button>
+                            <button class="btn-solution" onclick="toggleSolution('sol6')">Ver solução</button>
+                        </div>
+                    </div>
+
+                    <div class="graph-container" id="graph6">
+                        <div class="chart-wrapper">
+                            <canvas id="chart6"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="solution-container" id="sol6">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Identificar os limites de integração</p>
+                        <p>O começo da terceira semana corresponde a $t = 2$ e o fim da quarta semana corresponde a $t = 4$. O total produzido $N$ é dado por:</p>
+                        $$N = \int_{2}^{4} 5\,000 \left( 1 - \frac{100}{(t + 10)^2} \right) \, dt$$
+
+                        <p class="step-title">Passo 2: Determinar a primitiva $F(t)$</p>
+                        $$F(t) = 5\,000 \left( t + \frac{100}{t + 10} \right)$$
+
+                        <p class="step-title">Passo 3: Avaliar nos limites $t = 4$ e $t = 2$</p>
+                        $$F(4) = 5\,000 \left( 4 + \frac{100}{14} \right) = 5\,000 \left( 4 + \frac{50}{7} \right) = 5\,000 \left( \frac{78}{7} \right)$$
+                        $$F(2) = 5\,000 \left( 2 + \frac{100}{12} \right) = 5\,000 \left( 2 + \frac{25}{3} \right) = 5\,000 \left( \frac{31}{3} \right)$$
+
+                        <p class="step-title">Passo 4: Subtrair $F(4) - F(2)$</p>
+                        $$N = 5\,000 \left( \frac{78}{7} - \frac{31}{3} \right) = 5\,000 \left( \frac{234 - 217}{21} \right) = 5\,000 \cdot \frac{17}{21} = \frac{85\,000}{21}$$
+                        $$N \approx 4\,047{,}62 \text{ calculadoras}$$
+
+                        <div class="final-answer">Resultado Final: $\frac{85\,000}{21} \approx 4\,048 \text{ calculadoras}$</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Função genérica para alternar exibição da solução
+        function toggleSolution(id) {
+            const solBox = document.getElementById(id);
+            const isVisible = solBox.style.display === 'block';
+
+            solBox.style.display = isVisible ? 'none' : 'block';
+
+            if (!isVisible && window.MathJax && window.MathJax.typesetPromise) {
+                MathJax.typesetPromise([solBox]);
+            }
+        }
+
+        // Função genérica para alternar exibição do gráfico
+        function toggleGraph(graphId, initFn) {
+            const graphBox = document.getElementById(graphId);
+            const isVisible = graphBox.style.display === 'block';
+
+            graphBox.style.display = isVisible ? 'none' : 'block';
+
+            if (!isVisible && initFn) {
+                initFn();
+            }
+        }
+
+        // Instâncias globais dos gráficos para evitar reinicialização
+        let charts = {};
+
+        // Gráfico 3: Vazamento de Petróleo
+        function initChart3() {
+            if (charts[3]) return;
+            const ctx = document.getElementById('chart3').getContext('2d');
+
+            const labels = [];
+            const data = [];
+            for (let t = 0; t <= 60; t += 2) {
+                labels.push(t);
+                data.push(100 * Math.exp(-0.01 * t));
+            }
+
+            charts[3] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Taxa de Vazamento r(t) = 100e^(-0.01t) [L/min]',
+                        data: data,
+                        borderColor: '#0284c7',
+                        backgroundColor: 'rgba(2, 132, 199, 0.25)',
+                        fill: true,
+                        tension: 0.3,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: 'Área da Integral: Petróleo Vazado em 60 min' }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'Tempo t (minutos)' } },
+                        y: { title: { display: true, text: 'Taxa (L/min)' }, beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        // Gráfico 4: Crescimento de Bactérias
+        function initChart4() {
+            if (charts[4]) return;
+            const ctx = document.getElementById('chart4').getContext('2d');
+
+            const labels = [];
+            const data = [];
+            for (let t = 0; t <= 3; t += 0.1) {
+                labels.push(t.toFixed(1));
+                data.push(450.268 * Math.exp(1.12567 * t));
+            }
+
+            charts[4] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Taxa de Crescimento r(t) [bactérias/hora]',
+                        data: data,
+                        borderColor: '#059669',
+                        backgroundColor: 'rgba(5, 150, 105, 0.25)',
+                        fill: true,
+                        tension: 0.3,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: 'Acúmulo da População em 3 Horas' }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'Tempo t (horas)' } },
+                        y: { title: { display: true, text: 'Taxa (bactérias/h)' }, beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        // Gráfico 5: Fluxo de Ar nos Pulmões
+        function initChart5() {
+            if (charts[5]) return;
+            const ctx = document.getElementById('chart5').getContext('2d');
+
+            const labels = [];
+            const flowData = [];
+            const volumeData = [];
+
+            for (let t = 0; t <= 5; t += 0.1) {
+                labels.push(t.toFixed(1));
+                flowData.push(0.5 * Math.sin((2 * Math.PI * t) / 5));
+                volumeData.push((5 / (4 * Math.PI)) * (1 - Math.cos((2 * Math.PI * t) / 5)));
+            }
+
+            charts[5] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Fluxo f(t) [L/s]',
+                            data: flowData,
+                            borderColor: '#8b5cf6',
+                            backgroundColor: 'rgba(139, 92, 246, 0.15)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Volume Acumulado V(t) [L]',
+                            data: volumeData,
+                            borderColor: '#2563eb',
+                            borderDash: [5, 5],
+                            fill: false,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: 'Ciclo Respiratório Completo (5 segundos)' }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'Tempo t (segundos)' } },
+                        y: { title: { display: true, text: 'Litros' } }
+                    }
+                }
+            });
+        }
+
+        // Gráfico 6: Produção de Calculadoras
+        function initChart6() {
+            if (charts[6]) return;
+            const ctx = document.getElementById('chart6').getContext('2d');
+
+            const labels = [];
+            const data = [];
+            const highlightData = [];
+
+            for (let t = 0; t <= 6; t += 0.2) {
+                const val = 5000 * (1 - 100 / Math.pow(t + 10, 2));
+                labels.push(t.toFixed(1));
+                data.push(val);
+
+                // Destaque para o intervalo t em [2, 4]
+                if (t >= 2 && t <= 4) {
+                    highlightData.push(val);
+                } else {
+                    highlightData.push(null);
+                }
+            }
+
+            charts[6] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Produção dx/dt [unidades/semana]',
+                            data: data,
+                            borderColor: '#cbd5e1',
+                            fill: false,
+                            tension: 0.2
+                        },
+                        {
+                            label: 'Intervalo Integrado (Semanas 2 a 4)',
+                            data: highlightData,
+                            borderColor: '#d97706',
+                            backgroundColor: 'rgba(217, 119, 6, 0.3)',
+                            fill: true,
+                            tension: 0.2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: 'Produção Acumulada entre a 3ª e a 4ª Semana' }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'Tempo t (semanas)' } },
+                        y: { title: { display: true, text: 'Calculadoras / Semana' }, beginAtZero: false }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

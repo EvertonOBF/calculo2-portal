@@ -119,6 +119,54 @@
             color: #1e3a8a;
         }
 
+        /* Estilos da Bibliografia */
+        .books-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .book-card {
+            flex: 1;
+            min-width: 250px;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .book-cover {
+            width: 140px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 6px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+            margin-bottom: 15px;
+            background-color: #cbd5e1; /* Cor de fundo exibida enquanto a imagem carrega */
+        }
+
+        .book-title {
+            font-weight: bold;
+            color: #1d4ed8;
+            font-size: 1em;
+            margin-bottom: 8px;
+        }
+
+        .book-info {
+            font-size: 0.9em;
+            color: #555555;
+            line-height: 1.4;
+            margin: 0;
+            text-align: center;
+        }
+
         .btn-back {
             align-self: flex-start;
             margin-bottom: 20px;
@@ -144,28 +192,40 @@
     <div class="container">
         <h1>Apresentação da Disciplina</h1>
 
+        <!-- 1. SOBRE O PROFESSOR -->
         <h2>Sobre o Professor</h2>
         <p><strong>Prof. Everton Santos Castro</strong></p>
         <p>Possui Doutorado em Recursos Hídricos pela Universidade Federal do Ceará (2023), Mestrado Acadêmico em Ciências Físicas Aplicadas pela Universidade Estadual do Ceará (2016), Licenciatura plena em Física pela Universidade Estadual do Ceará (2012) e MBA em Data Science pela Universidade de São Paulo (2025). Atua nas áreas de ensino de Física e Ciência de Dados.</p>
 
-        <h2>Calendário de Avaliações</h2>
-        <p>Programe-se para as datas das provas escritas regulares aplicadas ao longo do semestre:</p>
-        
-        <ul class="dates-list">
-            <li>
-                <span><strong>NP1 - 1ª Avaliação Parcial:</strong></span>
-                <span>21/09 (Segunda-feira)</span>
-            </li>
-            <li>
-                <span><strong>NP2 - 2ª Avaliação Parcial:</strong></span>
-                <span>09/11 (Segunda-feira)</span>
-            </li>
-            <li>
-                <span><strong>NP3 - 3ª Avaliação Parcial:</strong></span>
-                <span>14/12 (Segunda-feira)</span>
-            </li>
-        </ul>
+        <!-- 2. LIVROS (BIBLIOGRAFIA) -->
+        <h2>Bibliografia do Curso</h2>
+        <p>Livros de referência adotados para o acompanhamento das aulas e lista de exercícios:</p>
 
+        <div class="books-container">
+            <!-- Livro 1 -->
+            <div class="book-card">
+                <img src="img/livro_1.jpg" alt="Capa Cálculo Volume I" class="book-cover">
+                <div class="book-title">Cálculo - Volume I</div>
+                <p class="book-info">
+                    James Stewart; Daniel Clegg; Saleem Watson.<br>
+                    Tradução da 9ª ed. norte-americana, 6ª Edição.<br>
+                    <em>Editora Cengage Learning Brasil, 2021.</em>
+                </p>
+            </div>
+
+            <!-- Livro 2 -->
+            <div class="book-card">
+                <img src="img/livro_2.png" alt="Capa Cálculo Volume II" class="book-cover">
+                <div class="book-title">Cálculo - Volume II</div>
+                <p class="book-info">
+                    James Stewart; Daniel Clegg; Saleem Watson.<br>
+                    6th Edition.<br>
+                    <em>Editora Cengage Learning Brasil, 2022.</em>
+                </p>
+            </div>
+        </div>
+
+        <!-- 3. CRITÉRIOS DE APROVAÇÃO -->
         <h2>Critérios de Avaliação</h2>
         <p>A composição das notas da disciplina ocorrerá da seguinte forma:</p>
         <ul>
@@ -185,6 +245,25 @@
             <li><strong>NF</strong> maior ou igual a <strong>5,0</strong>.</li>
             <li><strong>NP3</strong> maior ou igual a <strong>4,0</strong>.</li>
         </ol>
+
+        <!-- 4. DATAS DAS PROVAS (CALENDÁRIO) -->
+        <h2>Calendário de Avaliações</h2>
+        <p>Programe-se para as datas das provas escritas regulares aplicadas ao longo do semestre:</p>
+        
+        <ul class="dates-list">
+            <li>
+                <span><strong>NP1 - 1ª Avaliação Parcial:</strong></span>
+                <span>21/09 (Segunda-feira)</span>
+            </li>
+            <li>
+                <span><strong>NP2 - 2ª Avaliação Parcial:</strong></span>
+                <span>09/11 (Segunda-feira)</span>
+            </li>
+            <li>
+                <span><strong>NP3 - 3ª Avaliação Parcial:</strong></span>
+                <span>14/12 (Segunda-feira)</span>
+            </li>
+        </ul>
 
     </div>
 

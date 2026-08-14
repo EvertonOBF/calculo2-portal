@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo 2 - Lista 1: Exercícios Resolvidos</title>
+    
+    <!-- Configuração do MathJax -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e293b;
+            --accent-color: #059669;
+            --purple-accent: #8b5cf6;
+            --amber-accent: #d97706;
+            --cyan-accent: #0284c7;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        p, li {
+            text-align: justify;
+        }
+
+        p {
+            margin-bottom: 16px;
+        }
+
+        ul, ol {
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .navbar {
+            background-color: var(--secondary-color);
+            padding: 15px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: #93c5fd;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .content-section {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 35px;
+            margin-bottom: 35px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-left: 6px solid var(--primary-color);
+        }
+
+        h1 {
+            color: var(--secondary-color);
+            font-size: 2.2rem;
+            margin-top: 0;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        /* Cards dos Exercícios */
+        .exercise-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .exercise-card {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+        }
+
+        .exercise-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+        }
+
+        .exercise-header {
+            padding: 20px 25px;
+            background: #f8fafc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .exercise-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+
+        .btn-solution {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-solution:hover {
+            background-color: #1d4ed8;
+        }
+
+        .solution-container {
+            display: none;
+            padding: 25px;
+            background-color: #f0fdf4;
+            border-top: 2px dashed #86efac;
+        }
+
+        .solution-container h4 {
+            margin-top: 0;
+            color: var(--accent-color);
+            font-size: 1.15rem;
+            border-bottom: 1px solid #bbf7d0;
+            padding-bottom: 8px;
+        }
+
+        .step-title {
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-top: 15px;
+        }
+
+        .final-answer {
+            background-color: #dcfce7;
+            border: 1px solid #86efac;
+            color: #166534;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.15rem;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="etapa1.html">← Voltar ao Menu Principal</a>
+        <span>Cálculo 2 - Prática Dirigida</span>
+    </div>
+
+    <div class="container">
+
+        <div class="content-section">
+            <h1>Cálculo 2 – Lista 1</h1>
+            <p style="font-size: 1.15rem; font-weight: 500;">Calcule as integrais abaixo.</p>
+
+            <div class="exercise-grid">
+
+                <!-- EXERCÍCIO 1 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <span class="exercise-title">1. $\int_{0}^{2} (6x^2 - 4x + 5) \, dx$</span>
+                        <button class="btn-solution" onclick="toggleSolution('sol1')">Ver solução</button>
+                    </div>
+                    <div class="solution-container" id="sol1">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Determinar a primitiva $F(x)$ integrando termo a termo</p>
+                        $$\int (6x^2 - 4x + 5) \, dx = 6 \cdot \frac{x^3}{3} - 4 \cdot \frac{x^2}{2} + 5x = 2x^3 - 2x^2 + 5x$$
+                        <p class="step-title">Passo 2: Aplicar o Teorema Fundamental do Cálculo no intervalo $[0, 2]$</p>
+                        $$F(2) = 2(2)^3 - 2(2)^2 + 5(2) = 2(8) - 2(4) + 10 = 16 - 8 + 10 = 18$$
+                        $$F(0) = 2(0)^3 - 2(0)^2 + 5(0) = 0$$
+                        <p class="step-title">Passo 3: Calcular $F(2) - F(0)$</p>
+                        $$\int_{0}^{2} (6x^2 - 4x + 5) \, dx = 18 - 0 = 18$$
+                        <div class="final-answer">Resultado Final: $18$</div>
+                    </div>
+                </div>
+
+                <!-- EXERCÍCIO 2 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <span class="exercise-title">2. $\int_{1}^{3} (1 + 2x - 4x^3) \, dx$</span>
+                        <button class="btn-solution" onclick="toggleSolution('sol2')">Ver solução</button>
+                    </div>
+                    <div class="solution-container" id="sol2">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Obter a primitiva $F(x)$</p>
+                        $$\int (1 + 2x - 4x^3) \, dx = x + 2 \cdot \frac{x^2}{2} - 4 \cdot \frac{x^4}{4} = x + x^2 - x^4$$
+                        <p class="step-title">Passo 2: Avaliar nos limites $x = 3$ e $x = 1$</p>
+                        $$F(3) = 3 + (3)^2 - (3)^4 = 3 + 9 - 81 = -69$$
+                        $$F(1) = 1 + (1)^2 - (1)^4 = 1 + 1 - 1 = 1$$
+                        <p class="step-title">Passo 3: Aplicar $F(3) - F(1)$</p>
+                        $$\int_{1}^{3} (1 + 2x - 4x^3) \, dx = -69 - 1 = -70$$
+                        <div class="final-answer">Resultado Final: $-70$</div>
+                    </div>
+                </div>
+
+                <!-- EXERCÍCIO 3 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <span class="exercise-title">3. $\int_{-2}^{0} \left( \frac{1}{2}t^4 + \frac{1}{4}t^3 - t \right) \, dt$</span>
+                        <button class="btn-solution" onclick="toggleSolution('sol3')">Ver solução</button>
+                    </div>
+                    <div class="solution-container" id="sol3">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Integrar a expressão polinomial</p>
+                        $$F(t) = \frac{1}{2} \cdot \frac{t^5}{5} + \frac{1}{4} \cdot \frac{t^4}{4} - \frac{t^2}{2} = \frac{t^5}{10} + \frac{t^4}{16} - \frac{t^2}{2}$$
+                        <p class="step-title">Passo 2: Substituir os limites de integração $t = 0$ e $t = -2$</p>
+                        $$F(0) = 0$$
+                        $$F(-2) = \frac{(-2)^5}{10} + \frac{(-2)^4}{16} - \frac{(-2)^2}{2} = \frac{-32}{10} + \frac{16}{16} - \frac{4}{2} = -\frac{16}{5} + 1 - 2 = -\frac{21}{5}$$
+                        <p class="step-title">Passo 3: Calcular $F(0) - F(-2)$</p>
+                        $$\int_{-2}^{0} \left( \frac{1}{2}t^4 + \frac{1}{4}t^3 - t \right) \, dt = 0 - \left( -\frac{21}{5} \right) = \frac{21}{5}$$
+                        <div class="final-answer">Resultado Final: $\frac{21}{5} = 4{,}2$</div>
+                    </div>
+                </div>
+
+                <!-- EXERCÍCIO 4 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <span class="exercise-title">4. $\int_{0}^{3} (1 + 6w^2 - 10w^4) \, dw$</span>
+                        <button class="btn-solution" onclick="toggleSolution('sol4')">Ver solução</button>
+                    </div>
+                    <div class="solution-container" id="sol4">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Determinar a antiderivada $F(w)$</p>
+                        $$F(w) = w + 6 \cdot \frac{w^3}{3} - 10 \cdot \frac{w^5}{5} = w + 2w^3 - 2w^5$$
+                        <p class="step-title">Passo 2: Avaliar os limites de integração</p>
+                        $$F(3) = 3 + 2(3)^3 - 2(3)^5 = 3 + 2(27) - 2(243) = 3 + 54 - 486 = -429$$
+                        $$F(0) = 0$$
+                        <div class="final-answer">Resultado Final: $-429$</div>
+                    </div>
+                </div>
+
+                <!-- EXERCÍCIO 5 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <span class="exercise-title">5. $\int_{0}^{2} (2x - 3)(4x^2 + 1) \, dx$</span>
+                        <button class="btn-solution" onclick="toggleSolution('sol5')">Ver solução</button>
+                    </div>
+                    <div class="solution-container" id="sol5">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Expandir o produto algébrico no integrando</p>
+                        $$(2x - 3)(4x^2 + 1) = 8x^3 + 2x - 12x^2 - 3 = 8x^3 - 12x^2 + 2x - 3$$
+                        <p class="step-title">Passo 2: Integrar o polinômio resultante</p>
+                        $$F(x) = 8 \cdot \frac{x^4}{4} - 12 \cdot \frac{x^3}{3} + 2 \cdot \frac{x^2}{2} - 3x = 2x^4 - 4x^3 + x^2 - 3x$$
+                        <p class="step-title">Passo 3: Substituir os limites $[0, 2]$</p>
+                        $$F(2) = 2(2)^4 - 4(2)^3 + (2)^2 - 3(2) = 2(16) - 4(8) + 4 - 6 = 32 - 32 + 4 - 6 = -2$$
+                        $$F(0) = 0$$
+                        <div class="final-answer">Resultado Final: $-2$</div>
+                    </div>
+                </div>
+
+                <!-- EXERCÍCIO 6 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <span class="exercise-title">6. $\int_{-1}^{1} t(1 - t)^2 \, dt$</span>
+                        <button class="btn-solution" onclick="toggleSolution('sol6')">Ver solução</button>
+                    </div>
+                    <div class="solution-container" id="sol6">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Expandir o produto notável e multiplicar por $t$</p>
+                        $$(1 - t)^2 = 1 - 2t + t^2 \implies t(1 - 2t + t^2) = t - 2t^2 + t^3$$
+                        <p class="step-title">Passo 2: Integrar termo a termo</p>
+                        $$F(t) = \frac{t^2}{2} - \frac{2t^3}{3} + \frac{t^4}{4}$$
+                        <p class="step-title">Passo 3: Aplicar os limites $t = 1$ e $t = -1$</p>
+                        $$F(1) = \frac{1}{2} - \frac{2}{3} + \frac{1}{4} = \frac{6 - 8 + 3}{12} = \frac{1}{12}$$
+                        $$F(-1) = \frac{(-1)^2}{2} - \frac{2(-1)^3}{3} + \frac{(-1)^4}{4} = \frac{1}{2} + \frac{2}{3} + \frac{1}{4} = \frac{6 + 8 + 3}{12} = \frac{17}{12}$$
+                        $$F(1) - F(-1) = \frac{1}{12} - \frac{17}{12} = -\frac{16}{12} = -\frac{4}{3}$$
+                        <div class="final-answer">Resultado Final: $-\frac{4}{3}$</div>
+                    </div>
+                </div>
+
+                <!-- EXERCÍCIO 7 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <span class="exercise-title">7. $\int_{0}^{\pi} (5e^x + 3\sin x) \, dx$</span>
+                        <button class="btn-solution" onclick="toggleSolution('sol7')">Ver solução</button>
+                    </div>
+                    <div class="solution-container" id="sol7">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Integrar usando as regras imediatas ($\int e^x dx = e^x$ e $\int \sin x dx = -\cos x$)</p>
+                        $$F(x) = 5e^x - 3\cos x$$
+                        <p class="step-title">Passo 2: Avaliar em $x = \pi$ e $x = 0$</p>
+                        $$F(\pi) = 5e^\pi - 3\cos(\pi) = 5e^\pi - 3(-1) = 5e^\pi + 3$$
+                        $$F(0) = 5e^0 - 3\cos(0) = 5(1) - 3(1) = 2$$
+                        <p class="step-title">Passo 3: Calcular $F(\pi) - F(0)$</p>
+                        $$(5e^\pi + 3) - 2 = 5e^\pi + 1$$
+                        <div class="final-answer">Resultado Final: $5e^\pi + 1$</div>
+                    </div>
+                </div>
+
+                <!-- EXERCÍCIO 8 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <span class="exercise-title">8. $\int_{1}^{2} \left( \frac{1}{x^2} - \frac{4}{x^3} \right) \, dx$</span>
+                        <button class="btn-solution" onclick="toggleSolution('sol8')">Ver solução</button>
+                    </div>
+                    <div class="solution-container" id="sol8">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Reescrever com expoentes negativos</p>
+                        $$\int_{1}^{2} (x^{-2} - 4x^{-3}) \, dx$$
+                        <p class="step-title">Passo 2: Aplicar a regra da potência</p>
+                        $$F(x) = \frac{x^{-1}}{-1} - 4 \cdot \frac{x^{-2}}{-2} = -\frac{1}{x} + \frac{2}{x^2}$$
+                        <p class="step-title">Passo 3: Substituir os limites $x = 2$ e $x = 1$</p>
+                        $$F(2) = -\frac{1}{2} + \frac{2}{2^2} = -\frac{1}{2} + \frac{2}{4} = 0$$
+                        $$F(1) = -\frac{1}{1} + \frac{2}{1^2} = -1 + 2 = 1$$
+                        $$F(2) - F(1) = 0 - 1 = -1$$
+                        <div class="final-answer">Resultado Final: $-1$</div>
+                    </div>
+                </div>
+
+                <!-- EXERCÍCIO 9 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <span class="exercise-title">9. $\int_{1}^{4} \frac{4 + 6u}{\sqrt{u}} \, du$</span>
+                        <button class="btn-solution" onclick="toggleSolution('sol9')">Ver solução</button>
+                    </div>
+                    <div class="solution-container" id="sol9">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Dividir cada termo do numerador por $\sqrt{u} = u^{1/2}$</p>
+                        $$\frac{4 + 6u}{u^{1/2}} = 4u^{-1/2} + 6u^{1 - 1/2} = 4u^{-1/2} + 6u^{1/2}$$
+                        <p class="step-title">Passo 2: Integrar as potências de $u$</p>
+                        $$F(u) = 4 \cdot \left( \frac{u^{1/2}}{1/2} \right) + 6 \cdot \left( \frac{u^{3/2}}{3/2} \right) = 8\sqrt{u} + 4u\sqrt{u}$$
+                        <p class="step-title">Passo 3: Avaliar nos limites $[1, 4]$</p>
+                        $$F(4) = 8\sqrt{4} + 4(4)\sqrt{4} = 8(2) + 16(2) = 16 + 32 = 48$$
+                        $$F(1) = 8\sqrt{1} + 4(1)\sqrt{1} = 8 + 4 = 12$$
+                        $$F(4) - F(1) = 48 - 12 = 36$$
+                        <div class="final-answer">Resultado Final: $36$</div>
+                    </div>
+                </div>
+
+                <!-- EXERCÍCIO 10 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <span class="exercise-title">10. $\int_{0}^{4} (3\sqrt{t} - 2e^t) \, dt$</span>
+                        <button class="btn-solution" onclick="toggleSolution('sol10')">Ver solução</button>
+                    </div>
+                    <div class="solution-container" id="sol10">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Reescrever $\sqrt{t} = t^{1/2}$ e integrar</p>
+                        $$F(t) = 3 \cdot \left( \frac{t^{3/2}}{3/2} \right) - 2e^t = 2t\sqrt{t} - 2e^t$$
+                        <p class="step-title">Passo 2: Substituir os limites $t = 4$ e $t = 0$</p>
+                        $$F(4) = 2(4)\sqrt{4} - 2e^4 = 8(2) - 2e^4 = 16 - 2e^4$$
+                        $$F(0) = 2(0)\sqrt{0} - 2e^0 = 0 - 2(1) = -2$$
+                        <p class="step-title">Passo 3: Subtrair $F(4) - F(0)$</p>
+                        $$(16 - 2e^4) - (-2) = 18 - 2e^4$$
+                        <div class="final-answer">Resultado Final: $18 - 2e^4$</div>
+                    </div>
+                </div>
+
+                <!-- EXERCÍCIO 11 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <span class="exercise-title">11. $\int_{0}^{1} x(\sqrt[3]{x} + \sqrt[4]{x}) \, dx$</span>
+                        <button class="btn-solution" onclick="toggleSolution('sol11')">Ver solução</button>
+                    </div>
+                    <div class="solution-container" id="sol11">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Distribuir $x$ com os expoentes fracionários</p>
+                        $$x(x^{1/3} + x^{1/4}) = x^{1 + 1/3} + x^{1 + 1/4} = x^{4/3} + x^{5/4}$$
+                        <p class="step-title">Passo 2: Integrar pela regra da potência</p>
+                        $$F(x) = \frac{x^{4/3 + 1}}{\frac{4}{3} + 1} + \frac{x^{5/4 + 1}}{\frac{5}{4} + 1} = \frac{x^{7/3}}{\frac{7}{3}} + \frac{x^{9/4}}{\frac{9}{4}} = \frac{3}{7}x^{7/3} + \frac{4}{9}x^{9/4}$$
+                        <p class="step-title">Passo 3: Avaliar nos limites $[0, 1]$</p>
+                        $$F(1) = \frac{3}{7}(1) + \frac{4}{9}(1) = \frac{27 + 28}{63} = \frac{55}{63}$$
+                        $$F(0) = 0$$
+                        <div class="final-answer">Resultado Final: $\frac{55}{63}$</div>
+                    </div>
+                </div>
+
+                <!-- EXERCÍCIO 12 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <span class="exercise-title">12. $\int_{1}^{4} \frac{\sqrt{y} - y}{y^2} \, dy$</span>
+                        <button class="btn-solution" onclick="toggleSolution('sol12')">Ver solução</button>
+                    </div>
+                    <div class="solution-container" id="sol12">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Separar em duas frações simples</p>
+                        $$\frac{\sqrt{y}}{y^2} - \frac{y}{y^2} = y^{1/2 - 2} - \frac{1}{y} = y^{-3/2} - \frac{1}{y}$$
+                        <p class="step-title">Passo 2: Integrar termo a termo</p>
+                        $$F(y) = \frac{y^{-3/2 + 1}}{-\frac{3}{2} + 1} - \ln|y| = \frac{y^{-1/2}}{-\frac{1}{2}} - \ln|y| = -\frac{2}{\sqrt{y}} - \ln|y|$$
+                        <p class="step-title">Passo 3: Substituir os limites $y = 4$ e $y = 1$</p>
+                        $$F(4) = -\frac{2}{\sqrt{4}} - \ln(4) = -\frac{2}{2} - \ln(4) = -1 - \ln(4)$$
+                        $$F(1) = -\frac{2}{\sqrt{1}} - \ln(1) = -2 - 0 = -2$$
+                        $$F(4) - F(1) = (-1 - \ln 4) - (-2) = 1 - \ln 4$$
+                        <div class="final-answer">Resultado Final: $1 - \ln(4)$</div>
+                    </div>
+                </div>
+
+                <!-- EXERCÍCIO 13 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <span class="exercise-title">13. $\int_{1}^{2} \frac{x^2 - 2}{x} \, dx$</span>
+                        <button class="btn-solution" onclick="toggleSolution('sol13')">Ver solução</button>
+                    </div>
+                    <div class="solution-container" id="sol13">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Dividir o numerador por $x$</p>
+                        $$\frac{x^2 - 2}{x} = \frac{x^2}{x} - \frac{2}{x} = x - \frac{2}{x}$$
+                        <p class="step-title">Passo 2: Encontrar a antiderivada</p>
+                        $$F(x) = \frac{x^2}{2} - 2\ln|x|$$
+                        <p class="step-title">Passo 3: Avaliar nos limites $x = 2$ e $x = 1$</p>
+                        $$F(2) = \frac{2^2}{2} - 2\ln(2) = 2 - 2\ln(2)$$
+                        $$F(1) = \frac{1^2}{2} - 2\ln(1) = \frac{1}{2} - 0 = \frac{1}{2}$$
+                        $$F(2) - F(1) = \left( 2 - 2\ln 2 \right) - \frac{1}{2} = \frac{3}{2} - 2\ln 2$$
+                        <div class="final-answer">Resultado Final: $\frac{3}{2} - 2\ln(2)$</div>
+                    </div>
+                </div>
+
+                <!-- EXERCÍCIO 14 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <span class="exercise-title">14. $\int_{\pi/4}^{\pi/3} \csc^2 \theta \, d\theta$</span>
+                        <button class="btn-solution" onclick="toggleSolution('sol14')">Ver solução</button>
+                    </div>
+                    <div class="solution-container" id="sol14">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Identificar a antiderivada direta ($\frac{d}{d\theta}[-\cot\theta] = \csc^2\theta$)</p>
+                        $$F(\theta) = -\cot \theta$$
+                        <p class="step-title">Passo 2: Avaliar nos limites trigonométricos</p>
+                        $$F(\pi/3) = -\cot(\pi/3) = -\frac{\sqrt{3}}{3}$$
+                        $$F(\pi/4) = -\cot(\pi/4) = -1$$
+                        <p class="step-title">Passo 3: Calcular $F(\pi/3) - F(\pi/4)$</p>
+                        $$\left( -\frac{\sqrt{3}}{3} \right) - (-1) = 1 - \frac{\sqrt{3}}{3} = \frac{3 - \sqrt{3}}{3}$$
+                        <div class="final-answer">Resultado Final: $\frac{3 - \sqrt{3}}{3}$</div>
+                    </div>
+                </div>
+
+                <!-- EXERCÍCIO 15 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <span class="exercise-title">15. $\int_{0}^{\pi/4} \frac{1 + \cos^2 \theta}{\cos^2 \theta} \, d\theta$</span>
+                        <button class="btn-solution" onclick="toggleSolution('sol15')">Ver solução</button>
+                    </div>
+                    <div class="solution-container" id="sol15">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Simplificar o integrando usando secante</p>
+                        $$\frac{1 + \cos^2 \theta}{\cos^2 \theta} = \frac{1}{\cos^2 \theta} + \frac{\cos^2 \theta}{\cos^2 \theta} = \sec^2 \theta + 1$$
+                        <p class="step-title">Passo 2: Integrar cada termo</p>
+                        $$F(\theta) = \tan \theta + \theta$$
+                        <p class="step-title">Passo 3: Substituir os limites $[0, \pi/4]$</p>
+                        $$F(\pi/4) = \tan(\pi/4) + \frac{\pi}{4} = 1 + \frac{\pi}{4}$$
+                        $$F(0) = \tan(0) + 0 = 0$$
+                        <div class="final-answer">Resultado Final: $1 + \frac{\pi}{4}$</div>
+                    </div>
+                </div>
+
+                <!-- EXERCÍCIO 16 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <span class="exercise-title">16. $\int_{0}^{\pi/3} \frac{\sin \theta + \sin \theta \tan^2 \theta}{\sec^2 \theta} \, d\theta$</span>
+                        <button class="btn-solution" onclick="toggleSolution('sol16')">Ver solução</button>
+                    </div>
+                    <div class="solution-container" id="sol16">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Fatorar $\sin\theta$ no numerador e aplicar a identidade $1 + \tan^2\theta = \sec^2\theta$</p>
+                        $$\sin \theta (1 + \tan^2 \theta) = \sin \theta \cdot \sec^2 \theta$$
+                        <p class="step-title">Passo 2: Simplificar a fração</p>
+                        $$\frac{\sin \theta \cdot \sec^2 \theta}{\sec^2 \theta} = \sin \theta$$
+                        <p class="step-title">Passo 3: Integrar $\sin\theta$ no intervalo $[0, \pi/3]$</p>
+                        $$F(\theta) = -\cos \theta$$
+                        $$F(\pi/3) = -\cos(\pi/3) = -\frac{1}{2}$$
+                        $$F(0) = -\cos(0) = -1$$
+                        $$F(\pi/3) - F(0) = -\frac{1}{2} - (-1) = \frac{1}{2}$$
+                        <div class="final-answer">Resultado Final: $\frac{1}{2}$</div>
+                    </div>
+                </div>
+
+                <!-- EXERCÍCIO 17 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <span class="exercise-title">17. $\int_{1}^{64} \frac{1 + \sqrt[3]{x}}{\sqrt{x}} \, dx$</span>
+                        <button class="btn-solution" onclick="toggleSolution('sol17')">Ver solução</button>
+                    </div>
+                    <div class="solution-container" id="sol17">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Converter radicais para expoentes fracionários e dividir</p>
+                        $$\frac{1 + x^{1/3}}{x^{1/2}} = x^{-1/2} + x^{1/3 - 1/2} = x^{-1/2} + x^{-1/6}$$
+                        <p class="step-title">Passo 2: Integrar pela regra das potências</p>
+                        $$F(x) = \frac{x^{1/2}}{1/2} + \frac{x^{5/6}}{5/6} = 2\sqrt{x} + \frac{6}{5}x^{5/6}$$
+                        <p class="step-title">Passo 3: Avaliar em $x = 64$ e $x = 1$</p>
+                        $$F(64) = 2\sqrt{64} + \frac{6}{5}(64)^{5/6} = 2(8) + \frac{6}{5}(2^5) = 16 + \frac{6}{5}(32) = 16 + \frac{192}{5} = \frac{272}{5}$$
+                        $$F(1) = 2\sqrt{1} + \frac{6}{5}(1)^{5/6} = 2 + \frac{6}{5} = \frac{16}{5}$$
+                        $$F(64) - F(1) = \frac{272}{5} - \frac{16}{5} = \frac{256}{5}$$
+                        <div class="final-answer">Resultado Final: $\frac{256}{5} = 51{,}2$</div>
+                    </div>
+                </div>
+
+                <!-- EXERCÍCIO 18 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <span class="exercise-title">18. $\int_{0}^{\sqrt{3}/2} \frac{dr}{\sqrt{1 - r^2}}$</span>
+                        <button class="btn-solution" onclick="toggleSolution('sol18')">Ver solução</button>
+                    </div>
+                    <div class="solution-container" id="sol18">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Reconhecer a derivada da função arco seno ($\frac{d}{dr}[\arcsin r] = \frac{1}{\sqrt{1-r^2}}$)</p>
+                        $$F(r) = \arcsin(r)$$
+                        <p class="step-title">Passo 2: Avaliar nos limites $r = \frac{\sqrt{3}}{2}$ e $r = 0$</p>
+                        $$F\left(\frac{\sqrt{3}}{2}\right) = \arcsin\left(\frac{\sqrt{3}}{2}\right) = \frac{\pi}{3}$$
+                        $$F(0) = \arcsin(0) = 0$$
+                        <div class="final-answer">Resultado Final: $\frac{\pi}{3}$</div>
+                    </div>
+                </div>
+
+                <!-- EXERCÍCIO 19 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <span class="exercise-title">19. $\int_{1}^{2} \frac{(x - 1)^3}{x^2} \, dx$</span>
+                        <button class="btn-solution" onclick="toggleSolution('sol19')">Ver solução</button>
+                    </div>
+                    <div class="solution-container" id="sol19">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Expandir o cubo do binômio no numerador</p>
+                        $$(x - 1)^3 = x^3 - 3x^2 + 3x - 1$$
+                        <p class="step-title">Passo 2: Dividir cada termo por $x^2$</p>
+                        $$\frac{x^3 - 3x^2 + 3x - 1}{x^2} = x - 3 + \frac{3}{x} - x^{-2}$$
+                        <p class="step-title">Passo 3: Integrar termo a termo</p>
+                        $$F(x) = \frac{x^2}{2} - 3x + 3\ln|x| + \frac{1}{x}$$
+                        <p class="step-title">Passo 4: Avaliar nos limites $[1, 2]$</p>
+                        $$F(2) = \frac{4}{2} - 3(2) + 3\ln(2) + \frac{1}{2} = 2 - 6 + \frac{1}{2} + 3\ln(2) = -\frac{7}{2} + 3\ln(2)$$
+                        $$F(1) = \frac{1}{2} - 3(1) + 3\ln(1) + 1 = \frac{1}{2} - 3 + 0 + 1 = -\frac{3}{2}$$
+                        $$F(2) - F(1) = \left( -\frac{7}{2} + 3\ln 2 \right) - \left( -\frac{3}{2} \right) = -\frac{4}{2} + 3\ln 2 = 3\ln(2) - 2$$
+                        <div class="final-answer">Resultado Final: $3\ln(2) - 2$</div>
+                    </div>
+                </div>
+
+                <!-- EXERCÍCIO 20 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <span class="exercise-title">20. $\int_{0}^{1/\sqrt{3}} \frac{t^2 - 1}{t^4 - 1} \, dt$</span>
+                        <button class="btn-solution" onclick="toggleSolution('sol20')">Ver solução</button>
+                    </div>
+                    <div class="solution-container" id="sol20">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Fatorar o denominador como diferença de dois quadrados</p>
+                        $$t^4 - 1 = (t^2 - 1)(t^2 + 1)$$
+                        <p class="step-title">Passo 2: Simplificar a fração eliminando o fator comum $(t^2 - 1)$</p>
+                        $$\frac{t^2 - 1}{(t^2 - 1)(t^2 + 1)} = \frac{1}{t^2 + 1}$$
+                        <p class="step-title">Passo 3: Integrar a função arco tangente</p>
+                        $$F(t) = \arctan(t)$$
+                        <p class="step-title">Passo 4: Avaliar nos limites $t = \frac{1}{\sqrt{3}}$ e $t = 0$</p>
+                        $$F\left(\frac{1}{\sqrt{3}}\right) = \arctan\left(\frac{1}{\sqrt{3}}\right) = \frac{\pi}{6}$$
+                        $$F(0) = \arctan(0) = 0$$
+                        <div class="final-answer">Resultado Final: $\frac{\pi}{6}$</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Alterna individualmente a exibição de uma solução
+        function toggleSolution(id) {
+            const solBox = document.getElementById(id);
+            const isVisible = solBox.style.display === 'block';
+
+            solBox.style.display = isVisible ? 'none' : 'block';
+
+            if (!isVisible && window.MathJax && window.MathJax.typesetPromise) {
+                MathJax.typesetPromise([solBox]);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo 2 - Aula 2: A Integral Indefinida e Definida</title>
+    
+    <!-- Configuração do MathJax -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <!-- Biblioteca Plotly.js para gráficos -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e293b;
+            --accent-color: #059669;
+            --purple-accent: #8b5cf6;
+            --amber-accent: #d97706;
+            --cyan-accent: #0284c7;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        p, li {
+            text-align: justify;
+        }
+
+        p {
+            margin-bottom: 16px;
+        }
+
+        ul {
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        ul li {
+            margin-bottom: 12px;
+        }
+
+        .navbar {
+            background-color: var(--secondary-color);
+            padding: 15px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: #93c5fd;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .content-section {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 35px;
+            margin-bottom: 35px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-left: 6px solid var(--primary-color);
+        }
+
+        h1 {
+            color: var(--secondary-color);
+            font-size: 2.2rem;
+            margin-top: 0;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .highlight-box {
+            background-color: #eff6ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        /* Estilos dos Cards da Tabela Interativa de Integrais */
+        .integral-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .integral-card {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+        }
+
+        .integral-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+        }
+
+        .integral-header {
+            padding: 18px 25px;
+            background: #f8fafc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .integral-header:hover {
+            background: #f1f5f9;
+        }
+
+        .integral-formula {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+
+        .btn-toggle {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-toggle:hover {
+            background-color: #1d4ed8;
+        }
+
+        .proof-container {
+            display: none;
+            padding: 25px;
+            background-color: #faf5ff;
+            border-top: 2px dashed #c084fc;
+        }
+
+        .proof-container h4 {
+            margin-top: 0;
+            color: var(--purple-accent);
+            font-size: 1.1rem;
+        }
+
+        .canvas-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+
+        .controls {
+            margin-top: 15px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            font-weight: 600;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        input[type="range"] {
+            cursor: pointer;
+        }
+
+        /* Seletor de Funções do Módulo 5 */
+        .func-radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .func-option {
+            display: flex;
+            align-items: center;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .func-option:hover {
+            border-color: var(--cyan-accent);
+            background: #f0f9ff;
+        }
+
+        .func-option input[type="radio"] {
+            margin-right: 15px;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--cyan-accent);
+            cursor: pointer;
+        }
+
+        .func-option label {
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: var(--secondary-color);
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="etapa1.html">← Voltar ao Menu da Disciplina</a>
+        <span>Cálculo 2 - Etapa 1</span>
+    </div>
+
+    <div class="container">
+
+        <!-- MÓDULO 1: DEFINIÇÃO DA INTEGRAL INDEFINIDA -->
+        <div class="content-section">
+            <h1>1. O Conceito de Integral Indefinida</h1>
+            
+            <p>Anteriormente, observou-se que o processo de determinação da área acumulada sob uma curva está intrinsecamente associado à busca por uma antiderivada (ou primitiva). Agora, passa-se a formalizar essa operação matemática.</p>
+
+            <p>Dada uma função $f(x)$, dizemos que uma função $F(x)$ é uma <strong>antiderivada</strong> de $f(x)$ em um intervalo se, para todo $x$ nesse intervalo:</p>
+
+            <div class="highlight-box" style="text-align: center; font-size: 1.3rem;">
+                $$F'(x) = f(x)$$
+            </div>
+
+            <p>O conjunto de todas as antiderivadas de $f(x)$ é chamado de <strong>Integral Indefinida</strong> e é representado pelo símbolo de integração sem limites:</p>
+
+            <div class="highlight-box" style="text-align: center; font-size: 1.4rem; background-color: #f5f3ff; border-left-color: var(--purple-accent); color: var(--purple-accent);">
+                $$\int f(x) \, dx = F(x) + C$$
+            </div>
+
+            <ul>
+                <li>$\int$: O símbolo de integral (uma letra 'S' estilizada para indicar 'Soma').</li>
+                <li>$f(x)$: O <strong>integrando</strong> (a função que queremos antiderivar).</li>
+                <li>$dx$: O <strong>diferencial</strong>, que indica a variável de integração (neste caso, $x$).</li>
+                <li>$F(x)$: Uma antiderivada particular de $f(x)$.</li>
+                <li>$C$: A <strong>constante de integração</strong> (qualquer número real).</li>
+            </ul>
+        </div>
+
+        <!-- MÓDULO 2: A GEOMETRIA DA CONSTANTE C -->
+        <div class="content-section" style="border-left-color: var(--accent-color);">
+            <h2 style="color: var(--accent-color);">2. A Família de Curvas e a Constante $C$</h2>
+            
+            <p>Por que adicionamos a constante $+ C$? Lembre-se de que a derivada de qualquer constante é zero ($\frac{d}{dx}[C] = 0$). Por isso, existem infinitas funções que possuem exatamente a mesma derivada.</p>
+
+            <p>Geometricamente, a integral indefinida não representa uma única curva, mas sim uma <strong>família de curvas paralelas</strong> deslocadas verticalmente no plano cartesiano.</p>
+
+            <div class="canvas-container">
+                <div id="familyPlot" style="width: 100%; height: 420px;"></div>
+                <div class="controls">
+                    <label for="cSlider">Ajustar valor destacado da Constante $C$: <span id="cVal" style="color: var(--accent-color);">0.0</span></label>
+                    <input type="range" id="cSlider" min="-4" max="4" value="0" step="0.5" style="width: 250px;">
+                </div>
+            </div>
+        </div>
+
+        <!-- MÓDULO 3: PROPRIEDADES OPERATÓRIAS -->
+        <div class="content-section" style="border-left-color: var(--amber-accent);">
+            <h2 style="color: var(--amber-accent);">3. Propriedades Operatórias das Integrais</h2>
+            
+            <p>Como a integração é a operação inversa da diferenciação, ela herda as propriedades de linearidade da derivada:</p>
+
+            <ul>
+                <li><strong>Multiplicação por Constante:</strong> Uma constante multiplicativa pode ser "colocada para fora" da integral.
+                    $$\int k \cdot f(x) \, dx = k \int f(x) \, dx \quad (k \in \mathbb{R})$$
+                </li>
+                <li><strong>Soma e Subtração:</strong> A integral da soma (ou diferença) é a soma (ou diferença) das integrais.
+                    $$\int [f(x) \pm g(x)] \, dx = \int f(x) \, dx \pm \int g(x) \, dx$$
+                </li>
+            </ul>
+        </div>
+
+        <!-- MÓDULO 4: TABELA INTERATIVA DE INTEGRAIS IMEDIATAS -->
+        <div class="content-section" style="border-left-color: var(--purple-accent);">
+            <h2 style="color: var(--purple-accent);">4. Tabela de Integrais Imediatas e Suas Demonstrações</h2>
+            
+            <p>Clique em qualquer regra da tabela abaixo para expandir e visualizar a <strong>demonstração matemática passo a passo</strong> baseada na inversão das regras de derivação:</p>
+
+            <div class="integral-grid">
+
+                <!-- ITEM 1: REGRA DA POTÊNCIA -->
+                <div class="integral-card">
+                    <div class="integral-header" onclick="toggleProof('proof1')">
+                        <span class="integral-formula">1. $\int x^n \, dx = \frac{x^{n+1}}{n+1} + C \quad (n \neq -1)$</span>
+                        <button class="btn-toggle">Demonstração ▾</button>
+                    </div>
+                    <div class="proof-container" id="proof1">
+                        <h4>Demonstração (Inversão da Regra do Tombo)</h4>
+                        <p>Para provar que $\int x^n \, dx = \frac{x^{n+1}}{n+1} + C$, basta derivar o lado direito e verificar se retornamos ao integrando $x^n$:</p>
+                        $$\frac{d}{dx} \left[ \frac{x^{n+1}}{n+1} + C \right] = \frac{1}{n+1} \cdot \frac{d}{dx}[x^{n+1}] + \frac{d}{dx}[C]$$
+                        <p>Aplicando a regra do tombo para derivadas ($\frac{d}{dx}[x^k] = k \cdot x^{k-1}$):</p>
+                        $$= \frac{1}{n+1} \cdot (n+1)x^{(n+1)-1} + 0 = \frac{n+1}{n+1} \cdot x^n = x^n \quad \blacksquare$$
+                    </div>
+                </div>
+
+                <!-- ITEM 2: EXCEÇÃO LOGARÍTMICA -->
+                <div class="integral-card">
+                    <div class="integral-header" onclick="toggleProof('proof2')">
+                        <span class="integral-formula">2. $\int \frac{1}{x} \, dx = \ln|x| + C$</span>
+                        <button class="btn-toggle">Demonstração ▾</button>
+                    </div>
+                    <div class="proof-container" id="proof2">
+                        <h4>Demonstração (Derivada do Logaritmo Natural)</h4>
+                        <p>Quando $n = -1$, a regra da potência falharia por divisão por zero ($\frac{x^0}{0}$). Derivamos $F(x) = \ln|x| + C$ analisando os dois casos do valor absoluto:</p>
+                        <ul>
+                            <li>Se $x > 0$, então $|x| = x \implies \frac{d}{dx}[\ln(x)] = \frac{1}{x}$.</li>
+                            <li>Se $x < 0$, então $|x| = -x \implies \frac{d}{dx}[\ln(-x)] = \frac{1}{-x} \cdot (-1) = \frac{1}{x}$ (Regra da Cadeia).</li>
+                        </ul>
+                        <p>Portanto, em ambos os casos:</p>
+                        $$\frac{d}{dx}[\ln|x| + C] = \frac{1}{x} \quad \blacksquare$$
+                    </div>
+                </div>
+
+                <!-- ITEM 3: EXPONENCIAL -->
+                <div class="integral-card">
+                    <div class="integral-header" onclick="toggleProof('proof3')">
+                        <span class="integral-formula">3. $\int e^x \, dx = e^x + C$</span>
+                        <button class="btn-toggle">Demonstração ▾</button>
+                    </div>
+                    <div class="proof-container" id="proof3">
+                        <h4>Demonstração (Invariância da Exponencial)</h4>
+                        <p>A função exponencial natural $f(x) = e^x$ tem a propriedade única de ser a sua própria derivada.</p>
+                        $$\frac{d}{dx}[e^x + C] = \frac{d}{dx}[e^x] + \frac{d}{dx}[C] = e^x + 0 = e^x$$
+                        <p>Como a derivada de $e^x + C$ é $e^x$, por definição de antiderivada:</p>
+                        $$\int e^x \, dx = e^x + C \quad \blacksquare$$
+                    </div>
+                </div>
+
+                <!-- ITEM 4: SENO -->
+                <div class="integral-card">
+                    <div class="integral-header" onclick="toggleProof('proof4')">
+                        <span class="integral-formula">4. $\int \sin(x) \, dx = -\cos(x) + C$</span>
+                        <button class="btn-toggle">Demonstração ▾</button>
+                    </div>
+                    <div class="proof-container" id="proof4">
+                        <h4>Demonstração (Derivada do Cosseno)</h4>
+                        <p>Sabemos da trigonometria que a derivada do cosseno é o menos seno: $\frac{d}{dx}[\cos(x)] = -\sin(x)$.</p>
+                        <p>Derivando $F(x) = -\cos(x) + C$:</p>
+                        $$\frac{d}{dx}[-\cos(x) + C] = -\left( \frac{d}{dx}[\cos(x)] \right) + 0 = -(-\sin(x)) = \sin(x) \quad \blacksquare$$
+                    </div>
+                </div>
+
+                <!-- ITEM 5: COSSENO -->
+                <div class="integral-card">
+                    <div class="integral-header" onclick="toggleProof('proof5')">
+                        <span class="integral-formula">5. $\int \cos(x) \, dx = \sin(x) + C$</span>
+                        <button class="btn-toggle">Demonstração ▾</button>
+                    </div>
+                    <div class="proof-container" id="proof5">
+                        <h4>Demonstração (Derivada do Seno)</h4>
+                        <p>A derivada do seno é o cosseno: $\frac{d}{dx}[\sin(x)] = \cos(x)$.</p>
+                        <p>Derivando o lado direito:</p>
+                        $$\frac{d}{dx}[\sin(x) + C] = \frac{d}{dx}[\sin(x)] + 0 = \cos(x) \quad \blacksquare$$
+                    </div>
+                </div>
+
+                <!-- ITEM 6: SECANTE AO QUADRADO -->
+                <div class="integral-card">
+                    <div class="integral-header" onclick="toggleProof('proof6')">
+                        <span class="integral-formula">6. $\int \sec^2(x) \, dx = \tan(x) + C$</span>
+                        <button class="btn-toggle">Demonstração ▾</button>
+                    </div>
+                    <div class="proof-container" id="proof6">
+                        <h4>Demonstração (Pela Regra do Quociente na Tangente)</h4>
+                        <p>Reescrevendo $\tan(x) = \frac{\sin(x)}{\cos(x)}$ e aplicando a regra do quociente $\left(\frac{u}{v}\right)' = \frac{u'v - uv'}{v^2}$:</p>
+                        $$\frac{d}{dx}[\tan(x)] = \frac{\cos(x)\cos(x) - \sin(x)(-\sin(x))}{\cos^2(x)} = \frac{\cos^2(x) + \sin^2(x)}{\cos^2(x)}$$
+                        <p>Pela identidade fundamental ($\sin^2(x) + \cos^2(x) = 1$):</p>
+                        $$\frac{d}{dx}[\tan(x)] = \frac{1}{\cos^2(x)} = \sec^2(x)$$
+                        <p>Logo, a antiderivada de $\sec^2(x)$ é $\tan(x) + C$. $\quad \blacksquare$</p>
+                    </div>
+                </div>
+
+                <!-- ITEM 7: ARCO TANGENTE -->
+                <div class="integral-card">
+                    <div class="integral-header" onclick="toggleProof('proof7')">
+                        <span class="integral-formula">7. $\int \frac{1}{1+x^2} \, dx = \arctan(x) + C$</span>
+                        <button class="btn-toggle">Demonstração ▾</button>
+                    </div>
+                    <div class="proof-container" id="proof7">
+                        <h4>Demonstração (Derivação Implícita da Inversa)</h4>
+                        <p>Seja $y = \arctan(x) \implies x = \tan(y)$. Derivando ambos os lados em relação a $x$ via regra da cadeia:</p>
+                        $$1 = \sec^2(y) \cdot \frac{dy}{dx} \implies \frac{dy}{dx} = \frac{1}{\sec^2(y)}$$
+                        <p>Usando a identidade trigonométrica $\sec^2(y) = 1 + \tan^2(y)$:</p>
+                        $$\frac{dy}{dx} = \frac{1}{1 + \tan^2(y)}$$
+                        <p>Como $x = \tan(y)$, substituímos $\tan(y)$ por $x$:</p>
+                        $$\frac{d}{dx}[\arctan(x)] = \frac{1}{1 + x^2} \quad \blacksquare$$
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- MÓDULO 5: INTEGRAL DEFINIDA E O TEOREMA FUNDAMENTAL DO CÁLCULO -->
+        <div class="content-section" style="border-left-color: var(--cyan-accent);">
+            <h2 style="color: var(--cyan-accent);">5. A Integral Definida e o Teorema Fundamental do Cálculo (TFC)</h2>
+            
+            <p>Enquanto a integral indefinida resulta em uma família de funções (antiderivadas), a <strong>Integral Definida</strong> calcula o valor numérico exato da área sob o gráfico de $f(x)$ entre dois pontos delimitados $[a, b]$.</p>
+
+            <div class="highlight-box" style="border-left-color: var(--cyan-accent); background-color: #f0f9ff;">
+                <h3 style="margin-top:0; color: var(--cyan-accent);">Teorema Fundamental do Cálculo (Parte 2)</h3>
+                <p>Se $f(x)$ for uma função contínua no intervalo $[a, b]$ e $F(x)$ for uma antiderivada de $f(x)$, então a integral definida é dada por:</p>
+                <div style="text-align: center; font-size: 1.4rem; color: var(--cyan-accent); margin: 15px 0;">
+                    $$\int_{a}^{b} f(x) \, dx = \left[ F(x) \right]_{a}^{b} = F(b) - F(a)$$
+                </div>
+                <p style="margin-bottom:0;">Essa relação estabelece uma ponte direta entre a antiderivação e o cálculo geométrico de áreas de regiões curvas.</p>
+            </div>
+
+            <h3>Laboratório Interativo da Integral Definida</h3>
+            <p>Selecione uma das três funções abaixo para gerar o gráfico correspondente, visualizar a área destacada no intervalo $[a, b]$ e conferir o cálculo do TFC em tempo real:</p>
+
+            <!-- Opções de Seleção da Função (3 Opções) -->
+            <div class="func-radio-group">
+                <div class="func-option">
+                    <input type="radio" id="funcOpt1" name="funcSelect" value="f1" checked onclick="updateTFC()">
+                    <label for="funcOpt1">Opção 1: Parábola Clássica — $f(x) = x^2$</label>
+                </div>
+                <div class="func-option">
+                    <input type="radio" id="funcOpt2" name="funcSelect" value="f2" onclick="updateTFC()">
+                    <label for="funcOpt2">Opção 2: Função Trigonométrica — $f(x) = \sin(x) + 1{,}5$</label>
+                </div>
+                <div class="func-option">
+                    <input type="radio" id="funcOpt3" name="funcSelect" value="f3" onclick="updateTFC()">
+                    <label for="funcOpt3">Opção 3: Parábola Invertida — $f(x) = -0{,}5x^2 + 4$</label>
+                </div>
+            </div>
+
+            <!-- Gráfico Plotly + Controles do Intervalo -->
+            <div class="canvas-container">
+                <div id="tfcPlot" style="width: 100%; height: 420px;"></div>
+
+                <div class="controls" style="width: 100%; gap: 20px; justify-content: space-around;">
+                    <div>
+                        <label for="aSlider">Limite inferior ($a$): <span id="aVal" style="color: var(--cyan-accent); font-weight: bold;">0.00</span></label><br>
+                        <input type="range" id="aSlider" min="-2.0" max="2.0" value="0.0" step="0.1" style="width: 200px;">
+                    </div>
+                    <div>
+                        <label for="bSlider">Limite superior ($b$): <span id="bVal" style="color: var(--cyan-accent); font-weight: bold;">2.00</span></label><br>
+                        <input type="range" id="bSlider" min="-1.0" max="3.0" value="2.0" step="0.1" style="width: 200px;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resolução Numérica e Algébrica do TFC -->
+            <div class="highlight-box" id="tfcCalcBox" style="border-left-color: var(--cyan-accent); background-color: #ffffff; border: 1px solid #cbd5e1;">
+                <!-- Preenchido via JS -->
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- GRÁFICO DA FAMÍLIA DE CURVAS F(x) + C ---
+        const cSlider = document.getElementById('cSlider');
+        const cVal = document.getElementById('cVal');
+
+        function drawFamilyPlot() {
+            const currentC = parseFloat(cSlider.value);
+            cVal.textContent = currentC.toFixed(1);
+
+            let traces = [];
+            let xValues = [];
+            for (let x = -2; x <= 2; x += 0.05) xValues.push(x);
+
+            // Família de curvas secundárias (fundo cinza)
+            const cList = [-3, -2, -1, 1, 2, 3];
+            cList.forEach(c => {
+                let yValues = xValues.map(x => (x*x*x)/3 + c);
+                traces.push({
+                    x: xValues,
+                    y: yValues,
+                    mode: 'lines',
+                    line: { color: '#cbd5e1', width: 1.5 },
+                    hoverinfo: 'none',
+                    showlegend: false
+                });
+            });
+
+            // Curva destacada com o valor do Slider
+            let yHighlighted = xValues.map(x => (x*x*x)/3 + currentC);
+            traces.push({
+                x: xValues,
+                y: yHighlighted,
+                mode: 'lines',
+                name: `F(x) = x³/3 + (${currentC})`,
+                line: { color: '#059669', width: 3.5 }
+            });
+
+            let layout = {
+                title: { text: `Integrando f(x) = x²  ⟶  Primitiva F(x) = ⅓x³ + C`, font: { size: 14, color: '#059669' } },
+                xaxis: { title: 'Eixo x', range: [-2.1, 2.1], zeroline: true },
+                yaxis: { title: 'Eixo y', range: [-4.5, 4.5], zeroline: true },
+                showlegend: false,
+                margin: { t: 40, l: 50, r: 20, b: 40 }
+            };
+
+            Plotly.react('familyPlot', traces, layout, {displayModeBar: false});
+        }
+
+        cSlider.addEventListener('input', drawFamilyPlot);
+        drawFamilyPlot();
+
+        // --- FUNÇÃO PARA EXPANDIR/RECOLHER AS DEMONSTRAÇÕES ---
+        function toggleProof(id) {
+            const proofBox = document.getElementById(id);
+            const isVisible = proofBox.style.display === 'block';
+            
+            // Oculta todas as demonstrações primeiro (efeito sanfona)
+            document.querySelectorAll('.proof-container').forEach(el => el.style.display = 'none');
+
+            // Alterna o estado da clicada
+            if (!isVisible) {
+                proofBox.style.display = 'block';
+                // Garante que o MathJax renderize equações dinâmicas
+                if (window.MathJax && window.MathJax.typesetPromise) {
+                    MathJax.typesetPromise([proofBox]);
+                }
+            }
+        }
+
+        // --- LÓGICA DO MÓDULO 5: INTEGRAL DEFINIDA E TFC ---
+        const aSlider = document.getElementById('aSlider');
+        const bSlider = document.getElementById('bSlider');
+        const aVal = document.getElementById('aVal');
+        const bVal = document.getElementById('bVal');
+        const tfcCalcBox = document.getElementById('tfcCalcBox');
+
+        function updateTFC() {
+            let a = parseFloat(aSlider.value);
+            let b = parseFloat(bSlider.value);
+
+            // Garante que 'a' seja estritamente menor que 'b'
+            if (a >= b) {
+                b = a + 0.1;
+                bSlider.value = b.toFixed(1);
+            }
+
+            aVal.textContent = a.toFixed(2);
+            bVal.textContent = b.toFixed(2);
+
+            // Identifica qual função está selecionada nos Radio Buttons
+            const selectedRadio = document.querySelector('input[name="funcSelect"]:checked').value;
+
+            let f, F, fTex, FTex;
+
+            if (selectedRadio === 'f1') {
+                f = x => x * x;
+                F = x => (x * x * x) / 3;
+                fTex = "x^2";
+                FTex = "\\frac{x^3}{3}";
+            } else if (selectedRadio === 'f2') {
+                f = x => Math.sin(x) + 1.5;
+                F = x => -Math.cos(x) + 1.5 * x;
+                fTex = "\\sin(x) + 1{,}5";
+                FTex = "-\\cos(x) + 1{,}5x";
+            } else if (selectedRadio === 'f3') {
+                f = x => -0.5 * x * x + 4;
+                F = x => -(0.5 * Math.pow(x, 3)) / 3 + 4 * x;
+                fTex = "-0{,}5x^2 + 4";
+                FTex = "-\\frac{0{,}5x^3}{3} + 4x";
+            }
+
+            // Gerar a curva completa da função
+            let xFull = [], yFull = [];
+            for (let x = -2.5; x <= 3.5; x += 0.05) {
+                xFull.push(x);
+                yFull.push(f(x));
+            }
+
+            // Gerar os pontos da área sombreada entre [a, b]
+            let xArea = [a], yArea = [0];
+            for (let x = a; x <= b; x += 0.02) {
+                xArea.push(x);
+                yArea.push(f(x));
+            }
+            xArea.push(b); yArea.push(0);
+            xArea.push(a); yArea.push(0);
+
+            const traceCurva = {
+                x: xFull,
+                y: yFull,
+                mode: 'lines',
+                name: `f(x)`,
+                line: { color: '#0284c7', width: 3 }
+            };
+
+            const traceArea = {
+                x: xArea,
+                y: yArea,
+                fill: 'toself',
+                fillcolor: 'rgba(186, 230, 253, 0.65)',
+                line: { color: '#0284c7', width: 1.5 },
+                name: 'Área da Integral'
+            };
+
+            const layout = {
+                title: { text: `Área sob f(x) no intervalo [${a.toFixed(2)}, ${b.toFixed(2)}]`, font: { size: 14, color: '#0284c7' } },
+                xaxis: { title: 'Eixo x', range: [-2.5, 3.5], zeroline: true, zerolinecolor: '#94a3b8' },
+                yaxis: { title: 'Eixo y', range: [-0.5, 5.5], zeroline: true, zerolinecolor: '#94a3b8' },
+                showlegend: false,
+                margin: { t: 40, l: 50, r: 30, b: 50 }
+            };
+
+            Plotly.react('tfcPlot', [traceCurva, traceArea], layout, { displayModeBar: false });
+
+            // Cálculo dos valores via TFC
+            const Fb = F(b);
+            const Fa = F(a);
+            const areaVal = Fb - Fa;
+
+            // Preenchimento do painel de resultado
+            tfcCalcBox.innerHTML = `
+                <h3 style="margin-top:0; color: #0284c7;">Cálculo Analítico via Teorema Fundamental do Cálculo</h3>
+                <p><strong>1. Função Escolhida:</strong> $f(x) = ${fTex}$</p>
+                <p><strong>2. Primitiva Encontrada:</strong> $F(x) = ${FTex}$</p>
+                <p><strong>3. Avaliação no Intervalo $[${a.toFixed(2)}, ${b.toFixed(2)}]$:</strong></p>
+                <ul>
+                    <li>$F(b) = F(${b.toFixed(2)}) = ${Fb.toFixed(4)}$</li>
+                    <li>$F(a) = F(${a.toFixed(2)}) = ${Fa.toFixed(4)}$</li>
+                </ul>
+                <div style="text-align: center; font-size: 1.3rem; margin: 15px 0; color: #0284c7;">
+                    $$\\int_{${a.toFixed(2)}}^{${b.toFixed(2)}} \\left( ${fTex} \\right) dx = F(${b.toFixed(2)}) - F(${a.toFixed(2)}) = ${Fb.toFixed(4)} - (${Fa.toFixed(4)}) = \\mathbf{${areaVal.toFixed(4)}}$$
+                </div>
+                <p style="margin-bottom:0; text-align: center;"><strong>Valor da Área Líquida:</strong> <span style="color: #0284c7; font-size: 1.25rem; font-weight: bold;">${areaVal.toFixed(4)} u.a.</span></p>
+            `;
+
+            // Atualizar fórmulas matemáticas via MathJax
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                MathJax.typesetPromise([tfcCalcBox]);
+            }
+        }
+
+        // Event listeners para os sliders do Módulo 5
+        aSlider.addEventListener('input', updateTFC);
+        bSlider.addEventListener('input', updateTFC);
+
+        // Inicializar a renderização do Módulo 5
+        updateTFC();
+    </script>
+</body>
+</html>
