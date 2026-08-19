@@ -116,7 +116,7 @@
             font-size: 1.05rem;
             color: var(--secondary-color);
             margin-bottom: 15px;
-            text-align: justify; /* Adicionado para justificar os enunciados */
+            text-align: justify;
         }
 
         .btn-group {
@@ -178,7 +178,7 @@
             padding: 25px;
             background-color: #f0fdf4;
             border-top: 2px dashed #86efac;
-            text-align: justify; /* Adicionado para justificar os conteúdos da solução */
+            text-align: justify;
         }
 
         .solution-container h4 {
@@ -187,7 +187,7 @@
             font-size: 1.15rem;
             border-bottom: 1px solid #bbf7d0;
             padding-bottom: 8px;
-            text-align: left; /* Mantém o título da solução alinhado à esquerda para contraste */
+            text-align: left;
         }
 
         .step-title {
@@ -204,7 +204,7 @@
             padding: 12px 18px;
             border-radius: 8px;
             font-weight: bold;
-            text-align: center; /* Mantém a resposta final centralizada para destaque */
+            text-align: center;
             font-size: 1.15rem;
             margin-top: 20px;
         }
@@ -227,7 +227,7 @@
 
             <div class="exercise-grid">
 
-                <!-- EXERCÍCIO 3 -->
+                <!-- EXERCÍCIO 1 -->
                 <div class="exercise-card">
                     <div class="exercise-header">
                         <div class="exercise-title">
@@ -251,12 +251,19 @@
                         <p>Como a taxa de vazamento é dada em litros por minuto e desejamos a quantidade vazada na primeira hora ($60$ minutos), calculamos a integral de $t = 0$ até $t = 60$:</p>
                         $$Q = \int_{0}^{60} 100e^{-0{,}01t} \, dt$$
 
-                        <p class="step-title">Passo 2: Encontrar a primitiva da função</p>
-                        $$\int 100e^{-0{,}01t} \, dt = \frac{100}{-0{,}01}e^{-0{,}01t} = -10\,000 e^{-0{,}01t}$$
+                        <p class="step-title">Passo 2: Encontrar a primitiva usando o Método da Substituição</p>
+                        <p>Para resolver a integral indefinida $\int 100e^{-0{,}01t} \, dt$, definimos uma nova variável $u$:</p>
+                        $$u = -0{,}01t$$
+                        <p>Derivando $u$ em relação a $t$, temos:</p>
+                        $$du = -0{,}01 \, dt \implies dt = \frac{du}{-0{,}01} = -100 \, du$$
+                        <p>Substituindo $u$ e $dt$ na integral:</p>
+                        $$\int 100e^u (-100 \, du) = -10\,000 \int e^u \, du = -10\,000e^u$$
+                        <p>Retornando para a variável original $t$:</p>
+                        $$\int 100e^{-0{,}01t} \, dt = -10\,000e^{-0{,}01t}$$
 
                         <p class="step-title">Passo 3: Aplicar o Teorema Fundamental do Cálculo no intervalo $[0, 60]$</p>
-                        $$Q = \left[ -10\,000 e^{-0{,}01t} \right]_{0}^{60} = -10\,000 e^{-0{,}6} - (-10\,000 e^{0})$$
-                        $$Q = 10\,000 \left( 1 - e^{-0{,}6} \right)$$
+                        $$Q = \left[ -10\,000 e^{-0{,}01t} \right]_{0}^{60} = -10\,000 e^{-0{,}01(60)} - (-10\,000 e^{0})$$
+                        $$Q = -10\,000 e^{-0{,}6} + 10\,000 = 10\,000 \left( 1 - e^{-0{,}6} \right)$$
 
                         <p class="step-title">Passo 4: Calcular o valor numérico</p>
                         <p>Como $e^{-0{,}6} \approx 0{,}5488116$:</p>
@@ -266,7 +273,7 @@
                     </div>
                 </div>
 
-                <!-- EXERCÍCIO 4 -->
+                <!-- EXERCÍCIO 2 -->
                 <div class="exercise-card">
                     <div class="exercise-header">
                         <div class="exercise-title">
@@ -290,12 +297,19 @@
                         <p>A população total após $3$ horas é a população inicial mais o acúmulo decorrente da taxa de crescimento:</p>
                         $$P(3) = P(0) + \int_{0}^{3} r(t) \, dt = 400 + \int_{0}^{3} 450{,}268 e^{1{,}12567t} \, dt$$
 
-                        <p class="step-title">Passo 2: Integrar a taxa de crescimento</p>
-                        <p>Note que $\frac{450{,}268}{1{,}12567} = 400$. Logo:</p>
-                        $$\int 450{,}268 e^{1{,}12567t} \, dt = \frac{450{,}268}{1{,}12567} e^{1{,}12567t} = 400 e^{1{,}12567t}$$
+                        <p class="step-title">Passo 2: Integrar a taxa de crescimento pelo Método da Substituição</p>
+                        <p>Para resolver a integral $\int 450{,}268 e^{1{,}12567t} \, dt$, aplicamos a substituição:</p>
+                        $$u = 1{,}12567t \implies du = 1{,}12567 \, dt \implies dt = \frac{du}{1{,}12567}$$
+                        <p>Substituindo na integral:</p>
+                        $$\int 450{,}268 e^u \frac{du}{1{,}12567} = \frac{450{,}268}{1{,}12567} \int e^u \, du$$
+                        <p>Calculando a constante $\frac{450{,}268}{1{,}12567} = 400$, obtemos:</p>
+                        $$400 \int e^u \, du = 400e^u$$
+                        <p>Voltando para a variável $t$, a primitiva é:</p>
+                        $$400e^{1{,}12567t}$$
 
                         <p class="step-title">Passo 3: Avaliar a integral de $t = 0$ a $t = 3$</p>
-                        $$\int_{0}^{3} 450{,}268 e^{1{,}12567t} \, dt = \left[ 400 e^{1{,}12567t} \right]_{0}^{3} = 400 e^{3{,}37701} - 400$$
+                        $$\int_{0}^{3} 450{,}268 e^{1{,}12567t} \, dt = \left[ 400 e^{1{,}12567t} \right]_{0}^{3} = 400 e^{1{,}12567(3)} - 400 e^{0}$$
+                        $$= 400 e^{3{,}37701} - 400$$
 
                         <p class="step-title">Passo 4: Somar a população inicial</p>
                         $$P(3) = 400 + \left( 400 e^{3{,}37701} - 400 \right) = 400 e^{3{,}37701}$$
@@ -306,7 +320,7 @@
                     </div>
                 </div>
 
-                <!-- EXERCÍCIO 5 -->
+                <!-- EXERCÍCIO 3 -->
                 <div class="exercise-card">
                     <div class="exercise-header">
                         <div class="exercise-title">
@@ -330,20 +344,26 @@
                         <p>Assumindo volume inicial $V(0) = 0$, o volume total inalado até um instante $t$ é a integral da taxa $f(s)$ de $0$ a $t$:</p>
                         $$V(t) = \int_{0}^{t} \frac{1}{2}\sin\left(\frac{2\pi s}{5}\right) \, ds$$
 
-                        <p class="step-title">Passo 2: Resolver a integral indefinida</p>
-                        <p>Usando a regra da substituição com $k = \frac{2\pi}{5}$:</p>
-                        $$\int \frac{1}{2}\sin\left(\frac{2\pi s}{5}\right) \, ds = \frac{1}{2} \cdot \left( -\frac{5}{2\pi} \cos\left(\frac{2\pi s}{5}\right) \right) = -\frac{5}{4\pi}\cos\left(\frac{2\pi s}{5}\right)$$
+                        <p class="step-title">Passo 2: Resolver a integral pelo Método da Substituição</p>
+                        <p>Para a integral indefinida $\int \frac{1}{2}\sin\left(\frac{2\pi s}{5}\right) \, ds$, definimos a variável $u$:</p>
+                        $$u = \frac{2\pi s}{5} \implies du = \frac{2\pi}{5} \, ds \implies ds = \frac{5}{2\pi} \, du$$
+                        <p>Substituindo $u$ e $ds$ na integral:</p>
+                        $$\int \frac{1}{2}\sin(u) \left(\frac{5}{2\pi} \, du\right) = \frac{5}{4\pi} \int \sin(u) \, du$$
+                        <p>Sabemos que a integral de $\sin(u)$ é $-\cos(u)$, logo obtemos:</p>
+                        $$\frac{5}{4\pi} (-\cos(u)) = -\frac{5}{4\pi}\cos(u)$$
+                        <p>Retornando à variável original $s$:</p>
+                        $$\int \frac{1}{2}\sin\left(\frac{2\pi s}{5}\right) \, ds = -\frac{5}{4\pi}\cos\left(\frac{2\pi s}{5}\right)$$
 
-                        <p class="step-title">Passo 3: Aplicar os limites de $0$ a $t$</p>
+                        <p class="step-title">Passo 3: Aplicar os limites de integração de $0$ a $t$</p>
                         $$V(t) = \left[ -\frac{5}{4\pi}\cos\left(\frac{2\pi s}{5}\right) \right]_{0}^{t} = -\frac{5}{4\pi}\cos\left(\frac{2\pi t}{5}\right) - \left( -\frac{5}{4\pi}\cos(0) \right)$$
                         <p>Como $\cos(0) = 1$:</p>
-                        $$V(t) = \frac{5}{4\pi} \left[ 1 - \cos\left(\frac{2\pi t}{5}\right) \right] \text{ Litros}$$
+                        $$V(t) = -\frac{5}{4\pi}\cos\left(\frac{2\pi t}{5}\right) + \frac{5}{4\pi} = \frac{5}{4\pi} \left[ 1 - \cos\left(\frac{2\pi t}{5}\right) \right] \text{ Litros}$$
 
                         <div class="final-answer">Resultado Final: $V(t) = \frac{5}{4\pi}\left(1 - \cos\left(\frac{2\pi t}{5}\right)\right) \text{ L}$</div>
                     </div>
                 </div>
 
-                <!-- EXERCÍCIO 6 -->
+                <!-- EXERCÍCIO 4 -->
                 <div class="exercise-card">
                     <div class="exercise-header">
                         <div class="exercise-title">
@@ -367,7 +387,18 @@
                         <p>O começo da terceira semana corresponde a $t = 2$ e o fim da quarta semana corresponde a $t = 4$. O total produzido $N$ é dado por:</p>
                         $$N = \int_{2}^{4} 5\,000 \left( 1 - \frac{100}{(t + 10)^2} \right) \, dt$$
 
-                        <p class="step-title">Passo 2: Determinar a primitiva $F(t)$</p>
+                        <p class="step-title">Passo 2: Determinar a primitiva $F(t)$ usando o Método da Substituição</p>
+                        <p>A integral pode ser separada e distribuída:</p>
+                        $$\int 5\,000 \, dt - \int \frac{500\,000}{(t + 10)^2} \, dt$$
+                        <p>A primeira integral é imediata: $\int 5\,000 \, dt = 5\,000t$. Para a segunda integral, usamos o método da substituição. Seja:</p>
+                        $$u = t + 10 \implies du = dt$$
+                        <p>Substituindo na segunda integral:</p>
+                        $$\int \frac{500\,000}{u^2} \, du = 500\,000 \int u^{-2} \, du$$
+                        <p>Integrando $u^{-2}$:</p>
+                        $$500\,000 \left(\frac{u^{-1}}{-1}\right) = -\frac{500\,000}{u}$$
+                        <p>Retornando para $t$, o resultado da segunda parte é $-\frac{500\,000}{t + 10}$. Juntando os dois termos (e considerando o sinal negativo que separava as integrais):</p>
+                        $$F(t) = 5\,000t - \left(-\frac{500\,000}{t + 10}\right) = 5\,000t + \frac{500\,000}{t + 10}$$
+                        <p>Colocando $5\,000$ em evidência:</p>
                         $$F(t) = 5\,000 \left( t + \frac{100}{t + 10} \right)$$
 
                         <p class="step-title">Passo 3: Avaliar nos limites $t = 4$ e $t = 2$</p>

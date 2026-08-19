@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula - Método da Substituição (Integral Definida)</title>
+    
+    <!-- Configuração do MathJax -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e293b;
+            --accent-color: #059669;
+            --warning-color: #dc2626;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #444444;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .navbar {
+            background-color: var(--secondary-color);
+            padding: 15px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .navbar a {
+            color: #93c5fd;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .navbar a:hover {
+            color: #ffffff;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            margin: 40px 20px;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        .content-section {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-top: 6px solid var(--primary-color);
+        }
+
+        h1 {
+            color: var(--secondary-color);
+            font-size: 2.2rem;
+            margin-top: 0;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.4rem;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary-color);
+            padding-left: 10px;
+        }
+
+        p {
+            margin-bottom: 16px;
+            text-align: justify;
+            font-size: 1.05rem;
+        }
+
+        ul, ol {
+            font-size: 1.05rem;
+            color: var(--text-color);
+            margin-bottom: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+            text-align: justify;
+        }
+
+        /* Estilo específico para passos ordenados */
+        ol.steps-list {
+            background-color: #f8fafc;
+            padding: 25px 25px 25px 45px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        ol.steps-list li strong {
+            color: var(--primary-color);
+        }
+
+        /* Exemplos Interativos */
+        .example-card {
+            background-color: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-left: 4px solid var(--accent-color);
+            margin-bottom: 20px;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        .example-header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f8fafc;
+        }
+
+        .example-title {
+            font-size: 1.15rem;
+            color: var(--secondary-color);
+            margin: 0;
+        }
+
+        .btn-resolve {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-resolve:hover {
+            background-color: #047857;
+        }
+
+        .solution-panel {
+            display: none;
+            padding: 20px;
+            background-color: #f0fdf4;
+            border-top: 1px dashed #86efac;
+        }
+
+        .step-title {
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+
+        /* Caixa de Armadilhas */
+        .warning-box {
+            background-color: #fef2f2;
+            border: 1px solid #fecaca;
+            border-left: 5px solid var(--warning-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .warning-box h3 {
+            color: var(--warning-color);
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .warning-box ul {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div>
+           <a href="etapa1.html">← Voltar ao Menu Principal</a>
+        </div>
+        <span>Cálculo 2 - Etapa 1</span>
+    </div>
+
+    <div class="container">
+        <div class="content-section">
+            <h1>Método da Substituição</h1>
+            
+            <p>O <strong>Método da Substituição</strong> (ou mudança de variável) é uma técnica fundamental de integração utilizada para simplificar integrais que não podem ser resolvidas de forma imediata. A ideia principal consiste em introduzir uma nova variável intermediária, geralmente chamada de $u$, transformando a integral original complexa em uma integral mais simples e direta de resolver.</p>
+
+            <h2>Roteiro Prático em 4 Passos</h2>
+            <ol class="steps-list">
+                <li><strong>Escolher $u$:</strong> Identificar a função "de dentro" (geralmente localizada dentro de parênteses, raízes, denominadores ou expoentes).</li>
+                <li><strong>Calcular $du$:</strong> Derivar $u$ em relação a $x$, obtendo a relação diferencial $du = u'(x)dx$.</li>
+                <li><strong>Substituir e ajustar limites:</strong> Reescrever a integral inteiramente em termos da nova variável $u$. É fundamental também atualizar os limites de integração, aplicando a substituição nos valores originais de $x$.</li>
+                <li><strong>Integrar e calcular o valor:</strong> Resolver a integral definida já na variável $u$, não sendo mais necessário voltar para a variável $x$.</li>
+            </ol>
+
+            <h2>Exemplos Resolvidos</h2>
+            
+            <!-- EXEMPLO 1 -->
+            <div class="example-card">
+                <div class="example-header">
+                    <div class="example-title">
+                        <strong>Exemplo 1:</strong> $\int_{0}^{1} 3x^2 e^{x^3} \, dx$
+                    </div>
+                    <button class="btn-resolve" onclick="toggleSolution('sol1')">Ver Resolução</button>
+                </div>
+                <div class="solution-panel" id="sol1">
+                    <p class="step-title">1. Escolha de $u$, $du$ e mudança de limites:</p>
+                    <p>Seja $u = x^3$. Derivando, temos $du = 3x^2 \, dx$.</p>
+                    <p>Ajustando os limites para $u$:<br>
+                    - Quando $x = 0 \implies u = 0^3 = 0$<br>
+                    - Quando $x = 1 \implies u = 1^3 = 1$</p>
+                    
+                    <p class="step-title">2. Substituição na integral:</p>
+                    $$ \int_{0}^{1} e^u \, du $$
+                    
+                    <p class="step-title">3. Integração e cálculo final:</p>
+                    $$ \left[ e^u \right]_{0}^{1} = e^1 - e^0 = e - 1 $$
+                </div>
+            </div>
+            
+            <!-- EXEMPLO 2 -->
+            <div class="example-card">
+                <div class="example-header">
+                    <div class="example-title">
+                        <strong>Exemplo 2:</strong> $\int_{0}^{4} x \sqrt{x^2 + 9} \, dx$
+                    </div>
+                    <button class="btn-resolve" onclick="toggleSolution('sol2')">Ver Resolução</button>
+                </div>
+                <div class="solution-panel" id="sol2">
+                    <p class="step-title">1. Escolha de $u$, ajuste de $du$ e mudança de limites:</p>
+                    <p>Seja $u = x^2 + 9$. Derivando, temos $du = 2x \, dx \implies \frac{du}{2} = x \, dx$.</p>
+                    <p>Ajustando os limites para $u$:<br>
+                    - Quando $x = 0 \implies u = 0^2 + 9 = 9$<br>
+                    - Quando $x = 4 \implies u = 4^2 + 9 = 25$</p>
+                    
+                    <p class="step-title">2. Substituição na integral:</p>
+                    $$ \int_{9}^{25} \sqrt{u} \, \frac{du}{2} = \frac{1}{2} \int_{9}^{25} u^{1/2} \, du $$
+                    
+                    <p class="step-title">3. Integração e cálculo final:</p>
+                    $$ \frac{1}{2} \left[ \frac{u^{3/2}}{3/2} \right]_{9}^{25} = \frac{1}{3} \left[ u^{3/2} \right]_{9}^{25} $$
+                    $$ = \frac{1}{3} \left( 25^{3/2} - 9^{3/2} \right) = \frac{1}{3} (125 - 27) = \frac{98}{3} $$
+                </div>
+            </div>
+
+            <!-- EXEMPLO 3 -->
+            <div class="example-card">
+                <div class="example-header">
+                    <div class="example-title">
+                        <strong>Exemplo 3:</strong> $\int_{1}^{2} x (x - 1)^5 \, dx$
+                    </div>
+                    <button class="btn-resolve" onclick="toggleSolution('sol3')">Ver Resolução</button>
+                </div>
+                <div class="solution-panel" id="sol3">
+                    <p class="step-title">1. Escolha de $u$ com isolamento de $x$ e mudança de limites:</p>
+                    <p>Seja $u = x - 1$. Logo, $du = dx$ e $x = u + 1$.</p>
+                    <p>Ajustando os limites para $u$:<br>
+                    - Quando $x = 1 \implies u = 1 - 1 = 0$<br>
+                    - Quando $x = 2 \implies u = 2 - 1 = 1$</p>
+                    
+                    <p class="step-title">2. Substituição na integral:</p>
+                    $$ \int_{0}^{1} (u + 1) u^5 \, du = \int_{0}^{1} (u^6 + u^5) \, du $$
+                    
+                    <p class="step-title">3. Integração e cálculo final:</p>
+                    $$ \left[ \frac{u^7}{7} + \frac{u^6}{6} \right]_{0}^{1} = \left( \frac{1^7}{7} + \frac{1^6}{6} \right) - \left( 0 + 0 \right) $$
+                    $$ = \frac{1}{7} + \frac{1}{6} = \frac{6 + 7}{42} = \frac{13}{42} $$
+                </div>
+            </div>
+
+            <h2>Principais Armadilhas</h2>
+            <div class="warning-box">
+                <ul>
+                    <li><strong>Misturar variáveis:</strong> Deixar termos com $x$ e $u$ convivendo na mesma integral após a substituição.</li>
+                    <li><strong>Esquecer o $du$:</strong> Tratar o diferencial como mero enfeite em vez de parte fundamental da transformação algébrica.</li>
+                    <li><strong>Limites de Integração:</strong> Esquecer de mudar os limites de integração para a variável $u$. Se você não mudar os limites, será obrigado a voltar a integral para a variável $x$ antes de aplicar os números!</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function toggleSolution(id) {
+            const panel = document.getElementById(id);
+            const isVisible = panel.style.display === 'block';
+            
+            panel.style.display = isVisible ? 'none' : 'block';
+            
+            // Re-renderiza as equações caso ainda não tenham sido renderizadas visivelmente
+            if (!isVisible && window.MathJax && window.MathJax.typesetPromise) {
+                MathJax.typesetPromise([panel]);
+            }
+        }
+    </script>
+</body>
+</html>
