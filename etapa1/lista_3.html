@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo 2 - Lista 3: Método da Substituição</title>
+    
+    <!-- Configuração do MathJax -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e293b;
+            --accent-color: #059669;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #334155;
+            --btn-hover: #1d4ed8;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        .navbar {
+            background-color: var(--secondary-color);
+            padding: 15px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: #93c5fd;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .content-section {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 35px;
+            margin-bottom: 35px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-left: 6px solid var(--primary-color);
+        }
+
+        h1 {
+            color: var(--secondary-color);
+            font-size: 2.2rem;
+            margin-top: 0;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        .exercise-item {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            transition: all 0.3s ease;
+        }
+
+        .exercise-item:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+        }
+
+        .exercise-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .math-expr {
+            font-size: 1.15rem;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+
+        .btn-solution {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-solution:hover {
+            background-color: var(--btn-hover);
+        }
+
+        .solution-container {
+            display: none;
+            margin-top: 15px;
+            padding: 20px;
+            background-color: #f0fdf4;
+            border-top: 2px dashed #86efac;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .solution-container p {
+            margin: 8px 0;
+        }
+
+        .final-answer {
+            background-color: #dcfce7;
+            border: 1px solid #86efac;
+            color: #166534;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div>
+           <a href="etapa1.html">← Voltar ao Menu Principal</a>
+        </div>
+        <span>Cálculo 2 - Etapa 1</span>
+    </div>
+
+    <div class="container">
+        <div class="content-section">
+            <h1>Cálculo 2 – Lista 3</h1>
+            <p style="font-size: 1.15rem; font-weight: 500; margin-bottom: 30px;">
+                Calcule as integrais indefinidas abaixo utilizando o Método da Substituição.
+            </p>
+
+            <!-- Item (a) -->
+            <div class="exercise-item">
+                <div class="exercise-row">
+                    <div class="math-expr">(a) $\int \cos(3x)dx$</div>
+                    <button class="btn-solution" onclick="toggleSolution('sol-a')">Ver solução</button>
+                </div>
+                <div class="solution-container" id="sol-a">
+                    <p><strong>Substituição:</strong> Seja $u = 3x$.</p>
+                    <p><strong>Diferencial:</strong> $du = 3dx \implies dx = \frac{du}{3}$.</p>
+                    <p><strong>Integral:</strong> $\int \cos(u)\frac{du}{3} = \frac{1}{3}\int \cos(u)du = \frac{1}{3}\sin(u) + C$.</p>
+                    <div class="final-answer">Resposta: $\frac{1}{3}\sin(3x) + C$</div>
+                </div>
+            </div>
+
+            <!-- Item (b) -->
+            <div class="exercise-item">
+                <div class="exercise-row">
+                    <div class="math-expr">(b) $\int x(4+x^2)^{10}dx$</div>
+                    <button class="btn-solution" onclick="toggleSolution('sol-b')">Ver solução</button>
+                </div>
+                <div class="solution-container" id="sol-b">
+                    <p><strong>Substituição:</strong> Seja $u = 4+x^2$.</p>
+                    <p><strong>Diferencial:</strong> $du = 2xdx \implies xdx = \frac{du}{2}$.</p>
+                    <p><strong>Integral:</strong> $\int u^{10}\frac{du}{2} = \frac{1}{2} \cdot \frac{u^{11}}{11} + C = \frac{u^{11}}{22} + C$.</p>
+                    <div class="final-answer">Resposta: $\frac{(4+x^2)^{11}}{22} + C$</div>
+                </div>
+            </div>
+
+            <!-- Item (c) -->
+            <div class="exercise-item">
+                <div class="exercise-row">
+                    <div class="math-expr">(c) $\int x^2\sqrt{x^3+1}dx$</div>
+                    <button class="btn-solution" onclick="toggleSolution('sol-c')">Ver solução</button>
+                </div>
+                <div class="solution-container" id="sol-c">
+                    <p><strong>Substituição:</strong> Seja $u = x^3+1$.</p>
+                    <p><strong>Diferencial:</strong> $du = 3x^2dx \implies x^2dx = \frac{du}{3}$.</p>
+                    <p><strong>Integral:</strong> $\int \sqrt{u}\frac{du}{3} = \frac{1}{3} \int u^{1/2}du = \frac{1}{3} \left( \frac{u^{3/2}}{3/2} \right) + C = \frac{2}{9}u^{3/2} + C$.</p>
+                    <div class="final-answer">Resposta: $\frac{2}{9}(x^3+1)^{3/2} + C$</div>
+                </div>
+            </div>
+
+            <!-- Item (d) -->
+            <div class="exercise-item">
+                <div class="exercise-row">
+                    <div class="math-expr">(d) $\int \frac{dt}{(1-6t)^4}$</div>
+                    <button class="btn-solution" onclick="toggleSolution('sol-d')">Ver solução</button>
+                </div>
+                <div class="solution-container" id="sol-d">
+                    <p><strong>Substituição:</strong> Seja $u = 1-6t$.</p>
+                    <p><strong>Diferencial:</strong> $du = -6dt \implies dt = \frac{du}{-6}$.</p>
+                    <p><strong>Integral:</strong> $\int u^{-4}\frac{du}{-6} = -\frac{1}{6} \left( \frac{u^{-3}}{-3} \right) + C = \frac{1}{18}u^{-3} + C$.</p>
+                    <div class="final-answer">Resposta: $\frac{1}{18(1-6t)^3} + C$</div>
+                </div>
+            </div>
+
+            <!-- Item (e) -->
+            <div class="exercise-item">
+                <div class="exercise-row">
+                    <div class="math-expr">(e) $\int \cos^3\theta \sin\theta d\theta$</div>
+                    <button class="btn-solution" onclick="toggleSolution('sol-e')">Ver solução</button>
+                </div>
+                <div class="solution-container" id="sol-e">
+                    <p><strong>Substituição:</strong> Seja $u = \cos\theta$.</p>
+                    <p><strong>Diferencial:</strong> $du = -\sin\theta d\theta \implies \sin\theta d\theta = -du$.</p>
+                    <p><strong>Integral:</strong> $\int u^3(-du) = -\int u^3du = -\frac{u^4}{4} + C$.</p>
+                    <div class="final-answer">Resposta: $-\frac{1}{4}\cos^4\theta + C$</div>
+                </div>
+            </div>
+
+            <!-- Item (f) -->
+            <div class="exercise-item">
+                <div class="exercise-row">
+                    <div class="math-expr">(f) $\int \frac{\sec^2(1/x)}{x^2}dx$</div>
+                    <button class="btn-solution" onclick="toggleSolution('sol-f')">Ver solução</button>
+                </div>
+                <div class="solution-container" id="sol-f">
+                    <p><strong>Substituição:</strong> Seja $u = \frac{1}{x} = x^{-1}$.</p>
+                    <p><strong>Diferencial:</strong> $du = -x^{-2}dx \implies \frac{dx}{x^2} = -du$.</p>
+                    <p><strong>Integral:</strong> $\int \sec^2(u)(-du) = -\tan(u) + C$.</p>
+                    <div class="final-answer">Resposta: $-\text{tg}\left(\frac{1}{x}\right) + C$</div>
+                </div>
+            </div>
+
+            <!-- Item (g) -->
+            <div class="exercise-item">
+                <div class="exercise-row">
+                    <div class="math-expr">(g) $\int x \sin(x^2)dx$</div>
+                    <button class="btn-solution" onclick="toggleSolution('sol-g')">Ver solução</button>
+                </div>
+                <div class="solution-container" id="sol-g">
+                    <p><strong>Substituição:</strong> Seja $u = x^2$.</p>
+                    <p><strong>Diferencial:</strong> $du = 2xdx \implies xdx = \frac{du}{2}$.</p>
+                    <p><strong>Integral:</strong> $\int \sin(u)\frac{du}{2} = \frac{1}{2}(-\cos(u)) + C = -\frac{1}{2}\cos(u) + C$.</p>
+                    <div class="final-answer">Resposta: $-\frac{1}{2}\cos(x^2) + C$</div>
+                </div>
+            </div>
+
+            <!-- Item (h) -->
+            <div class="exercise-item">
+                <div class="exercise-row">
+                    <div class="math-expr">(h) $\int x^2 e^{x^3}dx$</div>
+                    <button class="btn-solution" onclick="toggleSolution('sol-h')">Ver solução</button>
+                </div>
+                <div class="solution-container" id="sol-h">
+                    <p><strong>Substituição:</strong> Seja $u = x^3$.</p>
+                    <p><strong>Diferencial:</strong> $du = 3x^2dx \implies x^2dx = \frac{du}{3}$.</p>
+                    <p><strong>Integral:</strong> $\int e^u\frac{du}{3} = \frac{1}{3}e^u + C$.</p>
+                    <div class="final-answer">Resposta: $\frac{1}{3}e^{x^3} + C$</div>
+                </div>
+            </div>
+
+            <!-- Item (i) -->
+            <div class="exercise-item">
+                <div class="exercise-row">
+                    <div class="math-expr">(i) $\int (3x-2)^{20}dx$</div>
+                    <button class="btn-solution" onclick="toggleSolution('sol-i')">Ver solução</button>
+                </div>
+                <div class="solution-container" id="sol-i">
+                    <p><strong>Substituição:</strong> Seja $u = 3x-2$.</p>
+                    <p><strong>Diferencial:</strong> $du = 3dx \implies dx = \frac{du}{3}$.</p>
+                    <p><strong>Integral:</strong> $\int u^{20}\frac{du}{3} = \frac{1}{3} \cdot \frac{u^{21}}{21} + C = \frac{u^{21}}{63} + C$.</p>
+                    <div class="final-answer">Resposta: $\frac{(3x-2)^{21}}{63} + C$</div>
+                </div>
+            </div>
+
+            <!-- Item (j) -->
+            <div class="exercise-item">
+                <div class="exercise-row">
+                    <div class="math-expr">(j) $\int (3t+2)^{2,4}dt$</div>
+                    <button class="btn-solution" onclick="toggleSolution('sol-j')">Ver solução</button>
+                </div>
+                <div class="solution-container" id="sol-j">
+                    <p><strong>Substituição:</strong> Seja $u = 3t+2$.</p>
+                    <p><strong>Diferencial:</strong> $du = 3dt \implies dt = \frac{du}{3}$.</p>
+                    <p><strong>Integral:</strong> $\int u^{2{,}4}\frac{du}{3} = \frac{1}{3} \cdot \frac{u^{3{,}4}}{3{,}4} + C = \frac{u^{3{,}4}}{10{,}2} + C = \frac{5}{51}u^{17/5} + C$.</p>
+                    <div class="final-answer">Resposta: $\frac{5}{51}(3t+2)^{17/5} + C$</div>
+                </div>
+            </div>
+
+            <!-- Item (k) -->
+            <div class="exercise-item">
+                <div class="exercise-row">
+                    <div class="math-expr">(k) $\int (x+1)\sqrt{2x+x^2}dx$</div>
+                    <button class="btn-solution" onclick="toggleSolution('sol-k')">Ver solução</button>
+                </div>
+                <div class="solution-container" id="sol-k">
+                    <p><strong>Substituição:</strong> Seja $u = 2x+x^2$.</p>
+                    <p><strong>Diferencial:</strong> $du = (2+2x)dx = 2(x+1)dx \implies (x+1)dx = \frac{du}{2}$.</p>
+                    <p><strong>Integral:</strong> $\int \sqrt{u}\frac{du}{2} = \frac{1}{2} \int u^{1/2}du = \frac{1}{2} \left( \frac{u^{3/2}}{3/2} \right) + C = \frac{1}{3}u^{3/2} + C$.</p>
+                    <div class="final-answer">Resposta: $\frac{1}{3}(2x+x^2)^{3/2} + C$</div>
+                </div>
+            </div>
+
+            <!-- Item (l) -->
+            <div class="exercise-item">
+                <div class="exercise-row">
+                    <div class="math-expr">(l) $\int \sec^2(2\theta)d\theta$</div>
+                    <button class="btn-solution" onclick="toggleSolution('sol-l')">Ver solução</button>
+                </div>
+                <div class="solution-container" id="sol-l">
+                    <p><strong>Substituição:</strong> Seja $u = 2\theta$.</p>
+                    <p><strong>Diferencial:</strong> $du = 2d\theta \implies d\theta = \frac{du}{2}$.</p>
+                    <p><strong>Integral:</strong> $\int \sec^2(u)\frac{du}{2} = \frac{1}{2}\tan(u) + C$.</p>
+                    <div class="final-answer">Resposta: $\frac{1}{2}\text{tg}(2\theta) + C$</div>
+                </div>
+            </div>
+
+            <!-- Item (m) -->
+            <div class="exercise-item">
+                <div class="exercise-row">
+                    <div class="math-expr">(m) $\int \frac{dx}{5-3x}$</div>
+                    <button class="btn-solution" onclick="toggleSolution('sol-m')">Ver solução</button>
+                </div>
+                <div class="solution-container" id="sol-m">
+                    <p><strong>Substituição:</strong> Seja $u = 5-3x$.</p>
+                    <p><strong>Diferencial:</strong> $du = -3dx \implies dx = -\frac{du}{3}$.</p>
+                    <p><strong>Integral:</strong> $\int \frac{1}{u}\left(-\frac{du}{3}\right) = -\frac{1}{3}\ln|u| + C$.</p>
+                    <div class="final-answer">Resposta: $-\frac{1}{3}\ln|5-3x| + C$</div>
+                </div>
+            </div>
+
+            <!-- Item (n) -->
+            <div class="exercise-item">
+                <div class="exercise-row">
+                    <div class="math-expr">(n) $\int u\sqrt{1-u^2}du$</div>
+                    <button class="btn-solution" onclick="toggleSolution('sol-n')">Ver solução</button>
+                </div>
+                <div class="solution-container" id="sol-n">
+                    <p><strong>Substituição:</strong> Seja $v = 1-u^2$ (usamos $v$ para não confundir com a variável $u$).</p>
+                    <p><strong>Diferencial:</strong> $dv = -2udu \implies udu = -\frac{dv}{2}$.</p>
+                    <p><strong>Integral:</strong> $\int \sqrt{v}\left(-\frac{dv}{2}\right) = -\frac{1}{2} \int v^{1/2}dv = -\frac{1}{2} \left(\frac{v^{3/2}}{3/2}\right) + C = -\frac{1}{3}v^{3/2} + C$.</p>
+                    <div class="final-answer">Resposta: $-\frac{1}{3}(1-u^2)^{3/2} + C$</div>
+                </div>
+            </div>
+
+            <!-- Item (o) -->
+            <div class="exercise-item">
+                <div class="exercise-row">
+                    <div class="math-expr">(o) $\int \sin(\pi t)dt$</div>
+                    <button class="btn-solution" onclick="toggleSolution('sol-o')">Ver solução</button>
+                </div>
+                <div class="solution-container" id="sol-o">
+                    <p><strong>Substituição:</strong> Seja $u = \pi t$.</p>
+                    <p><strong>Diferencial:</strong> $du = \pi dt \implies dt = \frac{du}{\pi}$.</p>
+                    <p><strong>Integral:</strong> $\int \sin(u)\frac{du}{\pi} = \frac{1}{\pi}(-\cos(u)) + C = -\frac{1}{\pi}\cos(u) + C$.</p>
+                    <div class="final-answer">Resposta: $-\frac{1}{\pi}\cos(\pi t) + C$</div>
+                </div>
+            </div>
+
+            <!-- Item (p) -->
+            <div class="exercise-item">
+                <div class="exercise-row">
+                    <div class="math-expr">(p) $\int e^x \sin(e^x)dx$</div>
+                    <button class="btn-solution" onclick="toggleSolution('sol-p')">Ver solução</button>
+                </div>
+                <div class="solution-container" id="sol-p">
+                    <p><strong>Substituição:</strong> Seja $u = e^x$.</p>
+                    <p><strong>Diferencial:</strong> $du = e^xdx$.</p>
+                    <p><strong>Integral:</strong> $\int \sin(u)du = -\cos(u) + C$.</p>
+                    <div class="final-answer">Resposta: $-\cos(e^x) + C$</div>
+                </div>
+            </div>
+
+            <!-- Item (q) -->
+            <div class="exercise-item">
+                <div class="exercise-row">
+                    <div class="math-expr">(q) $\int \frac{e^u}{(1-e^u)^2}du$</div>
+                    <button class="btn-solution" onclick="toggleSolution('sol-q')">Ver solução</button>
+                </div>
+                <div class="solution-container" id="sol-q">
+                    <p><strong>Substituição:</strong> Seja $v = 1-e^u$.</p>
+                    <p><strong>Diferencial:</strong> $dv = -e^udu \implies e^udu = -dv$.</p>
+                    <p><strong>Integral:</strong> $\int \frac{-dv}{v^2} = -\int v^{-2}dv = -\left(\frac{v^{-1}}{-1}\right) + C = \frac{1}{v} + C$.</p>
+                    <div class="final-answer">Resposta: $\frac{1}{1-e^u} + C$</div>
+                </div>
+            </div>
+
+            <!-- Item (r) -->
+            <div class="exercise-item">
+                <div class="exercise-row">
+                    <div class="math-expr">(r) $\int \frac{\sin\sqrt{x}}{\sqrt{x}}dx$</div>
+                    <button class="btn-solution" onclick="toggleSolution('sol-r')">Ver solução</button>
+                </div>
+                <div class="solution-container" id="sol-r">
+                    <p><strong>Substituição:</strong> Seja $u = \sqrt{x} = x^{1/2}$.</p>
+                    <p><strong>Diferencial:</strong> $du = \frac{1}{2}x^{-1/2}dx = \frac{dx}{2\sqrt{x}} \implies \frac{dx}{\sqrt{x}} = 2du$.</p>
+                    <p><strong>Integral:</strong> $\int \sin(u)(2du) = 2\int \sin(u)du = -2\cos(u) + C$.</p>
+                    <div class="final-answer">Resposta: $-2\cos(\sqrt{x}) + C$</div>
+                </div>
+            </div>
+
+            <!-- Item (s) -->
+            <div class="exercise-item">
+                <div class="exercise-row">
+                    <div class="math-expr">(s) $\int e^x\sqrt{1+e^x}dx$</div>
+                    <button class="btn-solution" onclick="toggleSolution('sol-s')">Ver solução</button>
+                </div>
+                <div class="solution-container" id="sol-s">
+                    <p><strong>Substituição:</strong> Seja $u = 1+e^x$.</p>
+                    <p><strong>Diferencial:</strong> $du = e^xdx$.</p>
+                    <p><strong>Integral:</strong> $\int \sqrt{u}du = \int u^{1/2}du = \frac{u^{3/2}}{3/2} + C = \frac{2}{3}u^{3/2} + C$.</p>
+                    <div class="final-answer">Resposta: $\frac{2}{3}(1+e^x)^{3/2} + C$</div>
+                </div>
+            </div>
+
+            <!-- Item (t) -->
+            <div class="exercise-item">
+                <div class="exercise-row">
+                    <div class="math-expr">(t) $\int \frac{dx}{ax+b}$ $(a\neq0)$</div>
+                    <button class="btn-solution" onclick="toggleSolution('sol-t')">Ver solução</button>
+                </div>
+                <div class="solution-container" id="sol-t">
+                    <p><strong>Substituição:</strong> Seja $u = ax+b$.</p>
+                    <p><strong>Diferencial:</strong> $du = adx \implies dx = \frac{du}{a}$.</p>
+                    <p><strong>Integral:</strong> $\int \frac{1}{u}\left(\frac{du}{a}\right) = \frac{1}{a}\ln|u| + C$.</p>
+                    <div class="final-answer">Resposta: $\frac{1}{a}\ln|ax+b| + C$</div>
+                </div>
+            </div>
+
+            <!-- Item (u) -->
+            <div class="exercise-item">
+                <div class="exercise-row">
+                    <div class="math-expr">(u) $\int (x^2+1)(x^3+3x)^4dx$</div>
+                    <button class="btn-solution" onclick="toggleSolution('sol-u')">Ver solução</button>
+                </div>
+                <div class="solution-container" id="sol-u">
+                    <p><strong>Substituição:</strong> Seja $u = x^3+3x$.</p>
+                    <p><strong>Diferencial:</strong> $du = (3x^2+3)dx = 3(x^2+1)dx \implies (x^2+1)dx = \frac{du}{3}$.</p>
+                    <p><strong>Integral:</strong> $\int u^4\frac{du}{3} = \frac{1}{3} \cdot \frac{u^5}{5} + C = \frac{u^5}{15} + C$.</p>
+                    <div class="final-answer">Resposta: $\frac{(x^3+3x)^5}{15} + C$</div>
+                </div>
+            </div>
+
+            <!-- Item (v) -->
+            <div class="exercise-item">
+                <div class="exercise-row">
+                    <div class="math-expr">(v) $\int e^{\cos t}\sin t dt$</div>
+                    <button class="btn-solution" onclick="toggleSolution('sol-v')">Ver solução</button>
+                </div>
+                <div class="solution-container" id="sol-v">
+                    <p><strong>Substituição:</strong> Seja $u = \cos t$.</p>
+                    <p><strong>Diferencial:</strong> $du = -\sin t dt \implies \sin t dt = -du$.</p>
+                    <p><strong>Integral:</strong> $\int e^u(-du) = -\int e^udu = -e^u + C$.</p>
+                    <div class="final-answer">Resposta: $-e^{\cos t} + C$</div>
+                </div>
+            </div>
+
+            <!-- Item (x) -->
+            <div class="exercise-item">
+                <div class="exercise-row">
+                    <div class="math-expr">(x) $\int \frac{tg^{-1}x}{1+x^2}dx$</div>
+                    <button class="btn-solution" onclick="toggleSolution('sol-x')">Ver solução</button>
+                </div>
+                <div class="solution-container" id="sol-x">
+                    <p><strong>Substituição:</strong> Seja $u = \text{tg}^{-1}x$.</p>
+                    <p><strong>Diferencial:</strong> $du = \frac{1}{1+x^2}dx$.</p>
+                    <p><strong>Integral:</strong> $\int u du = \frac{u^2}{2} + C$.</p>
+                    <div class="final-answer">Resposta: $\frac{1}{2}(\text{tg}^{-1}x)^2 + C$</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function toggleSolution(id) {
+            const solBox = document.getElementById(id);
+            const isVisible = solBox.style.display === 'block';
+            
+            // Fecha todas as outras soluções
+            document.querySelectorAll('.solution-container').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Abre a solução atual se ela não estava visível
+            if (!isVisible) {
+                solBox.style.display = 'block';
+                if (window.MathJax && window.MathJax.typesetPromise) {
+                    MathJax.typesetPromise([solBox]);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
