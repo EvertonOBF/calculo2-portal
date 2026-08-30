@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo 2 - Áreas entre Curvas</title>
+    
+    <!-- Configuração do MathJax para renderizar as fórmulas matemáticas -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <!-- Biblioteca Chart.js para gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            /* Cores Base */
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #334155;
+            --border-color: #e2e8f0;
+            --nav-bg: #1e293b;
+
+            /* Módulo 1 (Azul) */
+            --mod1-primary: #2563eb;
+            --mod1-light: #eff6ff;
+
+            /* Módulo 2 (Ciano) */
+            --mod2-primary: #0284c7;
+            --mod2-light: #e0f2fe;
+
+            /* Módulo 3 e 4 (Roxo/Âmbar) */
+            --mod3-primary: #7c3aed;
+            --mod3-accent: #f59e0b;
+            --mod3-light: #fffbeb;
+            
+            --mod4-primary: #8b5cf6;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        p {
+            text-align: justify;
+            margin-bottom: 16px;
+            font-size: 1.05rem;
+        }
+
+        .navbar {
+            background-color: var(--nav-bg);
+            padding: 15px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: #93c5fd;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .navbar a:hover {
+            color: #ffffff;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .content-section {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 35px;
+            margin-bottom: 35px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-left: 6px solid;
+        }
+
+        h1, h2 {
+            margin-top: 0;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        h1 { font-size: 2.2rem; }
+        h2 { font-size: 1.8rem; border-bottom: none; }
+
+        .figure-container {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .figure-container img {
+            max-width: 50%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .figure-caption {
+            font-size: 0.95rem;
+            color: #64748b;
+            margin-top: 15px;
+            font-style: italic;
+        }
+
+        .highlight-box {
+            border-radius: 8px;
+            padding: 25px;
+            margin: 30px 0 10px 0;
+            border-left: 5px solid;
+        }
+
+        .highlight-box h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .math-block {
+            background-color: #f3f4f6;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow-x: auto;
+            text-align: center;
+        }
+        
+        .math-display {
+            text-align: center; 
+            font-size: 1.4rem; 
+            margin: 20px 0;
+        }
+
+        .exercise-item {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            transition: all 0.3s ease;
+        }
+
+        .exercise-item:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .exercise-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .math-expr {
+            font-size: 1.05rem;
+            flex: 1;
+        }
+
+        .buttons-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-solution, .btn-graph {
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-solution:hover, .btn-graph:hover { opacity: 0.85; }
+
+        .solution-container {
+            display: none;
+            margin-top: 15px;
+            padding: 25px;
+            background-color: #f8fafc;
+            border-top: 2px dashed #cbd5e1;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .solution-step { margin-bottom: 15px; }
+        
+        .chart-wrapper {
+            position: relative;
+            max-width: 100%;
+            height: 350px;
+            margin: 0 auto;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div>
+           <a href="etapa1.html">← Voltar ao Menu Principal</a>
+        </div>
+        <span>Cálculo 2 - Etapa 1</span>
+    </div>
+
+    <div class="container">
+        
+        <!-- MÓDULO 1: DEFINIÇÃO E REPRESENTAÇÃO GEOMÉTRICA (Azul) -->
+        <div class="content-section" style="border-left-color: var(--mod1-primary);">
+            <h1 style="color: var(--nav-bg);">1. Áreas entre Curvas</h1>
+            
+            <p>Anteriormente definimos e calculamos áreas de regiões sob gráficos de funções. Aqui, usaremos as integrais para encontrar áreas de regiões entre gráficos de duas funções.</p>
+
+            <p>Considere a região $S$ que se encontra entre duas curvas $y = f(x)$ e $y = g(x)$ e entre as retas verticais $x = a$ e $x = b$, onde $f$ e $g$ são funções contínuas e $f(x) \geq g(x)$ para todo $x$ em $[a, b]$. (Veja a Figura 1).</p>
+
+            <div class="figure-container">
+                <img src="img/area_fig.png" alt="Gráfico mostrando a região S entre a curva f(x) e a curva g(x) no intervalo de a até b">
+                <p class="figure-caption">
+                    <strong>Figura 1:</strong> Região $S$ delimitada pelas curvas $f(x)$ (superior) e $g(x)$ (inferior) no intervalo $[a, b]$.
+                </p>
+            </div>
+
+            <div class="highlight-box" style="background-color: var(--mod1-light); border-left-color: var(--mod1-primary); box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);">
+                <h3 style="color: var(--mod1-primary);">Definição Formal</h3>
+                <p>A área $A$ da região limitada pelas curvas $y = f(x)$, $y = g(x)$ e pelas retas $x = a$, $x = b$, onde $f$ e $g$ são contínuas e $f(x) \geq g(x)$ para todo $x$ em $[a, b]$, é dada por:</p>
+                
+                <div class="math-display" style="color: var(--mod1-primary);">
+                    $$ A = \int_{a}^{b} [f(x) - g(x)] dx $$
+                </div>
+            </div>
+        </div>
+
+        <!-- MÓDULO 2: EXEMPLOS PRÁTICOS (Ciano) -->
+        <div class="content-section" style="border-left-color: var(--mod2-primary);">
+            <h2 style="color: var(--mod2-primary);">2. Exemplos Resolvidos</h2>
+            
+            <!-- EXEMPLO 1 -->
+            <div class="exercise-item" onmouseover="this.style.borderColor='var(--mod2-primary)'" onmouseout="this.style.borderColor='#cbd5e1'">
+                <div class="exercise-row">
+                    <div class="math-expr">
+                        <span style="background: var(--mod2-primary); color: white; padding: 3px 8px; font-weight: bold; border-radius: 4px; margin-right: 10px; font-size: 0.9rem;">EXEMPLO 1</span> 
+                        Encontre a área da região limitada acima por $y = e^x$, limitada abaixo por $y = x$, e limitada nos lados por $x = 0$ e $x = 1$.
+                    </div>
+                    <div class="buttons-group">
+                        <button class="btn-solution" style="background-color: var(--mod2-primary);" onclick="toggleContent('ex1', 'sol')">Ver Solução</button>
+                        <button class="btn-graph" style="background-color: var(--nav-bg);" onclick="toggleContent('ex1', 'graph')">Ver Gráfico</button>
+                    </div>
+                </div>
+                
+                <div class="solution-container" id="sol-ex1">
+                    <div class="solution-step">
+                        <strong>1. Identificando as funções e limites:</strong><br>
+                        Curva superior: $f(x) = e^x$ <br>
+                        Curva inferior: $g(x) = x$ <br>
+                        Intervalo: $[0, 1]$
+                    </div>
+                    <div class="solution-step">
+                        <strong>2. Montando a Integral:</strong>
+                        $$ A = \int_{0}^{1} (e^x - x) dx $$
+                    </div>
+                    <div class="solution-step">
+                        <strong>3. Calculando a Primitiva e Aplicando o TFC:</strong>
+                        $$ A = \left[ e^x - \frac{x^2}{2} \right]_{0}^{1} $$
+                        $$ A = \left( e^1 - \frac{1^2}{2} \right) - \left( e^0 - \frac{0^2}{2} \right) $$
+                        $$ A = \left( e - 0{,}5 \right) - (1 - 0) = e - 1{,}5 \approx 1{,}218 $$
+                    </div>
+                </div>
+
+                <div class="solution-container" id="graph-ex1">
+                    <div class="chart-wrapper">
+                        <canvas id="canvas-ex1"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EXEMPLO 2 -->
+            <div class="exercise-item" onmouseover="this.style.borderColor='var(--mod2-primary)'" onmouseout="this.style.borderColor='#cbd5e1'">
+                <div class="exercise-row">
+                    <div class="math-expr">
+                        <span style="background: var(--mod2-primary); color: white; padding: 3px 8px; font-weight: bold; border-radius: 4px; margin-right: 10px; font-size: 0.9rem;">EXEMPLO 2</span> 
+                        Encontre a área da região delimitada pelas parábolas $y = x^2$ e $y = 2x - x^2$.
+                    </div>
+                    <div class="buttons-group">
+                        <button class="btn-solution" style="background-color: var(--mod2-primary);" onclick="toggleContent('ex2', 'sol')">Ver Solução</button>
+                        <button class="btn-graph" style="background-color: var(--nav-bg);" onclick="toggleContent('ex2', 'graph')">Ver Gráfico</button>
+                    </div>
+                </div>
+                
+                <div class="solution-container" id="sol-ex2">
+                    <div class="solution-step">
+                        <strong>1. Encontrando os pontos de interseção:</strong><br>
+                        Igualamos as equações para achar os limites de integração:
+                        $$ x^2 = 2x - x^2 \implies 2x^2 - 2x = 0 \implies 2x(x - 1) = 0 $$
+                        Os limites são $x = 0$ e $x = 1$.
+                    </div>
+                    <div class="solution-step">
+                        <strong>2. Identificando a curva superior:</strong><br>
+                        Testando um ponto no intervalo, como $x = 0{,}5$:
+                        $f(0{,}5) = 2(0{,}5) - (0{,}5)^2 = 0{,}75$ (superior) <br>
+                        $g(0{,}5) = (0{,}5)^2 = 0{,}25$ (inferior)
+                    </div>
+                    <div class="solution-step">
+                        <strong>3. Montando e resolvendo a integral:</strong>
+                        $$ A = \int_{0}^{1} [(2x - x^2) - x^2] dx = \int_{0}^{1} (2x - 2x^2) dx $$
+                        $$ A = \left[ x^2 - \frac{2x^3}{3} \right]_{0}^{1} = \left( 1 - \frac{2}{3} \right) - (0) = \frac{1}{3} $$
+                    </div>
+                </div>
+
+                <div class="solution-container" id="graph-ex2">
+                    <div class="chart-wrapper">
+                        <canvas id="canvas-ex2"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MÓDULO 3: INTERSEÇÕES (Roxo/Âmbar) -->
+        <div class="content-section" style="border-left-color: var(--mod3-primary); box-shadow: 0 4px 12px rgba(124, 58, 237, 0.08);">
+            <h1 style="color: var(--nav-bg); font-size: 2.2rem; margin-top: 0; border-bottom: 2px solid var(--border-color); padding-bottom: 10px;">3. Áreas entre Curvas com Interseções</h1>
+            
+            <p>Para encontrarmos a área entre as curvas $y = f(x)$ e $y = g(x)$ onde $f(x) \geq g(x)$ para alguns valores de $x$, mas $g(x) \geq f(x)$ para outros valores de $x$, então dividimos determinada região $S$ em várias regiões $S_1, S_2, \dots$ com áreas $A_1, A_2, \dots$ como mostrado na Figura 2.</p>
+
+            <div class="figure-container">
+                <img src="img/area_fig2.png" alt="Gráfico mostrando a região S dividida em S1, S2 e S3 entre as curvas f(x) e g(x)">
+                <p class="figure-caption">
+                    <strong>Figura 2:</strong> Região delimitada pelas curvas com pontos de interseção, dividindo a área total em sub-regiões.
+                </p>
+            </div>
+
+            <p>Em seguida, definimos a área da região $S$ como a soma das áreas das regiões menores $S_1, S_2, \dots$, ou seja, $A = A_1 + A_2 + \dots$.</p>
+
+            <p>Uma vez que o módulo da diferença das funções nos garante sempre um valor positivo, temos a seguinte relação lógica:</p>
+            
+            <div class="math-block">
+                $$ |f(x) - g(x)| = \begin{cases} 
+                f(x) - g(x) & \text{onde } f(x) \geq g(x) \\ 
+                g(x) - f(x) & \text{onde } g(x) \geq f(x) 
+                \end{cases} $$
+            </div>
+
+            <p>A partir dessa definição, temos a seguinte expressão geral para calcular a área $A$.</p>
+
+            <div class="highlight-box" style="background-color: var(--mod3-light); border: 1px solid #fde68a; border-left: 5px solid var(--mod3-accent); box-shadow: 0 2px 8px rgba(245, 158, 11, 0.1);">
+                <h3 style="color: #b45309;">
+                    <span style="background-color: #fcd34d; color: #92400e; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 4px; font-size: 1rem;">!</span>
+                    Fórmula Geral
+                </h3>
+                <p>A área entre as curvas $y = f(x)$ e $y = g(x)$ e entre $x = a$ e $x = b$ é:</p>
+                
+                <div class="math-display" style="color: var(--nav-bg);">
+                    $$ A = \int_{a}^{b} |f(x) - g(x)| dx $$
+                </div>
+            </div>
+        </div>
+
+        <!-- MÓDULO 4: EXEMPLO RESOLVIDO - INTERSEÇÕES -->
+        <div class="content-section" style="border-left-color: var(--mod4-primary);">
+            <h2 style="color: var(--mod4-primary);">4. Aplicação: Áreas com Interseções</h2>
+            
+            <!-- EXEMPLO 3 -->
+            <div class="exercise-item" onmouseover="this.style.borderColor='var(--mod4-primary)'" onmouseout="this.style.borderColor='#cbd5e1'">
+                <div class="exercise-row">
+                    <div class="math-expr">
+                        <span style="background: var(--mod4-primary); color: white; padding: 3px 8px; font-weight: bold; border-radius: 4px; margin-right: 10px; font-size: 0.9rem;">EXEMPLO 3</span> 
+                        Calcule a área delimitada pelas curvas $y = x$, $y = -x + 1$, $x = 0$ e $x = 2$.
+                    </div>
+                    <div class="buttons-group">
+                        <button class="btn-solution" style="background-color: var(--mod4-primary);" onclick="toggleContent('ex3', 'sol')">Ver Solução</button>
+                        <button class="btn-graph" style="background-color: var(--nav-bg);" onclick="toggleContent('ex3', 'graph')">Ver Gráfico</button>
+                    </div>
+                </div>
+                
+                <div class="solution-container" id="sol-ex3">
+                    <div class="solution-step">
+                        <strong>1. Encontrando o ponto de interseção:</strong><br>
+                        Igualamos as funções para verificar se as curvas se cruzam no intervalo $[0, 2]$:
+                        $$ x = -x + 1 \implies 2x = 1 \implies x = 0{,}5 $$
+                        Como $x = 0{,}5$ está dentro do intervalo $[0, 2]$, precisaremos dividir a integral em duas partes.
+                    </div>
+                    <div class="solution-step">
+                        <strong>2. Analisando a curva superior e inferior:</strong><br>
+                        No intervalo $[0, 0{,}5]$: Testando $x = 0$, temos $y = 0$ e $y = 1$. Portanto, a curva superior é $y = -x + 1$.<br>
+                        No intervalo $[0{,}5, 2]$: Testando $x = 1$, temos $y = 1$ e $y = 0$. Portanto, a curva superior é $y = x$.
+                    </div>
+                    <div class="solution-step">
+                        <strong>3. Montando as Integrais:</strong>
+                        $$ A = \int_{0}^{0{,}5} [(-x + 1) - x] dx + \int_{0{,}5}^{2} [x - (-x + 1)] dx $$
+                        $$ A = \int_{0}^{0{,}5} (1 - 2x) dx + \int_{0{,}5}^{2} (2x - 1) dx $$
+                    </div>
+                    <div class="solution-step">
+                        <strong>4. Resolvendo as Integrais:</strong><br>
+                        Para a primeira parte:
+                        $$ \left[ x - x^2 \right]_{0}^{0{,}5} = (0{,}5 - 0{,}25) - 0 = 0{,}25 $$
+                        Para a segunda parte:
+                        $$ \left[ x^2 - x \right]_{0{,}5}^{2} = (4 - 2) - (0{,}25 - 0{,}5) = 2 - (-0{,}25) = 2{,}25 $$
+                        Somando as áreas:
+                        $$ A = 0{,}25 + 2{,}25 = 2{,}5 \text{ ou } \frac{5}{2} $$
+                    </div>
+                </div>
+
+                <div class="solution-container" id="graph-ex3">
+                    <div class="chart-wrapper">
+                        <canvas id="canvas-ex3"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Instâncias globais dos gráficos para evitar reinicialização múltipla
+        let charts = {};
+
+        function toggleContent(exampleId, type) {
+            const targetContainerId = `${type}-${exampleId}`;
+            const targetContainer = document.getElementById(targetContainerId);
+            const isVisible = targetContainer.style.display === 'block';
+            
+            // Oculta todas as soluções de todos os itens dentro do mesmo quadro
+            const parentSection = targetContainer.closest('.content-section');
+            parentSection.querySelectorAll('.solution-container').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            if (!isVisible) {
+                targetContainer.style.display = 'block';
+                
+                if (type === 'sol') {
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        MathJax.typesetPromise([targetContainer]);
+                    }
+                } else if (type === 'graph') {
+                    if (exampleId === 'ex1') initChartEx1();
+                    if (exampleId === 'ex2') initChartEx2();
+                    if (exampleId === 'ex3') initChartEx3();
+                }
+            }
+        }
+
+        // Inicialização do Gráfico 1 usando Chart.js
+        function initChartEx1() {
+            if (charts['ex1']) return;
+            const ctx = document.getElementById('canvas-ex1').getContext('2d');
+
+            const labels = [];
+            const dataBot = [];
+            const dataTop = [];
+            const areaBot = [];
+            const areaTop = [];
+
+            for (let x = -0.5; x <= 1.51; x += 0.05) {
+                let xVal = parseFloat(x.toFixed(2));
+                labels.push(xVal);
+                
+                let yBot = xVal;
+                let yTop = Math.exp(xVal);
+                
+                dataBot.push(yBot);
+                dataTop.push(yTop);
+
+                if (xVal >= 0 && xVal <= 1.01) {
+                    areaBot.push(yBot);
+                    areaTop.push(yTop);
+                } else {
+                    areaBot.push(null);
+                    areaTop.push(null);
+                }
+            }
+
+            charts['ex1'] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'y = x', data: dataBot, borderColor: '#0ea5e9', fill: false, tension: 0.1, pointRadius: 0, borderWidth: 2 },
+                        { label: 'y = e^x', data: dataTop, borderColor: '#ec4899', fill: false, tension: 0.1, pointRadius: 0, borderWidth: 2 },
+                        { label: 'Base Área', data: areaBot, borderColor: 'transparent', fill: false, pointRadius: 0, borderWidth: 0, showLine: false },
+                        { label: 'Área S', data: areaTop, backgroundColor: 'rgba(186, 230, 253, 0.65)', fill: '-1', borderColor: 'transparent', pointRadius: 0, borderWidth: 0 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { 
+                            labels: {
+                                filter: function(item, chart) {
+                                    return item.text !== 'Base Área'; 
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'x' } },
+                        y: { title: { display: true, text: 'y' } }
+                    }
+                }
+            });
+        }
+
+        // Inicialização do Gráfico 2 usando Chart.js
+        function initChartEx2() {
+            if (charts['ex2']) return;
+            const ctx = document.getElementById('canvas-ex2').getContext('2d');
+
+            const labels = [];
+            const dataBot = [];
+            const dataTop = [];
+            const areaBot = [];
+            const areaTop = [];
+
+            for (let x = -0.5; x <= 1.51; x += 0.05) {
+                let xVal = parseFloat(x.toFixed(2));
+                labels.push(xVal);
+                
+                let yBot = Math.pow(xVal, 2);
+                let yTop = 2 * xVal - Math.pow(xVal, 2);
+                
+                dataBot.push(yBot);
+                dataTop.push(yTop);
+
+                if (xVal >= 0 && xVal <= 1.01) {
+                    areaBot.push(yBot);
+                    areaTop.push(yTop);
+                } else {
+                    areaBot.push(null);
+                    areaTop.push(null);
+                }
+            }
+
+            charts['ex2'] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'y = x²', data: dataBot, borderColor: '#0ea5e9', fill: false, tension: 0.4, pointRadius: 0, borderWidth: 2 },
+                        { label: 'y = 2x - x²', data: dataTop, borderColor: '#ec4899', fill: false, tension: 0.4, pointRadius: 0, borderWidth: 2 },
+                        { label: 'Base Área', data: areaBot, borderColor: 'transparent', fill: false, pointRadius: 0, borderWidth: 0, showLine: false },
+                        { label: 'Área S', data: areaTop, backgroundColor: 'rgba(186, 230, 253, 0.65)', fill: '-1', borderColor: 'transparent', pointRadius: 0, borderWidth: 0 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                filter: function(item, chart) {
+                                    return item.text !== 'Base Área'; 
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'x' } },
+                        y: { title: { display: true, text: 'y' } }
+                    }
+                }
+            });
+        }
+
+        // Inicialização do Gráfico 3 usando Chart.js
+        function initChartEx3() {
+            if (charts['ex3']) return;
+            const ctx = document.getElementById('canvas-ex3').getContext('2d');
+
+            const labels = [];
+            const dataLine1 = [];
+            const dataLine2 = [];
+            const areaBot = [];
+            const areaTop = [];
+
+            for (let x = -0.5; x <= 2.51; x += 0.05) {
+                let xVal = parseFloat(x.toFixed(2));
+                labels.push(xVal);
+                
+                let y1 = xVal; // y = x
+                let y2 = -xVal + 1; // y = -x + 1
+                
+                dataLine1.push(y1);
+                dataLine2.push(y2);
+
+                // Intervalo de integração de 0 a 2
+                if (xVal >= 0 && xVal <= 2.01) {
+                    areaBot.push(Math.min(y1, y2));
+                    areaTop.push(Math.max(y1, y2));
+                } else {
+                    areaBot.push(null);
+                    areaTop.push(null);
+                }
+            }
+
+            charts['ex3'] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'y = x', data: dataLine1, borderColor: '#0ea5e9', fill: false, tension: 0.1, pointRadius: 0, borderWidth: 2 },
+                        { label: 'y = -x + 1', data: dataLine2, borderColor: '#ec4899', fill: false, tension: 0.1, pointRadius: 0, borderWidth: 2 },
+                        { label: 'Base Área', data: areaBot, borderColor: 'transparent', fill: false, pointRadius: 0, borderWidth: 0, showLine: false },
+                        { label: 'Área Total S', data: areaTop, backgroundColor: 'rgba(139, 92, 246, 0.25)', fill: '-1', borderColor: 'transparent', pointRadius: 0, borderWidth: 0 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                filter: function(item, chart) {
+                                    return item.text !== 'Base Área'; 
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'x' } },
+                        y: { title: { display: true, text: 'y' } }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
