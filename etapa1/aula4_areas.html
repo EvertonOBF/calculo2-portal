@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -42,6 +41,10 @@
             --mod3-light: #fffbeb;
             
             --mod4-primary: #8b5cf6;
+
+            /* Módulo 5 (Verde Esmeralda) */
+            --mod5-primary: #059669;
+            --mod5-light: #ecfdf5;
         }
 
         body {
@@ -111,13 +114,6 @@
             background-color: #f8fafc;
             border-radius: 8px;
             border: 1px solid var(--border-color);
-        }
-
-        .figure-container img {
-            max-width: 50%;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
         .figure-caption {
@@ -244,7 +240,9 @@
             <p>Considere a região $S$ que se encontra entre duas curvas $y = f(x)$ e $y = g(x)$ e entre as retas verticais $x = a$ e $x = b$, onde $f$ e $g$ são funções contínuas e $f(x) \geq g(x)$ para todo $x$ em $[a, b]$. (Veja a Figura 1).</p>
 
             <div class="figure-container">
-                <img src="img/area_fig.png" alt="Gráfico mostrando a região S entre a curva f(x) e a curva g(x) no intervalo de a até b">
+                <div class="chart-wrapper">
+                    <canvas id="canvas-fig1"></canvas>
+                </div>
                 <p class="figure-caption">
                     <strong>Figura 1:</strong> Região $S$ delimitada pelas curvas $f(x)$ (superior) e $g(x)$ (inferior) no intervalo $[a, b]$.
                 </p>
@@ -325,7 +323,7 @@
                     </div>
                     <div class="solution-step">
                         <strong>2. Identificando a curva superior:</strong><br>
-                        Testando um ponto no intervalo, como $x = 0{,}5$:
+                        Testando um ponto no intervalo, como $x = 0{,}5$:<br>
                         $f(0{,}5) = 2(0{,}5) - (0{,}5)^2 = 0{,}75$ (superior) <br>
                         $g(0{,}5) = (0{,}5)^2 = 0{,}25$ (inferior)
                     </div>
@@ -351,9 +349,11 @@
             <p>Para encontrarmos a área entre as curvas $y = f(x)$ e $y = g(x)$ onde $f(x) \geq g(x)$ para alguns valores de $x$, mas $g(x) \geq f(x)$ para outros valores de $x$, então dividimos determinada região $S$ em várias regiões $S_1, S_2, \dots$ com áreas $A_1, A_2, \dots$ como mostrado na Figura 2.</p>
 
             <div class="figure-container">
-                <img src="img/area_fig2.png" alt="Gráfico mostrando a região S dividida em S1, S2 e S3 entre as curvas f(x) e g(x)">
+                <div class="chart-wrapper">
+                    <canvas id="canvas-fig2"></canvas>
+                </div>
                 <p class="figure-caption">
-                    <strong>Figura 2:</strong> Região delimitada pelas curvas com pontos de interseção, dividindo a área total em sub-regiões.
+                    <strong>Figura 2:</strong> Região delimitada pelas curvas com pontos de interseção, dividindo a área total em sub-regiões $S_1$, $S_2$ e $S_3$.
                 </p>
             </div>
 
@@ -436,18 +436,374 @@
             </div>
         </div>
 
+        <!-- MÓDULO 5: INTEGRANDO EM Y (Verde Esmeralda) -->
+        <div class="content-section" style="border-left-color: var(--mod5-primary);">
+            <h1 style="color: var(--nav-bg);">3. Integrando em y</h1>
+            
+            <p>Algumas regiões são mais bem tratadas considerando $x$ como uma função de $y$. Se uma região é delimitada por curvas com equações $x = f(y)$, $x = g(y)$, $y = c$ e $y = d$, em que $f$ e $g$ são contínuas e $f(y) \geq g(y)$ para $c \leq y \leq d$ (veja a Figura 3), então sua área é dada pela integral em relação a $y$.</p>
+
+            <div class="figure-container">
+                <div class="chart-wrapper">
+                    <canvas id="canvas-fig3"></canvas>
+                </div>
+                <p class="figure-caption">
+                    <strong>Figura 3:</strong> Região delimitada pelas curvas $x = f(y)$ (curva à direita) e $x = g(y)$ (curva à esquerda) entre as retas $y = c$ e $y = d$.
+                </p>
+            </div>
+
+            <div class="highlight-box" style="background-color: var(--mod5-light); border-left-color: var(--mod5-primary); box-shadow: 0 2px 8px rgba(5, 150, 105, 0.1);">
+                <h3 style="color: var(--mod5-primary);">Definição Formal (Integração em y)</h3>
+                <p>A área $A$ da região limitada pelas curvas $x = f(y)$, $x = g(y)$ e pelas retas horizontais $y = c$ e $y = d$, onde $f$ e $g$ são contínuas e $f(y) \geq g(y)$ para todo $y$ em $[c, d]$, é dada por:</p>
+                
+                <div class="math-display" style="color: var(--mod5-primary);">
+                    $$ A = \int_{c}^{d} [f(y) - g(y)] dy $$
+                </div>
+            </div>
+
+            <h2 style="color: var(--mod5-primary); margin-top: 30px;">Exemplo Resolvido</h2>
+            
+            <!-- EXEMPLO 4 -->
+            <div class="exercise-item" onmouseover="this.style.borderColor='var(--mod5-primary)'" onmouseout="this.style.borderColor='#cbd5e1'">
+                <div class="exercise-row">
+                    <div class="math-expr">
+                        <span style="background: var(--mod5-primary); color: white; padding: 3px 8px; font-weight: bold; border-radius: 4px; margin-right: 10px; font-size: 0.9rem;">EXEMPLO 4</span> 
+                        Encontre a área delimitada pela reta $y = x - 1$ e pela parábola $y^2 = 2x + 6$.
+                    </div>
+                    <div class="buttons-group">
+                        <button class="btn-solution" style="background-color: var(--mod5-primary);" onclick="toggleContent('ex4', 'sol')">Ver Solução</button>
+                        <button class="btn-graph" style="background-color: var(--nav-bg);" onclick="toggleContent('ex4', 'graph')">Ver Gráfico</button>
+                    </div>
+                </div>
+                
+                <div class="solution-container" id="sol-ex4">
+                    <div class="solution-step">
+                        <strong>1. Expressando $x$ em função de $y$:</strong><br>
+                        Isolamos $x$ em ambas as equações para facilitar a integração em relação a $y$:<br>
+                        Reta: $y = x - 1 \implies x = y + 1$<br>
+                        Parábola: $y^2 = 2x + 6 \implies 2x = y^2 - 6 \implies x = \frac{y^2 - 6}{2}$
+                    </div>
+                    <div class="solution-step">
+                        <strong>2. Encontrando os limites de integração em $y$:</strong><br>
+                        Igualamos as expressões para obter os pontos de interseção $c$ e $d$:
+                        $$ y + 1 = \frac{y^2 - 6}{2} \implies 2y + 2 = y^2 - 6 \implies y^2 - 2y - 8 = 0 $$
+                        Fatorando a equação do 2º grau:
+                        $$ (y - 4)(y + 2) = 0 \implies y = -2 \text{ e } y = 4 $$
+                        Portanto, os limites de integração são $c = -2$ e $d = 4$.
+                    </div>
+                    <div class="solution-step">
+                        <strong>3. Identificando a curva à direita $f(y)$ e à esquerda $g(y)$:</strong><br>
+                        Testando um ponto no intervalo $[-2, 4]$, como $y = 0$:<br>
+                        Reta: $x = 0 + 1 = 1$ (curva à direita, $f(y)$)<br>
+                        Parábola: $x = \frac{0^2 - 6}{2} = -3$ (curva à esquerda, $g(y)$)
+                    </div>
+                    <div class="solution-step">
+                        <strong>4. Montando e resolvendo a integral:</strong>
+                        $$ A = \int_{-2}^{4} \left[ (y + 1) - \left(\frac{y^2 - 6}{2}\right) \right] dy $$
+                        $$ A = \int_{-2}^{4} \left( y + 1 - \frac{y^2}{2} + 3 \right) dy = \int_{-2}^{4} \left( 4 + y - \frac{y^2}{2} \right) dy $$
+                        Calculando a primitiva e aplicando o Teorema Fundamental do Cálculo:
+                        $$ A = \left[ 4y + \frac{y^2}{2} - \frac{y^3}{6} \right]_{-2}^{4} $$
+                        Para $y = 4$:
+                        $$ 4(4) + \frac{4^2}{2} - \frac{4^3}{6} = 16 + 8 - \frac{32}{3} = 24 - \frac{32}{3} = \frac{40}{3} $$
+                        Para $y = -2$:
+                        $$ 4(-2) + \frac{(-2)^2}{2} - \frac{(-2)^3}{6} = -8 + 2 + \frac{4}{3} = -6 + \frac{4}{3} = -\frac{14}{3} $$
+                        Subtraindo os valores obtidos:
+                        $$ A = \frac{40}{3} - \left(-\frac{14}{3}\right) = \frac{54}{3} = 18 $$
+                    </div>
+                </div>
+
+                <div class="solution-container" id="graph-ex4">
+                    <div class="chart-wrapper">
+                        <canvas id="canvas-ex4"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script>
         // Instâncias globais dos gráficos para evitar reinicialização múltipla
         let charts = {};
 
+        // Inicializa as Figuras conceituais 1, 2 e 3 assim que o DOM estiver pronto
+        document.addEventListener('DOMContentLoaded', () => {
+            initChartFig1();
+            initChartFig2();
+            initChartFig3();
+        });
+
+        // Inicialização da Figura 1 (Intervalo 0 a 5, passos de 0.5)
+        function initChartFig1() {
+            if (charts['fig1']) return;
+            const ctx = document.getElementById('canvas-fig1').getContext('2d');
+
+            const labels = [];
+            const dataBot = [];
+            const dataTop = [];
+            const areaBot = [];
+            const areaTop = [];
+
+            const a = 1.0;
+            const b = 4.0;
+
+            for (let x = 0; x <= 5.01; x += 0.05) {
+                let xVal = parseFloat(x.toFixed(2));
+                labels.push(xVal);
+                
+                let yTop = parseFloat((4 - 0.2 * Math.pow(xVal - 2.5, 2)).toFixed(3));
+                let yBot = parseFloat((0.3 * Math.pow(xVal - 2.0, 2) - 0.5).toFixed(3));
+                
+                dataTop.push(yTop);
+                dataBot.push(yBot);
+
+                if (xVal >= a && xVal <= b + 0.01) {
+                    areaBot.push(yBot);
+                    areaTop.push(yTop);
+                } else {
+                    areaBot.push(null);
+                    areaTop.push(null);
+                }
+            }
+
+            charts['fig1'] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'y = g(x) [inferior]', data: dataBot, borderColor: '#0ea5e9', fill: false, tension: 0.3, pointRadius: 0, borderWidth: 2 },
+                        { label: 'y = f(x) [superior]', data: dataTop, borderColor: '#ec4899', fill: false, tension: 0.3, pointRadius: 0, borderWidth: 2 },
+                        { label: 'Base Área', data: areaBot, borderColor: 'transparent', fill: false, pointRadius: 0, borderWidth: 0, showLine: false },
+                        { label: 'Região S', data: areaTop, backgroundColor: 'rgba(186, 230, 253, 0.65)', fill: '-1', borderColor: 'transparent', pointRadius: 0, borderWidth: 0 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { 
+                            labels: {
+                                filter: function(item, chart) {
+                                    return item.text !== 'Base Área'; 
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { 
+                            title: { display: true, text: 'x' },
+                            ticks: {
+                                autoSkip: false,
+                                callback: function(value, index, ticks) {
+                                    let label = this.getLabelForValue(value);
+                                    let val = parseFloat(label);
+                                    if (Math.abs(val - Math.round(val * 2) / 2) < 0.01) {
+                                        return Math.round(val * 2) / 2;
+                                    }
+                                    return null;
+                                }
+                            }
+                        },
+                        y: { title: { display: true, text: 'y' } }
+                    }
+                }
+            });
+        }
+
+        // Inicialização da Figura 2 (Intervalo 0 a 6, passos de 0.5)
+        function initChartFig2() {
+            if (charts['fig2']) return;
+            const ctx = document.getElementById('canvas-fig2').getContext('2d');
+
+            const labels = [];
+            const dataF = [];
+            const dataG = [];
+
+            const botS1 = [], topS1 = [];
+            const botS2 = [], topS2 = [];
+            const botS3 = [], topS3 = [];
+
+            const a = 0.5;
+            const b = 5.5;
+            const x1 = 1.57; // Interseção 1
+            const x2 = 4.71; // Interseção 2
+
+            for (let x = 0; x <= 6.01; x += 0.05) {
+                let xVal = parseFloat(x.toFixed(2));
+                labels.push(xVal);
+                
+                let yF = parseFloat((3 + 1.5 * Math.cos(xVal)).toFixed(3));
+                let yG = parseFloat((3 - 1.5 * Math.cos(xVal)).toFixed(3));
+                
+                dataF.push(yF);
+                dataG.push(yG);
+
+                if (xVal >= a && xVal <= x1 + 0.02) {
+                    botS1.push(Math.min(yF, yG));
+                    topS1.push(Math.max(yF, yG));
+                } else {
+                    botS1.push(null);
+                    topS1.push(null);
+                }
+
+                if (xVal >= x1 - 0.02 && xVal <= x2 + 0.02) {
+                    botS2.push(Math.min(yF, yG));
+                    topS2.push(Math.max(yF, yG));
+                } else {
+                    botS2.push(null);
+                    topS2.push(null);
+                }
+
+                if (xVal >= x2 - 0.02 && xVal <= b + 0.01) {
+                    botS3.push(Math.min(yF, yG));
+                    topS3.push(Math.max(yF, yG));
+                } else {
+                    botS3.push(null);
+                    topS3.push(null);
+                }
+            }
+
+            charts['fig2'] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'y = f(x)', data: dataF, borderColor: '#ec4899', fill: false, tension: 0.2, pointRadius: 0, borderWidth: 2 },
+                        { label: 'y = g(x)', data: dataG, borderColor: '#0ea5e9', fill: false, tension: 0.2, pointRadius: 0, borderWidth: 2 },
+                        
+                        { label: 'Base S1', data: botS1, borderColor: 'transparent', fill: false, pointRadius: 0, borderWidth: 0, showLine: false },
+                        { label: 'Área S₁', data: topS1, backgroundColor: 'rgba(186, 230, 253, 0.65)', fill: '-1', borderColor: 'transparent', pointRadius: 0, borderWidth: 0 },
+
+                        { label: 'Base S2', data: botS2, borderColor: 'transparent', fill: false, pointRadius: 0, borderWidth: 0, showLine: false },
+                        { label: 'Área S₂', data: topS2, backgroundColor: 'rgba(253, 230, 138, 0.75)', fill: '-1', borderColor: 'transparent', pointRadius: 0, borderWidth: 0 },
+
+                        { label: 'Base S3', data: botS3, borderColor: 'transparent', fill: false, pointRadius: 0, borderWidth: 0, showLine: false },
+                        { label: 'Área S₃', data: topS3, backgroundColor: 'rgba(186, 230, 253, 0.65)', fill: '-1', borderColor: 'transparent', pointRadius: 0, borderWidth: 0 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { 
+                            labels: {
+                                filter: function(item, chart) {
+                                    return !item.text.startsWith('Base'); 
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { 
+                            title: { display: true, text: 'x' },
+                            ticks: {
+                                autoSkip: false,
+                                callback: function(value, index, ticks) {
+                                    let label = this.getLabelForValue(value);
+                                    let val = parseFloat(label);
+                                    if (Math.abs(val - Math.round(val * 2) / 2) < 0.01) {
+                                        return Math.round(val * 2) / 2;
+                                    }
+                                    return null;
+                                }
+                            }
+                        },
+                        y: { title: { display: true, text: 'y' } }
+                    }
+                }
+            });
+        }
+
+        // Inicialização da Figura 3 Atualizada (Integração em y)
+        function initChartFig3() {
+            if (charts['fig3']) return;
+            const ctx = document.getElementById('canvas-fig3').getContext('2d');
+
+            const labels = [];
+            const dataG = [];
+            const dataF = [];
+            const areaG = [];
+            const areaF = [];
+
+            // Limites de destaque da área: y = 1.5 até y = 4.5
+            const c = 1.5;
+            const d = 4.5;
+
+            // Eixo y variando de 0 a 6
+            for (let y = 0; y <= 6.01; y += 0.05) {
+                let yVal = parseFloat(y.toFixed(2));
+                labels.push(yVal);
+
+                // Funções só devem existir de y = 1 até y = 5
+                if (yVal >= 1.0 && yVal <= 5.01) {
+                    let xG = parseFloat((1.0 + 0.1 * Math.pow(yVal - 3.0, 2)).toFixed(3)); // Curva à esquerda
+                    let xF = parseFloat((4.0 + 0.5 * Math.sin(yVal)).toFixed(3));         // Curva à direita
+
+                    dataG.push(xG);
+                    dataF.push(xF);
+
+                    // Destacando a área apenas entre c e d (1.5 e 4.5)
+                    if (yVal >= c && yVal <= d + 0.01) {
+                        areaG.push(xG);
+                        areaF.push(xF);
+                    } else {
+                        areaG.push(null);
+                        areaF.push(null);
+                    }
+                } else {
+                    dataG.push(null);
+                    dataF.push(null);
+                    areaG.push(null);
+                    areaF.push(null);
+                }
+            }
+
+            charts['fig3'] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels, // Array usado para montar o eixo y graças ao indexAxis
+                    datasets: [
+                        { label: 'x = g(y) [esquerda]', data: dataG, borderColor: '#0ea5e9', fill: false, tension: 0.3, pointRadius: 0, borderWidth: 2 },
+                        { label: 'x = f(y) [direita]', data: dataF, borderColor: '#ec4899', fill: false, tension: 0.3, pointRadius: 0, borderWidth: 2 },
+                        { label: 'Base Área', data: areaG, borderColor: 'transparent', fill: false, pointRadius: 0, borderWidth: 0, showLine: false },
+                        { label: 'Região S', data: areaF, backgroundColor: 'rgba(16, 185, 129, 0.25)', fill: '-1', borderColor: 'transparent', pointRadius: 0, borderWidth: 0 }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y', 
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                filter: function(item) { return item.text !== 'Base Área'; }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { 
+                            title: { display: true, text: 'x' }, 
+                            min: 0, 
+                            max: 6 
+                        },
+                        y: { 
+                            type: 'linear', // Garante que os valores cresçam de baixo para cima corretamente
+                            title: { display: true, text: 'y' }, 
+                            min: 0, 
+                            max: 6,
+                            ticks: {
+                                stepSize: 1 // Garante valores discretos com passo de 0.5
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
         function toggleContent(exampleId, type) {
             const targetContainerId = `${type}-${exampleId}`;
             const targetContainer = document.getElementById(targetContainerId);
             const isVisible = targetContainer.style.display === 'block';
             
-            // Oculta todas as soluções de todos os itens dentro do mesmo quadro
             const parentSection = targetContainer.closest('.content-section');
             parentSection.querySelectorAll('.solution-container').forEach(el => {
                 el.style.display = 'none';
@@ -464,11 +820,12 @@
                     if (exampleId === 'ex1') initChartEx1();
                     if (exampleId === 'ex2') initChartEx2();
                     if (exampleId === 'ex3') initChartEx3();
+                    if (exampleId === 'ex4') initChartEx4();
                 }
             }
         }
 
-        // Inicialização do Gráfico 1 usando Chart.js
+        // Inicialização do Gráfico 1
         function initChartEx1() {
             if (charts['ex1']) return;
             const ctx = document.getElementById('canvas-ex1').getContext('2d');
@@ -515,9 +872,7 @@
                     plugins: {
                         legend: { 
                             labels: {
-                                filter: function(item, chart) {
-                                    return item.text !== 'Base Área'; 
-                                }
+                                filter: function(item) { return item.text !== 'Base Área'; }
                             }
                         }
                     },
@@ -529,7 +884,7 @@
             });
         }
 
-        // Inicialização do Gráfico 2 usando Chart.js
+        // Inicialização do Gráfico 2
         function initChartEx2() {
             if (charts['ex2']) return;
             const ctx = document.getElementById('canvas-ex2').getContext('2d');
@@ -576,9 +931,7 @@
                     plugins: {
                         legend: {
                             labels: {
-                                filter: function(item, chart) {
-                                    return item.text !== 'Base Área'; 
-                                }
+                                filter: function(item) { return item.text !== 'Base Área'; }
                             }
                         }
                     },
@@ -590,7 +943,7 @@
             });
         }
 
-        // Inicialização do Gráfico 3 usando Chart.js
+        // Inicialização do Gráfico 3
         function initChartEx3() {
             if (charts['ex3']) return;
             const ctx = document.getElementById('canvas-ex3').getContext('2d');
@@ -605,13 +958,12 @@
                 let xVal = parseFloat(x.toFixed(2));
                 labels.push(xVal);
                 
-                let y1 = xVal; // y = x
-                let y2 = -xVal + 1; // y = -x + 1
+                let y1 = xVal;
+                let y2 = -xVal + 1;
                 
                 dataLine1.push(y1);
                 dataLine2.push(y2);
 
-                // Intervalo de integração de 0 a 2
                 if (xVal >= 0 && xVal <= 2.01) {
                     areaBot.push(Math.min(y1, y2));
                     areaTop.push(Math.max(y1, y2));
@@ -638,15 +990,75 @@
                     plugins: {
                         legend: {
                             labels: {
-                                filter: function(item, chart) {
-                                    return item.text !== 'Base Área'; 
-                                }
+                                filter: function(item) { return item.text !== 'Base Área'; }
                             }
                         }
                     },
                     scales: {
                         x: { title: { display: true, text: 'x' } },
                         y: { title: { display: true, text: 'y' } }
+                    }
+                }
+            });
+        }
+
+        // Inicialização do Gráfico 4 (Exemplo 4 Atualizado: Integração em y)
+        function initChartEx4() {
+            if (charts['ex4']) return;
+            const ctx = document.getElementById('canvas-ex4').getContext('2d');
+
+            const labels = [];
+            const dataParabola = [];
+            const dataReta = [];
+            const areaLeft = [];
+            const areaRight = [];
+
+            // Iterando no eixo y da mesma forma que a figura 3 para usar indexAxis
+            for (let y = -3.0; y <= 5.01; y += 0.05) {
+                let yVal = parseFloat(y.toFixed(2));
+                labels.push(yVal);
+                
+                let xParab = parseFloat(((Math.pow(yVal, 2) - 6) / 2).toFixed(3));
+                let xReta = parseFloat((yVal + 1).toFixed(3));
+
+                dataParabola.push(xParab);
+                dataReta.push(xReta);
+
+                // Destacando a área entre as duas curvas nos limites das interseções y = -2 e y = 4
+                if (yVal >= -2.0 && yVal <= 4.01) {
+                    areaLeft.push(xParab);
+                    areaRight.push(xReta);
+                } else {
+                    areaLeft.push(null);
+                    areaRight.push(null);
+                }
+            }
+
+            charts['ex4'] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels, // Baseando o chart no eixo vertical
+                    datasets: [
+                        { label: 'x = (y² - 6)/2 [parábola]', data: dataParabola, borderColor: '#0ea5e9', fill: false, tension: 0.3, pointRadius: 0, borderWidth: 2 },
+                        { label: 'x = y + 1 [reta]', data: dataReta, borderColor: '#ec4899', fill: false, tension: 0, pointRadius: 0, borderWidth: 2 },
+                        { label: 'Base Área', data: areaLeft, borderColor: 'transparent', fill: false, pointRadius: 0, borderWidth: 0, showLine: false },
+                        { label: 'Área S', data: areaRight, backgroundColor: 'rgba(5, 150, 105, 0.25)', fill: '-1', borderColor: 'transparent', pointRadius: 0, borderWidth: 0 }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y', // Configuração vital para que o 'fill: -1' ocorra no eixo x
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                filter: function(item) { return item.text !== 'Base Área'; }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { type: 'linear', title: { display: true, text: 'x' }, min: -4, max: 6 },
+                        y: { type: 'linear', title: { display: true, text: 'y' }, min: -3, max: 5 }
                     }
                 }
             });

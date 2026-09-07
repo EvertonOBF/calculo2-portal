@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo 2 - Lista 4: Área entre Curvas</title>
+    
+    <!-- Configuração do MathJax -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Chart.js para Renderização dos Gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e293b;
+            --accent-color: #059669;
+            --graph-btn-color: #0284c7;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        p, li {
+            text-align: justify;
+        }
+
+        p {
+            margin-bottom: 16px;
+        }
+
+        .navbar {
+            background-color: var(--secondary-color);
+            padding: 15px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: #93c5fd;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .content-section {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 35px;
+            margin-bottom: 35px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-left: 6px solid var(--primary-color);
+        }
+
+        h1 {
+            color: var(--secondary-color);
+            font-size: 2.2rem;
+            margin-top: 0;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        .instruction-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Cards dos Exercícios */
+        .exercise-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .exercise-card {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+        }
+
+        .exercise-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+        }
+
+        .exercise-header {
+            padding: 20px 25px;
+            background: #f8fafc;
+        }
+
+        .exercise-title {
+            font-size: 1.1rem;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-graph {
+            background-color: var(--graph-btn-color);
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-graph:hover {
+            background-color: #0369a1;
+        }
+
+        .btn-solution {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-solution:hover {
+            background-color: #1d4ed8;
+        }
+
+        /* Painel do Gráfico */
+        .graph-container {
+            display: none;
+            padding: 20px;
+            background-color: #f1f5f9;
+            border-top: 1px solid #cbd5e1;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            max-width: 100%;
+            height: 320px;
+            margin: 0 auto;
+        }
+
+        /* Painel da Solução */
+        .solution-container {
+            display: none;
+            padding: 25px;
+            background-color: #f0fdf4;
+            border-top: 2px dashed #86efac;
+            text-align: justify;
+        }
+
+        .solution-container h4 {
+            margin-top: 0;
+            color: var(--accent-color);
+            font-size: 1.15rem;
+            border-bottom: 1px solid #bbf7d0;
+            padding-bottom: 8px;
+            text-align: left;
+        }
+
+        .step-title {
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-top: 15px;
+            text-align: justify;
+        }
+
+        .final-answer {
+            background-color: #dcfce7;
+            border: 1px solid #86efac;
+            color: #166534;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.15rem;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div>
+           <a href="etapa1.html">← Voltar ao Menu Principal</a>
+        </div>
+        <span>Cálculo 2 - Etapa 1</span>
+    </div>
+
+    <div class="container">
+
+        <div class="content-section">
+            <h1>Cálculo 2 – Lista de Exercícios</h1>
+            <div class="instruction-title">Esboce a região delimitada pelas curvas indicadas e encontre sua área.</div>
+
+            <div class="exercise-grid">
+
+                <!-- EXERCÍCIO 1 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-title">
+                            <strong>1.</strong> $y = 12 - x^2, \quad y = x^2 - 6$
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-graph" onclick="toggleGraph('graph1', initChart1)">Ver gráfico</button>
+                            <button class="btn-solution" onclick="toggleSolution('sol1')">Ver solução</button>
+                        </div>
+                    </div>
+
+                    <div class="graph-container" id="graph1">
+                        <div class="chart-wrapper">
+                            <canvas id="chart1"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="solution-container" id="sol1">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Encontrar os pontos de interseção</p>
+                        <p>Igualamos as equações para determinar os limites de integração:</p>
+                        $$12 - x^2 = x^2 - 6 \implies 2x^2 = 18 \implies x^2 = 9 \implies x = \pm 3$$
+
+                        <p class="step-title">Passo 2: Escolher a variável de integração e analisar as curvas</p>
+                        <p>Como as curvas são dadas diretamente por funções de $x$, integramos em relação a $x$. No intervalo $[-3, 3]$, a parábola $y = 12 - x^2$ está acima de $y = x^2 - 6$.</p>
+
+                        <p class="step-title">Passo 3: Montar e calcular a integral definida</p>
+                        $$A = \int_{-3}^{3} \left[ (12 - x^2) - (x^2 - 6) \right] dx = \int_{-3}^{3} (18 - 2x^2) dx$$
+                        <p>Pela simetria de função par:</p>
+                        $$A = 2 \int_{0}^{3} (18 - 2x^2) dx = 2 \left[ 18x - \frac{2x^3}{3} \right]_{0}^{3}$$
+                        $$A = 2 \left( 18(3) - \frac{2(27)}{3} \right) = 2 (54 - 18) = 72$$
+
+                        <div class="final-answer">Resultado Final: $A = 72 \text{ u.a.}$</div>
+                    </div>
+                </div>
+
+                <!-- EXERCÍCIO 2 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-title">
+                            <strong>2.</strong> $y = x^2, \quad y = 4x - x^2$
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-graph" onclick="toggleGraph('graph2', initChart2)">Ver gráfico</button>
+                            <button class="btn-solution" onclick="toggleSolution('sol2')">Ver solução</button>
+                        </div>
+                    </div>
+
+                    <div class="graph-container" id="graph2">
+                        <div class="chart-wrapper">
+                            <canvas id="chart2"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="solution-container" id="sol2">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Encontrar os pontos de interseção</p>
+                        $$x^2 = 4x - x^2 \implies 2x^2 - 4x = 0 \implies 2x(x - 2) = 0$$
+                        <p>Portanto, os limites são $x = 0$ e $x = 2$.</p>
+
+                        <p class="step-title">Passo 2: Escolher a variável de integração e determinar as posições</p>
+                        <p>Integramos em relação a $x$. No intervalo $[0, 2]$, a parábola $y = 4x - x^2$ está acima da parábola $y = x^2$.</p>
+
+                        <p class="step-title">Passo 3: Resolver a integral</p>
+                        $$A = \int_{0}^{2} \left[ (4x - x^2) - x^2 \right] dx = \int_{0}^{2} (4x - 2x^2) dx$$
+                        $$A = \left[ 2x^2 - \frac{2x^3}{3} \right]_{0}^{2} = \left( 8 - \frac{16}{3} \right) - 0 = \frac{8}{3}$$
+
+                        <div class="final-answer">Resultado Final: $A = \frac{8}{3} \text{ u.a.}$</div>
+                    </div>
+                </div>
+
+                <!-- EXERCÍCIO 3 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-title">
+                            <strong>3.</strong> $y = x^3, \quad x = y$
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-graph" onclick="toggleGraph('graph3', initChart3)">Ver gráfico</button>
+                            <button class="btn-solution" onclick="toggleSolution('sol3')">Ver solução</button>
+                        </div>
+                    </div>
+
+                    <div class="graph-container" id="graph3">
+                        <div class="chart-wrapper">
+                            <canvas id="chart3"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="solution-container" id="sol3">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Encontrar as interseções</p>
+                        $$x^3 = x \implies x^3 - x = 0 \implies x(x - 1)(x + 1) = 0 \implies x = -1, \, x = 0, \, x = 1$$
+
+                        <p class="step-title">Passo 2: Escolher a variável e analisar a simetria</p>
+                        <p>Integramos em relação a $x$. Há duas regiões congruentes nos intervalos $[-1, 0]$ e $[0, 1]$. Em $[0, 1]$, a reta $y = x$ fica acima de $y = x^3$.</p>
+
+                        <p class="step-title">Passo 3: Calcular a área total</p>
+                        $$A = 2 \int_{0}^{1} (x - x^3) dx = 2 \left[ \frac{x^2}{2} - \frac{x^4}{4} \right]_{0}^{1} = 2 \left( \frac{1}{2} - \frac{1}{4} \right) = \frac{1}{2}$$
+
+                        <div class="final-answer">Resultado Final: $A = \frac{1}{2} \text{ u.a.}$</div>
+                    </div>
+                </div>
+
+                <!-- EXERCÍCIO 4 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-title">
+                            <strong>4.</strong> $x = 2y^2, \quad x = 4 + y^2$
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-graph" onclick="toggleGraph('graph4', initChart4)">Ver gráfico</button>
+                            <button class="btn-solution" onclick="toggleSolution('sol4')">Ver solução</button>
+                        </div>
+                    </div>
+
+                    <div class="graph-container" id="graph4">
+                        <div class="chart-wrapper">
+                            <canvas id="chart4"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="solution-container" id="sol4">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Identificar a melhor variável de integração</p>
+                        <p>As equações expressam $x$ como função de $y$. Por isso, é mais simples e direto integrar em relação a $y$.</p>
+
+                        <p class="step-title">Passo 2: Encontrar os limites de integração em $y$</p>
+                        $$2y^2 = 4 + y^2 \implies y^2 = 4 \implies y = -2 \text{ e } y = 2$$
+
+                        <p class="step-title">Passo 3: Determinar a curva à direita e à esquerda</p>
+                        <p>Para $y = 0$, $x = 4 + 0^2 = 4$ (curva da direita) e $x = 2(0)^2 = 0$ (curva da esquerda).</p>
+
+                        <p class="step-title">Passo 4: Resolver a integral</p>
+                        $$A = \int_{-2}^{2} \left[ (4 + y^2) - 2y^2 \right] dy = \int_{-2}^{2} (4 - y^2) dy$$
+                        $$A = 2 \int_{0}^{2} (4 - y^2) dy = 2 \left[ 4y - \frac{y^3}{3} \right]_{0}^{2} = 2 \left( 8 - \frac{8}{3} \right) = \frac{32}{3}$$
+
+                        <div class="final-answer">Resultado Final: $A = \frac{32}{3} \text{ u.a.}$</div>
+                    </div>
+                </div>
+
+                <!-- EXERCÍCIO 5 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-title">
+                            <strong>5.</strong> $y = \sqrt{x - 1}, \quad x - y = 1$
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-graph" onclick="toggleGraph('graph5', initChart5)">Ver gráfico</button>
+                            <button class="btn-solution" onclick="toggleSolution('sol5')">Ver solução</button>
+                        </div>
+                    </div>
+
+                    <div class="graph-container" id="graph5">
+                        <div class="chart-wrapper">
+                            <canvas id="chart5"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="solution-container" id="sol5">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Analisar as curvas e escolher a variável</p>
+                        <p>Isolando $x$ em ambas as funções para evitar raízes na integração:</p>
+                        $$y = \sqrt{x - 1} \implies x = y^2 + 1 \quad (y \ge 0)$$
+                        $$x - y = 1 \implies x = y + 1$$
+                        <p>Integraremos em relação a $y$.</p>
+
+                        <p class="step-title">Passo 2: Encontrar os limites de integração</p>
+                        $$y^2 + 1 = y + 1 \implies y^2 - y = 0 \implies y = 0 \text{ e } y = 1$$
+
+                        <p class="step-title">Passo 3: Resolver a integral</p>
+                        <p>No intervalo $y \in [0, 1]$, a reta $x = y + 1$ está à direita da parábola $x = y^2 + 1$:</p>
+                        $$A = \int_{0}^{1} \left[ (y + 1) - (y^2 + 1) \right] dy = \int_{0}^{1} (y - y^2) dy$$
+                        $$A = \left[ \frac{y^2}{2} - \frac{y^3}{3} \right]_{0}^{1} = \frac{1}{2} - \frac{1}{3} = \frac{1}{6}$$
+
+                        <div class="final-answer">Resultado Final: $A = \frac{1}{6} \text{ u.a.}$</div>
+                    </div>
+                </div>
+
+                <!-- EXERCÍCIO 6 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-title">
+                            <strong>6.</strong> $x = y^4, \quad y = \sqrt{2 - x}, \quad y = 0$
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-graph" onclick="toggleGraph('graph6', initChart6)">Ver gráfico</button>
+                            <button class="btn-solution" onclick="toggleSolution('sol6')">Ver solução</button>
+                        </div>
+                    </div>
+
+                    <div class="graph-container" id="graph6">
+                        <div class="chart-wrapper">
+                            <canvas id="chart6"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="solution-container" id="sol6">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Escolher a variável de integração</p>
+                        <p>Integraremos em $y$ para resolver com apenas uma única integral. Expressando $x$ em função de $y$:</p>
+                        $$x = y^4$$
+                        $$y = \sqrt{2 - x} \implies x = 2 - y^2 \quad (y \ge 0)$$
+
+                        <p class="step-title">Passo 2: Determinar os limites de integração em $y$</p>
+                        <p>O limite inferior é $y = 0$. Para o limite superior, igualamos as equações:</p>
+                        $$y^4 = 2 - y^2 \implies y^4 + y^2 - 2 = 0 \implies (y^2 - 1)(y^2 + 2) = 0 \implies y = 1$$
+
+                        <p class="step-title">Passo 3: Resolver a integral</p>
+                        <p>A curva $x = 2 - y^2$ fica à direita de $x = y^4$ no intervalo $y \in [0, 1]$:</p>
+                        $$A = \int_{0}^{1} \left[ (2 - y^2) - y^4 \right] dy = \left[ 2y - \frac{y^3}{3} - \frac{y^5}{5} \right]_{0}^{1}$$
+                        $$A = 2 - \frac{1}{3} - \frac{1}{5} = \frac{22}{15}$$
+
+                        <div class="final-answer">Resultado Final: $A = \frac{22}{15} \text{ u.a.}$</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Função para alternar a exibição da solução
+        function toggleSolution(id) {
+            const solBox = document.getElementById(id);
+            const isVisible = solBox.style.display === 'block';
+
+            solBox.style.display = isVisible ? 'none' : 'block';
+
+            if (!isVisible && window.MathJax && window.MathJax.typesetPromise) {
+                MathJax.typesetPromise([solBox]);
+            }
+        }
+
+        // Função para alternar a exibição do gráfico
+        function toggleGraph(graphId, initFn) {
+            const graphBox = document.getElementById(graphId);
+            const isVisible = graphBox.style.display === 'block';
+
+            graphBox.style.display = isVisible ? 'none' : 'block';
+
+            if (!isVisible && initFn) {
+                initFn();
+            }
+        }
+
+        // Armazenamento das instâncias dos gráficos
+        let charts = {};
+
+        // Gráfico 1
+        function initChart1() {
+            if (charts[1]) return;
+            const ctx = document.getElementById('chart1').getContext('2d');
+
+            const labels = [];
+            const dataTop = [];
+            const dataBot = [];
+            const areaBot = [];
+            const areaTop = [];
+
+            for (let x = -4; x <= 4.01; x += 0.1) {
+                let xVal = parseFloat(x.toFixed(1));
+                labels.push(xVal);
+                
+                let yTop = 12 - xVal * xVal;
+                let yBot = xVal * xVal - 6;
+
+                dataTop.push(yTop);
+                dataBot.push(yBot);
+
+                if (xVal >= -3 && xVal <= 3.01) {
+                    areaBot.push(yBot);
+                    areaTop.push(yTop);
+                } else {
+                    areaBot.push(null);
+                    areaTop.push(null);
+                }
+            }
+
+            charts[1] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'y = 12 - x²', data: dataTop, borderColor: '#ec4899', fill: false, tension: 0.3, pointRadius: 0, borderWidth: 2 },
+                        { label: 'y = x² - 6', data: dataBot, borderColor: '#0ea5e9', fill: false, tension: 0.3, pointRadius: 0, borderWidth: 2 },
+                        { label: 'Base Área', data: areaBot, borderColor: 'transparent', fill: false, pointRadius: 0, borderWidth: 0, showLine: false },
+                        { label: 'Área S = 72', data: areaTop, backgroundColor: 'rgba(37, 99, 235, 0.25)', fill: '-1', borderColor: 'transparent', pointRadius: 0, borderWidth: 0 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { filter: item => item.text !== 'Base Área' } }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'x' } },
+                        y: { title: { display: true, text: 'y' } }
+                    }
+                }
+            });
+        }
+
+        // Gráfico 2
+        function initChart2() {
+            if (charts[2]) return;
+            const ctx = document.getElementById('chart2').getContext('2d');
+
+            const labels = [];
+            const dataTop = [];
+            const dataBot = [];
+            const areaBot = [];
+            const areaTop = [];
+
+            for (let x = -1; x <= 3.01; x += 0.05) {
+                let xVal = parseFloat(x.toFixed(2));
+                labels.push(xVal);
+                
+                let yTop = 4 * xVal - xVal * xVal;
+                let yBot = xVal * xVal;
+
+                dataTop.push(yTop);
+                dataBot.push(yBot);
+
+                if (xVal >= 0 && xVal <= 2.01) {
+                    areaBot.push(yBot);
+                    areaTop.push(yTop);
+                } else {
+                    areaBot.push(null);
+                    areaTop.push(null);
+                }
+            }
+
+            charts[2] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'y = 4x - x²', data: dataTop, borderColor: '#ec4899', fill: false, tension: 0.3, pointRadius: 0, borderWidth: 2 },
+                        { label: 'y = x²', data: dataBot, borderColor: '#0ea5e9', fill: false, tension: 0.3, pointRadius: 0, borderWidth: 2 },
+                        { label: 'Base Área', data: areaBot, borderColor: 'transparent', fill: false, pointRadius: 0, borderWidth: 0, showLine: false },
+                        { label: 'Área S = 8/3', data: areaTop, backgroundColor: 'rgba(37, 99, 235, 0.25)', fill: '-1', borderColor: 'transparent', pointRadius: 0, borderWidth: 0 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { filter: item => item.text !== 'Base Área' } }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'x' } },
+                        y: { title: { display: true, text: 'y' } }
+                    }
+                }
+            });
+        }
+
+        // Gráfico 3
+        function initChart3() {
+            if (charts[3]) return;
+            const ctx = document.getElementById('chart3').getContext('2d');
+
+            const labels = [];
+            const dataLine = [];
+            const dataCubic = [];
+            const areaBot = [];
+            const areaTop = [];
+
+            for (let x = -1.3; x <= 1.31; x += 0.05) {
+                let xVal = parseFloat(x.toFixed(2));
+                labels.push(xVal);
+                
+                let yLine = xVal;
+                let yCubic = Math.pow(xVal, 3);
+
+                dataLine.push(yLine);
+                dataCubic.push(yCubic);
+
+                if (xVal >= -1 && xVal <= 1.01) {
+                    areaBot.push(Math.min(yLine, yCubic));
+                    areaTop.push(Math.max(yLine, yCubic));
+                } else {
+                    areaBot.push(null);
+                    areaTop.push(null);
+                }
+            }
+
+            charts[3] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'y = x', data: dataLine, borderColor: '#ec4899', fill: false, tension: 0, pointRadius: 0, borderWidth: 2 },
+                        { label: 'y = x³', data: dataCubic, borderColor: '#0ea5e9', fill: false, tension: 0.3, pointRadius: 0, borderWidth: 2 },
+                        { label: 'Base Área', data: areaBot, borderColor: 'transparent', fill: false, pointRadius: 0, borderWidth: 0, showLine: false },
+                        { label: 'Área S = 1/2', data: areaTop, backgroundColor: 'rgba(37, 99, 235, 0.25)', fill: '-1', borderColor: 'transparent', pointRadius: 0, borderWidth: 0 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { filter: item => item.text !== 'Base Área' } }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'x' } },
+                        y: { title: { display: true, text: 'y' } }
+                    }
+                }
+            });
+        }
+
+        // Gráfico 4
+        function initChart4() {
+            if (charts[4]) return;
+            const ctx = document.getElementById('chart4').getContext('2d');
+
+            const labels = [];
+            const dataRight = [];
+            const dataLeft = [];
+            const areaLeft = [];
+            const areaRight = [];
+
+            for (let y = -3; y <= 3.01; y += 0.1) {
+                let yVal = parseFloat(y.toFixed(1));
+                labels.push(yVal);
+
+                let xRight = 4 + yVal * yVal;
+                let xLeft = 2 * yVal * yVal;
+
+                dataRight.push(xRight);
+                dataLeft.push(xLeft);
+
+                if (yVal >= -2 && yVal <= 2.01) {
+                    areaLeft.push(xLeft);
+                    areaRight.push(xRight);
+                } else {
+                    areaLeft.push(null);
+                    areaRight.push(null);
+                }
+            }
+
+            charts[4] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'x = 4 + y²', data: dataRight, borderColor: '#ec4899', fill: false, tension: 0.3, pointRadius: 0, borderWidth: 2 },
+                        { label: 'x = 2y²', data: dataLeft, borderColor: '#0ea5e9', fill: false, tension: 0.3, pointRadius: 0, borderWidth: 2 },
+                        { label: 'Base Área', data: areaLeft, borderColor: 'transparent', fill: false, pointRadius: 0, borderWidth: 0, showLine: false },
+                        { label: 'Área S = 32/3', data: areaRight, backgroundColor: 'rgba(37, 99, 235, 0.25)', fill: '-1', borderColor: 'transparent', pointRadius: 0, borderWidth: 0 }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { filter: item => item.text !== 'Base Área' } }
+                    },
+                    scales: {
+                        x: { type: 'linear', title: { display: true, text: 'x' }, min: 0, max: 10 },
+                        y: { type: 'linear', title: { display: true, text: 'y' }, min: -3, max: 3 }
+                    }
+                }
+            });
+        }
+
+        // Gráfico 5
+        function initChart5() {
+            if (charts[5]) return;
+            const ctx = document.getElementById('chart5').getContext('2d');
+
+            const labels = [];
+            const dataRight = [];
+            const dataLeft = [];
+            const areaLeft = [];
+            const areaRight = [];
+
+            for (let y = -0.5; y <= 1.51; y += 0.05) {
+                let yVal = parseFloat(y.toFixed(2));
+                labels.push(yVal);
+
+                let xRight = yVal + 1;
+                let xLeft = yVal * yVal + 1;
+
+                dataRight.push(xRight);
+                dataLeft.push(xLeft);
+
+                if (yVal >= 0 && yVal <= 1.01) {
+                    areaLeft.push(xLeft);
+                    areaRight.push(xRight);
+                } else {
+                    areaLeft.push(null);
+                    areaRight.push(null);
+                }
+            }
+
+            charts[5] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'x = y + 1', data: dataRight, borderColor: '#ec4899', fill: false, tension: 0, pointRadius: 0, borderWidth: 2 },
+                        { label: 'x = y² + 1', data: dataLeft, borderColor: '#0ea5e9', fill: false, tension: 0.3, pointRadius: 0, borderWidth: 2 },
+                        { label: 'Base Área', data: areaLeft, borderColor: 'transparent', fill: false, pointRadius: 0, borderWidth: 0, showLine: false },
+                        { label: 'Área S = 1/6', data: areaRight, backgroundColor: 'rgba(37, 99, 235, 0.25)', fill: '-1', borderColor: 'transparent', pointRadius: 0, borderWidth: 0 }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { filter: item => item.text !== 'Base Área' } }
+                    },
+                    scales: {
+                        x: { type: 'linear', title: { display: true, text: 'x' }, min: 0, max: 3 },
+                        y: { type: 'linear', title: { display: true, text: 'y' }, min: -0.5, max: 1.5 }
+                    }
+                }
+            });
+        }
+
+        // Gráfico 6
+        function initChart6() {
+            if (charts[6]) return;
+            const ctx = document.getElementById('chart6').getContext('2d');
+
+            const labels = [];
+            const dataRight = [];
+            const dataLeft = [];
+            const areaLeft = [];
+            const areaRight = [];
+
+            for (let y = 0; y <= 1.31; y += 0.05) {
+                let yVal = parseFloat(y.toFixed(2));
+                labels.push(yVal);
+
+                let xRight = 2 - yVal * yVal;
+                let xLeft = Math.pow(yVal, 4);
+
+                dataRight.push(xRight);
+                dataLeft.push(xLeft);
+
+                if (yVal >= 0 && yVal <= 1.01) {
+                    areaLeft.push(xLeft);
+                    areaRight.push(xRight);
+                } else {
+                    areaLeft.push(null);
+                    areaRight.push(null);
+                }
+            }
+
+            charts[6] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'x = 2 - y²', data: dataRight, borderColor: '#ec4899', fill: false, tension: 0.3, pointRadius: 0, borderWidth: 2 },
+                        { label: 'x = y⁴', data: dataLeft, borderColor: '#0ea5e9', fill: false, tension: 0.3, pointRadius: 0, borderWidth: 2 },
+                        { label: 'Base Área', data: areaLeft, borderColor: 'transparent', fill: false, pointRadius: 0, borderWidth: 0, showLine: false },
+                        { label: 'Área S = 22/15', data: areaRight, backgroundColor: 'rgba(37, 99, 235, 0.25)', fill: '-1', borderColor: 'transparent', pointRadius: 0, borderWidth: 0 }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { filter: item => item.text !== 'Base Área' } }
+                    },
+                    scales: {
+                        x: { type: 'linear', title: { display: true, text: 'x' }, min: -0.2, max: 2.5 },
+                        y: { type: 'linear', title: { display: true, text: 'y' }, min: 0, max: 1.4 }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
