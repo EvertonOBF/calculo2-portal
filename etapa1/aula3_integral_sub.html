@@ -151,6 +151,8 @@
             font-weight: 600;
             cursor: pointer;
             transition: background-color 0.2s;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .btn-resolve:hover {
@@ -189,6 +191,71 @@
 
         .warning-box ul {
             margin-bottom: 0;
+        }
+
+        /* Seção das Listas de Exercícios ao fim */
+        .lists-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .list-card {
+            flex: 1;
+            min-width: 260px;
+            background-color: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .list-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+        }
+
+        .list-card-2 {
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .list-card-3 {
+            border-left: 5px solid var(--accent-color);
+        }
+
+        .list-card h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+        }
+
+        .list-card p {
+            font-size: 0.95rem;
+            color: var(--text-color);
+            margin-bottom: 20px;
+        }
+
+        .btn-list-2 {
+            background-color: var(--primary-color);
+            text-align: center;
+        }
+
+        .btn-list-2:hover {
+            background-color: #1d4ed8;
+        }
+
+        .btn-list-3 {
+            background-color: var(--accent-color);
+            text-align: center;
+        }
+
+        .btn-list-3:hover {
+            background-color: #047857;
         }
     </style>
 </head>
@@ -295,6 +362,25 @@
                     <li><strong>Esquecer o $du$:</strong> Tratar o diferencial como mero enfeite em vez de parte fundamental da transformação algébrica.</li>
                     <li><strong>Limites de Integração:</strong> Esquecer de mudar os limites de integração para a variável $u$. Se você não mudar os limites, será obrigado a voltar a integral para a variável $x$ antes de aplicar os números!</li>
                 </ul>
+            </div>
+
+            <h2>Listas de Exercícios</h2>
+            <div class="lists-container">
+                <div class="list-card list-card-2">
+                    <div>
+                        <h3>Lista 2</h3>
+                        <p>Exercícios de fixação do Método da Substituição em integrais indefinidas.</p>
+                    </div>
+                    <a href="listas/lista_2.html" class="btn-resolve btn-list-2">Acessar Lista 2</a>
+                </div>
+
+                <div class="list-card list-card-3">
+                    <div>
+                        <h3>Lista 3</h3>
+                        <p>Exercícios focados em aplicações práticas de integrais.</p>
+                    </div>
+                    <a href="listas/lista_3.html" class="btn-resolve btn-list-3">Acessar Lista 3</a>
+                </div>
             </div>
 
         </div>

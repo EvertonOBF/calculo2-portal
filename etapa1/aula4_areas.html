@@ -1,8 +1,9 @@
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cálculo 2 - Áreas entre Curvas</title>
+    <title>Cálculo 2 - Aula 4: Área entre Curvas</title>
     
     <!-- Configuração do MathJax para renderizar as fórmulas matemáticas -->
     <script>
@@ -42,9 +43,13 @@
             
             --mod4-primary: #8b5cf6;
 
-            /* Módulo 5 (Verde Esmeralda) */
+            /* Módulo 5 e 6 (Verde Esmeralda) */
             --mod5-primary: #059669;
             --mod5-light: #ecfdf5;
+
+            /* Módulo 6 - Chamada para Lista (Azul Índigo) */
+            --mod6-primary: #4f46e5;
+            --mod6-accent: #166534;
         }
 
         body {
@@ -56,7 +61,7 @@
             line-height: 1.6;
         }
 
-        p {
+        p, li {
             text-align: justify;
             margin-bottom: 16px;
             font-size: 1.05rem;
@@ -154,6 +159,7 @@
             margin: 20px 0;
         }
 
+        /* Formatação de Exemplos */
         .exercise-item {
             background: #ffffff;
             border: 1px solid #cbd5e1;
@@ -194,7 +200,7 @@
             font-weight: 600;
             font-size: 0.95rem;
             cursor: pointer;
-            transition: opacity 0.2s;
+            transition: opacity 0.2s, background-color 0.2s;
             white-space: nowrap;
         }
 
@@ -209,7 +215,11 @@
             border-radius: 0 0 8px 8px;
         }
 
-        .solution-step { margin-bottom: 15px; }
+        .solution-step {
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: var(--nav-bg);
+        }
         
         .chart-wrapper {
             position: relative;
@@ -218,6 +228,25 @@
             margin: 0 auto;
         }
 
+        /* Seção Chamada para Lista (Botão Corrigido) */
+        .btn-exercise-list {
+            display: inline-block;
+            background-color: var(--mod5-primary);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.05rem;
+            text-decoration: none;
+            box-shadow: 0 4px 10px rgba(5, 150, 105, 0.25);
+            transition: all 0.2s ease;
+        }
+
+        .btn-exercise-list:hover {
+            background-color: #047857;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(5, 150, 105, 0.35);
+        }
     </style>
 </head>
 <body>
@@ -519,32 +548,65 @@
             </div>
         </div>
 
+        <!-- MÓDULO 6: CHAMADA PARA A LISTA DE EXERCÍCIOS 4 (CORRIGIDO) -->
+        <div class="content-section" style="border-left-color: var(--mod5-primary); text-align: center; background-color: var(--mod5-light);">
+            <h2 style="color: var(--mod5-primary); margin-bottom: 10px; border-bottom: none;">Pratique o Conteúdo</h2>
+            <p style="text-align: center; font-size: 1.1rem; margin-bottom: 25px;">
+                Acesse a lista de exercícios para fixar seus conhecimentos.
+            </p>
+            <a href="listas/lista_4.html" class="btn-exercise-list">
+                📋 Acessar Lista de Questões (Lista 4)
+            </a>
+        </div>
+
     </div>
 
     <script>
-        // Instâncias globais dos gráficos para evitar reinicialização múltipla
+        // Instâncias globais dos gráficos
         let charts = {};
 
-        // Inicializa as Figuras conceituais 1, 2 e 3 assim que o DOM estiver pronto
+        // Inicializa as Figuras conceituais 1, 2 e 3 no carregamento
         document.addEventListener('DOMContentLoaded', () => {
             initChartFig1();
             initChartFig2();
             initChartFig3();
         });
 
-        // Inicialização da Figura 1 (Intervalo 0 a 5, passos de 0.5)
+        // Alternar Conteúdo dos Exemplos Teóricos
+        function toggleContent(exampleId, type) {
+            const targetContainerId = `${type}-${exampleId}`;
+            const targetContainer = document.getElementById(targetContainerId);
+            const isVisible = targetContainer.style.display === 'block';
+            
+            const parentSection = targetContainer.closest('.content-section');
+            parentSection.querySelectorAll('.solution-container').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            if (!isVisible) {
+                targetContainer.style.display = 'block';
+                
+                if (type === 'sol') {
+                    if (window.MathJax && window.MathJax.typesetPromise) {
+                        MathJax.typesetPromise([targetContainer]);
+                    }
+                } else if (type === 'graph') {
+                    if (exampleId === 'ex1') initChartEx1();
+                    if (exampleId === 'ex2') initChartEx2();
+                    if (exampleId === 'ex3') initChartEx3();
+                    if (exampleId === 'ex4') initChartEx4();
+                }
+            }
+        }
+
+        /* --- FIGURAS TEÓRICAS (FIG 1, 2, 3) --- */
         function initChartFig1() {
             if (charts['fig1']) return;
             const ctx = document.getElementById('canvas-fig1').getContext('2d');
 
             const labels = [];
-            const dataBot = [];
-            const dataTop = [];
-            const areaBot = [];
-            const areaTop = [];
-
-            const a = 1.0;
-            const b = 4.0;
+            const dataBot = [], dataTop = [], areaBot = [], areaTop = [];
+            const a = 1.0, b = 4.0;
 
             for (let x = 0; x <= 5.01; x += 0.05) {
                 let xVal = parseFloat(x.toFixed(2));
@@ -579,53 +641,21 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: { 
-                            labels: {
-                                filter: function(item, chart) {
-                                    return item.text !== 'Base Área'; 
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: { 
-                            title: { display: true, text: 'x' },
-                            ticks: {
-                                autoSkip: false,
-                                callback: function(value, index, ticks) {
-                                    let label = this.getLabelForValue(value);
-                                    let val = parseFloat(label);
-                                    if (Math.abs(val - Math.round(val * 2) / 2) < 0.01) {
-                                        return Math.round(val * 2) / 2;
-                                    }
-                                    return null;
-                                }
-                            }
-                        },
-                        y: { title: { display: true, text: 'y' } }
-                    }
+                    plugins: { legend: { labels: { filter: item => item.text !== 'Base Área' } } },
+                    scales: { x: { title: { display: true, text: 'x' } }, y: { title: { display: true, text: 'y' } } }
                 }
             });
         }
 
-        // Inicialização da Figura 2 (Intervalo 0 a 6, passos de 0.5)
         function initChartFig2() {
             if (charts['fig2']) return;
             const ctx = document.getElementById('canvas-fig2').getContext('2d');
 
             const labels = [];
-            const dataF = [];
-            const dataG = [];
+            const dataF = [], dataG = [];
+            const botS1 = [], topS1 = [], botS2 = [], topS2 = [], botS3 = [], topS3 = [];
 
-            const botS1 = [], topS1 = [];
-            const botS2 = [], topS2 = [];
-            const botS3 = [], topS3 = [];
-
-            const a = 0.5;
-            const b = 5.5;
-            const x1 = 1.57; // Interseção 1
-            const x2 = 4.71; // Interseção 2
+            const a = 0.5, b = 5.5, x1 = 1.57, x2 = 4.71;
 
             for (let x = 0; x <= 6.01; x += 0.05) {
                 let xVal = parseFloat(x.toFixed(2));
@@ -640,26 +670,17 @@
                 if (xVal >= a && xVal <= x1 + 0.02) {
                     botS1.push(Math.min(yF, yG));
                     topS1.push(Math.max(yF, yG));
-                } else {
-                    botS1.push(null);
-                    topS1.push(null);
-                }
+                } else { botS1.push(null); topS1.push(null); }
 
                 if (xVal >= x1 - 0.02 && xVal <= x2 + 0.02) {
                     botS2.push(Math.min(yF, yG));
                     topS2.push(Math.max(yF, yG));
-                } else {
-                    botS2.push(null);
-                    topS2.push(null);
-                }
+                } else { botS2.push(null); topS2.push(null); }
 
                 if (xVal >= x2 - 0.02 && xVal <= b + 0.01) {
                     botS3.push(Math.min(yF, yG));
                     topS3.push(Math.max(yF, yG));
-                } else {
-                    botS3.push(null);
-                    topS3.push(null);
-                }
+                } else { botS3.push(null); topS3.push(null); }
             }
 
             charts['fig2'] = new Chart(ctx, {
@@ -669,13 +690,10 @@
                     datasets: [
                         { label: 'y = f(x)', data: dataF, borderColor: '#ec4899', fill: false, tension: 0.2, pointRadius: 0, borderWidth: 2 },
                         { label: 'y = g(x)', data: dataG, borderColor: '#0ea5e9', fill: false, tension: 0.2, pointRadius: 0, borderWidth: 2 },
-                        
                         { label: 'Base S1', data: botS1, borderColor: 'transparent', fill: false, pointRadius: 0, borderWidth: 0, showLine: false },
                         { label: 'Área S₁', data: topS1, backgroundColor: 'rgba(186, 230, 253, 0.65)', fill: '-1', borderColor: 'transparent', pointRadius: 0, borderWidth: 0 },
-
                         { label: 'Base S2', data: botS2, borderColor: 'transparent', fill: false, pointRadius: 0, borderWidth: 0, showLine: false },
                         { label: 'Área S₂', data: topS2, backgroundColor: 'rgba(253, 230, 138, 0.75)', fill: '-1', borderColor: 'transparent', pointRadius: 0, borderWidth: 0 },
-
                         { label: 'Base S3', data: botS3, borderColor: 'transparent', fill: false, pointRadius: 0, borderWidth: 0, showLine: false },
                         { label: 'Área S₃', data: topS3, backgroundColor: 'rgba(186, 230, 253, 0.65)', fill: '-1', borderColor: 'transparent', pointRadius: 0, borderWidth: 0 }
                     ]
@@ -683,84 +701,43 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: { 
-                            labels: {
-                                filter: function(item, chart) {
-                                    return !item.text.startsWith('Base'); 
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: { 
-                            title: { display: true, text: 'x' },
-                            ticks: {
-                                autoSkip: false,
-                                callback: function(value, index, ticks) {
-                                    let label = this.getLabelForValue(value);
-                                    let val = parseFloat(label);
-                                    if (Math.abs(val - Math.round(val * 2) / 2) < 0.01) {
-                                        return Math.round(val * 2) / 2;
-                                    }
-                                    return null;
-                                }
-                            }
-                        },
-                        y: { title: { display: true, text: 'y' } }
-                    }
+                    plugins: { legend: { labels: { filter: item => !item.text.startsWith('Base') } } },
+                    scales: { x: { title: { display: true, text: 'x' } }, y: { title: { display: true, text: 'y' } } }
                 }
             });
         }
 
-        // Inicialização da Figura 3 Atualizada (Integração em y)
         function initChartFig3() {
             if (charts['fig3']) return;
             const ctx = document.getElementById('canvas-fig3').getContext('2d');
 
-            const labels = [];
-            const dataG = [];
-            const dataF = [];
-            const areaG = [];
-            const areaF = [];
+            const labels = [], dataG = [], dataF = [], areaG = [], areaF = [];
+            const c = 1.5, d = 4.5;
 
-            // Limites de destaque da área: y = 1.5 até y = 4.5
-            const c = 1.5;
-            const d = 4.5;
-
-            // Eixo y variando de 0 a 6
             for (let y = 0; y <= 6.01; y += 0.05) {
                 let yVal = parseFloat(y.toFixed(2));
                 labels.push(yVal);
 
-                // Funções só devem existir de y = 1 até y = 5
                 if (yVal >= 1.0 && yVal <= 5.01) {
-                    let xG = parseFloat((1.0 + 0.1 * Math.pow(yVal - 3.0, 2)).toFixed(3)); // Curva à esquerda
-                    let xF = parseFloat((4.0 + 0.5 * Math.sin(yVal)).toFixed(3));         // Curva à direita
+                    let xG = parseFloat((1.0 + 0.1 * Math.pow(yVal - 3.0, 2)).toFixed(3));
+                    let xF = parseFloat((4.0 + 0.5 * Math.sin(yVal)).toFixed(3));
 
                     dataG.push(xG);
                     dataF.push(xF);
 
-                    // Destacando a área apenas entre c e d (1.5 e 4.5)
                     if (yVal >= c && yVal <= d + 0.01) {
                         areaG.push(xG);
                         areaF.push(xF);
-                    } else {
-                        areaG.push(null);
-                        areaF.push(null);
-                    }
+                    } else { areaG.push(null); areaF.push(null); }
                 } else {
-                    dataG.push(null);
-                    dataF.push(null);
-                    areaG.push(null);
-                    areaF.push(null);
+                    dataG.push(null); dataF.push(null); areaG.push(null); areaF.push(null);
                 }
             }
 
             charts['fig3'] = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: labels, // Array usado para montar o eixo y graças ao indexAxis
+                    labels: labels,
                     datasets: [
                         { label: 'x = g(y) [esquerda]', data: dataG, borderColor: '#0ea5e9', fill: false, tension: 0.3, pointRadius: 0, borderWidth: 2 },
                         { label: 'x = f(y) [direita]', data: dataF, borderColor: '#ec4899', fill: false, tension: 0.3, pointRadius: 0, borderWidth: 2 },
@@ -772,87 +749,29 @@
                     indexAxis: 'y', 
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            labels: {
-                                filter: function(item) { return item.text !== 'Base Área'; }
-                            }
-                        }
-                    },
+                    plugins: { legend: { labels: { filter: item => item.text !== 'Base Área' } } },
                     scales: {
-                        x: { 
-                            title: { display: true, text: 'x' }, 
-                            min: 0, 
-                            max: 6 
-                        },
-                        y: { 
-                            type: 'linear', // Garante que os valores cresçam de baixo para cima corretamente
-                            title: { display: true, text: 'y' }, 
-                            min: 0, 
-                            max: 6,
-                            ticks: {
-                                stepSize: 1 // Garante valores discretos com passo de 0.5
-                            }
-                        }
+                        x: { type: 'linear', title: { display: true, text: 'x' }, min: 0, max: 6 },
+                        y: { type: 'linear', title: { display: true, text: 'y' }, min: 0, max: 6 }
                     }
                 }
             });
         }
 
-        function toggleContent(exampleId, type) {
-            const targetContainerId = `${type}-${exampleId}`;
-            const targetContainer = document.getElementById(targetContainerId);
-            const isVisible = targetContainer.style.display === 'block';
-            
-            const parentSection = targetContainer.closest('.content-section');
-            parentSection.querySelectorAll('.solution-container').forEach(el => {
-                el.style.display = 'none';
-            });
-            
-            if (!isVisible) {
-                targetContainer.style.display = 'block';
-                
-                if (type === 'sol') {
-                    if (window.MathJax && window.MathJax.typesetPromise) {
-                        MathJax.typesetPromise([targetContainer]);
-                    }
-                } else if (type === 'graph') {
-                    if (exampleId === 'ex1') initChartEx1();
-                    if (exampleId === 'ex2') initChartEx2();
-                    if (exampleId === 'ex3') initChartEx3();
-                    if (exampleId === 'ex4') initChartEx4();
-                }
-            }
-        }
-
-        // Inicialização do Gráfico 1
+        /* --- EXEMPLOS DA AULA (EX 1 A 4) --- */
         function initChartEx1() {
             if (charts['ex1']) return;
             const ctx = document.getElementById('canvas-ex1').getContext('2d');
-
-            const labels = [];
-            const dataBot = [];
-            const dataTop = [];
-            const areaBot = [];
-            const areaTop = [];
+            const labels = [], dataBot = [], dataTop = [], areaBot = [], areaTop = [];
 
             for (let x = -0.5; x <= 1.51; x += 0.05) {
                 let xVal = parseFloat(x.toFixed(2));
                 labels.push(xVal);
-                
-                let yBot = xVal;
-                let yTop = Math.exp(xVal);
-                
-                dataBot.push(yBot);
-                dataTop.push(yTop);
+                let yBot = xVal, yTop = Math.exp(xVal);
+                dataBot.push(yBot); dataTop.push(yTop);
 
-                if (xVal >= 0 && xVal <= 1.01) {
-                    areaBot.push(yBot);
-                    areaTop.push(yTop);
-                } else {
-                    areaBot.push(null);
-                    areaTop.push(null);
-                }
+                if (xVal >= 0 && xVal <= 1.01) { areaBot.push(yBot); areaTop.push(yTop); }
+                else { areaBot.push(null); areaTop.push(null); }
             }
 
             charts['ex1'] = new Chart(ctx, {
@@ -866,52 +785,23 @@
                         { label: 'Área S', data: areaTop, backgroundColor: 'rgba(186, 230, 253, 0.65)', fill: '-1', borderColor: 'transparent', pointRadius: 0, borderWidth: 0 }
                     ]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { 
-                            labels: {
-                                filter: function(item) { return item.text !== 'Base Área'; }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: { title: { display: true, text: 'x' } },
-                        y: { title: { display: true, text: 'y' } }
-                    }
-                }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { filter: item => item.text !== 'Base Área' } } } }
             });
         }
 
-        // Inicialização do Gráfico 2
         function initChartEx2() {
             if (charts['ex2']) return;
             const ctx = document.getElementById('canvas-ex2').getContext('2d');
-
-            const labels = [];
-            const dataBot = [];
-            const dataTop = [];
-            const areaBot = [];
-            const areaTop = [];
+            const labels = [], dataBot = [], dataTop = [], areaBot = [], areaTop = [];
 
             for (let x = -0.5; x <= 1.51; x += 0.05) {
                 let xVal = parseFloat(x.toFixed(2));
                 labels.push(xVal);
-                
-                let yBot = Math.pow(xVal, 2);
-                let yTop = 2 * xVal - Math.pow(xVal, 2);
-                
-                dataBot.push(yBot);
-                dataTop.push(yTop);
+                let yBot = Math.pow(xVal, 2), yTop = 2 * xVal - Math.pow(xVal, 2);
+                dataBot.push(yBot); dataTop.push(yTop);
 
-                if (xVal >= 0 && xVal <= 1.01) {
-                    areaBot.push(yBot);
-                    areaTop.push(yTop);
-                } else {
-                    areaBot.push(null);
-                    areaTop.push(null);
-                }
+                if (xVal >= 0 && xVal <= 1.01) { areaBot.push(yBot); areaTop.push(yTop); }
+                else { areaBot.push(null); areaTop.push(null); }
             }
 
             charts['ex2'] = new Chart(ctx, {
@@ -925,52 +815,25 @@
                         { label: 'Área S', data: areaTop, backgroundColor: 'rgba(186, 230, 253, 0.65)', fill: '-1', borderColor: 'transparent', pointRadius: 0, borderWidth: 0 }
                     ]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            labels: {
-                                filter: function(item) { return item.text !== 'Base Área'; }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: { title: { display: true, text: 'x' } },
-                        y: { title: { display: true, text: 'y' } }
-                    }
-                }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { filter: item => item.text !== 'Base Área' } } } }
             });
         }
 
-        // Inicialização do Gráfico 3
         function initChartEx3() {
             if (charts['ex3']) return;
             const ctx = document.getElementById('canvas-ex3').getContext('2d');
-
-            const labels = [];
-            const dataLine1 = [];
-            const dataLine2 = [];
-            const areaBot = [];
-            const areaTop = [];
+            const labels = [], dataLine1 = [], dataLine2 = [], areaBot = [], areaTop = [];
 
             for (let x = -0.5; x <= 2.51; x += 0.05) {
                 let xVal = parseFloat(x.toFixed(2));
                 labels.push(xVal);
-                
-                let y1 = xVal;
-                let y2 = -xVal + 1;
-                
-                dataLine1.push(y1);
-                dataLine2.push(y2);
+                let y1 = xVal, y2 = -xVal + 1;
+                dataLine1.push(y1); dataLine2.push(y2);
 
                 if (xVal >= 0 && xVal <= 2.01) {
                     areaBot.push(Math.min(y1, y2));
                     areaTop.push(Math.max(y1, y2));
-                } else {
-                    areaBot.push(null);
-                    areaTop.push(null);
-                }
+                } else { areaBot.push(null); areaTop.push(null); }
             }
 
             charts['ex3'] = new Chart(ctx, {
@@ -984,60 +847,32 @@
                         { label: 'Área Total S', data: areaTop, backgroundColor: 'rgba(139, 92, 246, 0.25)', fill: '-1', borderColor: 'transparent', pointRadius: 0, borderWidth: 0 }
                     ]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            labels: {
-                                filter: function(item) { return item.text !== 'Base Área'; }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: { title: { display: true, text: 'x' } },
-                        y: { title: { display: true, text: 'y' } }
-                    }
-                }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { filter: item => item.text !== 'Base Área' } } } }
             });
         }
 
-        // Inicialização do Gráfico 4 (Exemplo 4 Atualizado: Integração em y)
         function initChartEx4() {
             if (charts['ex4']) return;
             const ctx = document.getElementById('canvas-ex4').getContext('2d');
+            const labels = [], dataParabola = [], dataReta = [], areaLeft = [], areaRight = [];
 
-            const labels = [];
-            const dataParabola = [];
-            const dataReta = [];
-            const areaLeft = [];
-            const areaRight = [];
-
-            // Iterando no eixo y da mesma forma que a figura 3 para usar indexAxis
             for (let y = -3.0; y <= 5.01; y += 0.05) {
                 let yVal = parseFloat(y.toFixed(2));
                 labels.push(yVal);
-                
                 let xParab = parseFloat(((Math.pow(yVal, 2) - 6) / 2).toFixed(3));
                 let xReta = parseFloat((yVal + 1).toFixed(3));
 
-                dataParabola.push(xParab);
-                dataReta.push(xReta);
+                dataParabola.push(xParab); dataReta.push(xReta);
 
-                // Destacando a área entre as duas curvas nos limites das interseções y = -2 e y = 4
                 if (yVal >= -2.0 && yVal <= 4.01) {
-                    areaLeft.push(xParab);
-                    areaRight.push(xReta);
-                } else {
-                    areaLeft.push(null);
-                    areaRight.push(null);
-                }
+                    areaLeft.push(xParab); areaRight.push(xReta);
+                } else { areaLeft.push(null); areaRight.push(null); }
             }
 
             charts['ex4'] = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: labels, // Baseando o chart no eixo vertical
+                    labels: labels,
                     datasets: [
                         { label: 'x = (y² - 6)/2 [parábola]', data: dataParabola, borderColor: '#0ea5e9', fill: false, tension: 0.3, pointRadius: 0, borderWidth: 2 },
                         { label: 'x = y + 1 [reta]', data: dataReta, borderColor: '#ec4899', fill: false, tension: 0, pointRadius: 0, borderWidth: 2 },
@@ -1046,16 +881,8 @@
                     ]
                 },
                 options: {
-                    indexAxis: 'y', // Configuração vital para que o 'fill: -1' ocorra no eixo x
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            labels: {
-                                filter: function(item) { return item.text !== 'Base Área'; }
-                            }
-                        }
-                    },
+                    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { labels: { filter: item => item.text !== 'Base Área' } } },
                     scales: {
                         x: { type: 'linear', title: { display: true, text: 'x' }, min: -4, max: 6 },
                         y: { type: 'linear', title: { display: true, text: 'y' }, min: -3, max: 5 }

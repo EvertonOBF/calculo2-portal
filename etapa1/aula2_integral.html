@@ -65,12 +65,27 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .navbar a {
             color: #93c5fd;
             text-decoration: none;
             font-weight: 600;
+        }
+
+        .navbar .nav-btn {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
+        }
+
+        .navbar .nav-btn:hover {
+            background-color: #047857;
         }
 
         .container {
@@ -247,6 +262,26 @@
             font-size: 1.05rem;
             color: var(--secondary-color);
             width: 100%;
+        }
+
+        /* Estilo do Botão Final da Lista de Questões */
+        .btn-exercise-list {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(5, 150, 105, 0.2);
+        }
+
+        .btn-exercise-list:hover {
+            background-color: #047857;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(5, 150, 105, 0.3);
         }
     </style>
 </head>
@@ -493,6 +528,17 @@
             <div class="highlight-box" id="tfcCalcBox" style="border-left-color: var(--cyan-accent); background-color: #ffffff; border: 1px solid #cbd5e1;">
                 <!-- Preenchido via JS -->
             </div>
+        </div>
+
+        <!-- ABA / SEÇÃO FINAL: LISTA DE QUESTÕES -->
+        <div class="content-section" style="border-left-color: var(--accent-color); text-align: center; background-color: #f0fdf4;">
+            <h2 style="color: var(--accent-color); margin-bottom: 10px;">Pratique o Conteúdo</h2>
+            <p style="text-align: center; font-size: 1.1rem; margin-bottom: 25px;">
+                Acesse a lista de exercícios para fixar seus conhecimentos.
+            </p>
+            <a href="listas/lista_1.html" class="btn-exercise-list">
+                📋 Acessar Lista de Questões (Lista 1)
+            </a>
         </div>
 
     </div>
