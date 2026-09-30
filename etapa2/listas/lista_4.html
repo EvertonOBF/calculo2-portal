@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo 2 - Lista 1: Volumes de Sólidos de Rovolução</title>
+    
+    <!-- Configuração do MathJax -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Plotly.js para Renderização 3D -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e293b;
+            --accent-color: #059669;
+            --graph-btn-color: #0284c7;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #334155;
+            --btn-hover: #1d4ed8;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        p, li {
+            text-align: justify;
+        }
+
+        p {
+            margin-bottom: 12px;
+        }
+
+        .navbar {
+            background-color: var(--secondary-color);
+            padding: 15px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: #93c5fd;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .content-section {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 35px;
+            margin-bottom: 35px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-left: 6px solid var(--primary-color);
+        }
+
+        h1 {
+            color: var(--secondary-color);
+            font-size: 2.2rem;
+            margin-top: 0;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        .exercise-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            margin-top: 25px;
+        }
+
+        .exercise-card {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+        }
+
+        .exercise-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+        }
+
+        .exercise-header {
+            padding: 20px 25px;
+            background: #f8fafc;
+        }
+
+        .exercise-title {
+            font-size: 1.05rem;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-graph {
+            background-color: var(--graph-btn-color);
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-graph:hover {
+            background-color: #0369a1;
+        }
+
+        .btn-solution {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-solution:hover {
+            background-color: var(--btn-hover);
+        }
+
+        .graph-container {
+            display: none;
+            padding: 15px;
+            background-color: #ffffff;
+            border-top: 1px solid #cbd5e1;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            height: 480px;
+            margin: 0 auto;
+        }
+
+        .solution-container {
+            display: none;
+            padding: 25px;
+            background-color: #f0fdf4;
+            border-top: 2px dashed #86efac;
+            text-align: justify;
+        }
+
+        .solution-container h4 {
+            margin-top: 0;
+            color: var(--accent-color);
+            font-size: 1.15rem;
+            border-bottom: 1px solid #bbf7d0;
+            padding-bottom: 8px;
+            text-align: left;
+        }
+
+        .step-title {
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-top: 15px;
+            text-align: justify;
+        }
+
+        .final-answer {
+            background-color: #dcfce7;
+            border: 1px solid #86efac;
+            color: #166534;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.15rem;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div>
+           <a href="../aula1_volumes.html">← Voltar a aula 2</a>
+        </div>
+        <span>Cálculo 2 - Etapa 2</span>
+    </div>
+
+    <div class="container">
+
+        <div class="content-section">
+            <h1>Cálculo 2 – Volumes de Sólidos de Revolução</h1>
+            <p style="font-size: 1.15rem; font-weight: 500;">
+                Encontre o volume do sólido obtido pela rotação da região delimitada pelas curvas dadas em torno das retas especificadas.
+            </p>
+
+            <div class="exercise-grid">
+
+                <!-- ITEM (a) -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-title">
+                            <strong>(a)</strong> $y = 2 - \frac{1}{2}x, \quad y = 0, \quad x = 1, \quad x = 2; \quad \text{em torno do eixo } x$
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-graph" onclick="toggleGraph('graph-a', initChart3DA)">Ver gráfico 3D</button>
+                            <button class="btn-solution" onclick="toggleSolution('sol-a')">Ver solução</button>
+                        </div>
+                    </div>
+                    <div class="graph-container" id="graph-a"><div id="chart-a" class="chart-wrapper"></div></div>
+                    <div class="solution-container" id="sol-a">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Identificar o método</p>
+                        <p>Método dos Discos em relação a $x$. Raio: $R(x) = 2 - \frac{1}{2}x$.</p>
+                        <p class="step-title">Passo 2: Montar e calcular a integral</p>
+                        $$V = \pi \int_{1}^{2} \left(2 - \frac{1}{2}x\right)^2 dx = \pi \int_{1}^{2} \left(4 - 2x + \frac{1}{4}x^2\right) dx = \frac{19\pi}{12}$$
+                        <div class="final-answer">Resultado Final: $V = \frac{19\pi}{12}$</div>
+                    </div>
+                </div>
+
+                <!-- ITEM (b) -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-title">
+                            <strong>(b)</strong> $y = 1 - x^2, \quad y = 0; \quad \text{em torno do eixo } x$
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-graph" onclick="toggleGraph('graph-b', initChart3DB)">Ver gráfico 3D</button>
+                            <button class="btn-solution" onclick="toggleSolution('sol-b')">Ver solução</button>
+                        </div>
+                    </div>
+                    <div class="graph-container" id="graph-b"><div id="chart-b" class="chart-wrapper"></div></div>
+                    <div class="solution-container" id="sol-b">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Limites de integração</p>
+                        <p>$y = 0 \implies x = -1 \text{ e } x = 1$. Raio: $R(x) = 1 - x^2$.</p>
+                        <p class="step-title">Passo 2: Resolver a integral</p>
+                        $$V = \pi \int_{-1}^{1} (1 - x^2)^2 dx = 2\pi \int_{0}^{1} (1 - 2x^2 + x^4) dx = \frac{16\pi}{15}$$
+                        <div class="final-answer">Resultado Final: $V = \frac{16\pi}{15}$</div>
+                    </div>
+                </div>
+
+                <!-- ITEM (c) -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-title">
+                            <strong>(c)</strong> $y = \frac{1}{x}, \quad x = 1, \quad x = 2, \quad y = 0; \quad \text{em torno do eixo } x$
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-graph" onclick="toggleGraph('graph-c', initChart3DC)">Ver gráfico 3D</button>
+                            <button class="btn-solution" onclick="toggleSolution('sol-c')">Ver solução</button>
+                        </div>
+                    </div>
+                    <div class="graph-container" id="graph-c"><div id="chart-c" class="chart-wrapper"></div></div>
+                    <div class="solution-container" id="sol-c">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Resolver a integral</p>
+                        $$V = \pi \int_{1}^{2} \left(\frac{1}{x}\right)^2 dx = \pi \left[ -\frac{1}{x} \right]_1^2 = \frac{\pi}{2}$$
+                        <div class="final-answer">Resultado Final: $V = \frac{\pi}{2}$</div>
+                    </div>
+                </div>
+
+                <!-- ITEM (d) -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-title">
+                            <strong>(d)</strong> $y = \sqrt{25 - x^2}, \quad y = 0, \quad x = 2, \quad x = 4; \quad \text{em torno do eixo } x$
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-graph" onclick="toggleGraph('graph-d', initChart3DD)">Ver gráfico 3D</button>
+                            <button class="btn-solution" onclick="toggleSolution('sol-d')">Ver solução</button>
+                        </div>
+                    </div>
+                    <div class="graph-container" id="graph-d"><div id="chart-d" class="chart-wrapper"></div></div>
+                    <div class="solution-container" id="sol-d">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Resolver a integral</p>
+                        $$V = \pi \int_{2}^{4} (25 - x^2) dx = \frac{94\pi}{3}$$
+                        <div class="final-answer">Resultado Final: $V = \frac{94\pi}{3}$</div>
+                    </div>
+                </div>
+
+                <!-- ITEM (e) -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-title">
+                            <strong>(e)</strong> $x = 2\sqrt{y}, \quad x = 0, \quad y = 9; \quad \text{em torno do eixo } y$
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-graph" onclick="toggleGraph('graph-e', initChart3DE)">Ver gráfico 3D</button>
+                            <button class="btn-solution" onclick="toggleSolution('sol-e')">Ver solução</button>
+                        </div>
+                    </div>
+                    <div class="graph-container" id="graph-e"><div id="chart-e" class="chart-wrapper"></div></div>
+                    <div class="solution-container" id="sol-e">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Integral em relação a $y$</p>
+                        $$V = \pi \int_{0}^{9} (2\sqrt{y})^2 dy = \pi \int_{0}^{9} 4y \, dy = 162\pi$$
+                        <div class="final-answer">Resultado Final: $V = 162\pi$</div>
+                    </div>
+                </div>
+
+                <!-- ITEM (f) -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-title">
+                            <strong>(f)</strong> $y = \ln x, \quad y = 1, \quad y = 2, \quad x = 0; \quad \text{em torno do eixo } y$
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-graph" onclick="toggleGraph('graph-f', initChart3DF)">Ver gráfico 3D</button>
+                            <button class="btn-solution" onclick="toggleSolution('sol-f')">Ver solução</button>
+                        </div>
+                    </div>
+                    <div class="graph-container" id="graph-f"><div id="chart-f" class="chart-wrapper"></div></div>
+                    <div class="solution-container" id="sol-f">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Isolar $x$ e integrar</p>
+                        $$x = e^y \implies V = \pi \int_{1}^{2} e^{2y} dy = \frac{\pi}{2}(e^4 - e^2)$$
+                        <div class="final-answer">Resultado Final: $V = \frac{\pi}{2}(e^4 - e^2)$</div>
+                    </div>
+                </div>
+
+                <!-- ITEM (g) -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-title">
+                            <strong>(g)</strong> $y = x^3, \quad y = x, \quad x \ge 0; \quad \text{em torno do eixo } x$
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-graph" onclick="toggleGraph('graph-g', initChart3DG)">Ver gráfico 3D</button>
+                            <button class="btn-solution" onclick="toggleSolution('sol-g')">Ver solução</button>
+                        </div>
+                    </div>
+                    <div class="graph-container" id="graph-g"><div id="chart-g" class="chart-wrapper"></div></div>
+                    <div class="solution-container" id="sol-g">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Método das Arruelas</p>
+                        $$V = \pi \int_{0}^{1} (x^2 - x^6) dx = \frac{4\pi}{21}$$
+                        <div class="final-answer">Resultado Final: $V = \frac{4\pi}{21}$</div>
+                    </div>
+                </div>
+
+                <!-- ITEM (h) -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-title">
+                            <strong>(h)</strong> $y = \frac{1}{4}x^2, \quad x = 2, \quad y = 0; \quad \text{em torno do eixo } y$
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-graph" onclick="toggleGraph('graph-h', initChart3DH)">Ver gráfico 3D</button>
+                            <button class="btn-solution" onclick="toggleSolution('sol-h')">Ver solução</button>
+                        </div>
+                    </div>
+                    <div class="graph-container" id="graph-h"><div id="chart-h" class="chart-wrapper"></div></div>
+                    <div class="solution-container" id="sol-h">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Método das Arruelas em $y$</p>
+                        $$V = \pi \int_{0}^{1} (4 - 4y) dy = 2\pi$$
+                        <div class="final-answer">Resultado Final: $V = 2\pi$</div>
+                    </div>
+                </div>
+
+                <!-- ITEM (i) -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-title">
+                            <strong>(i)</strong> $x = y^2, \quad x = 1; \quad \text{em torno de } x = 1$
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-graph" onclick="toggleGraph('graph-i', initChart3DI)">Ver gráfico 3D</button>
+                            <button class="btn-solution" onclick="toggleSolution('sol-i')">Ver solução</button>
+                        </div>
+                    </div>
+                    <div class="graph-container" id="graph-i"><div id="chart-i" class="chart-wrapper"></div></div>
+                    <div class="solution-container" id="sol-i">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Identificar o método e raio</p>
+                        <p>A rotação é feita em torno da reta vertical $x = 1$. Utilizando o Método dos Discos em relação a $y$, os pontos de intersecção ocorrem em $y^2 = 1 \implies y = -1$ e $y = 1$.</p>
+                        <p>O raio de cada disco é a distância do eixo de rotação $x = 1$ até a curva $x = y^2$: $R(y) = 1 - y^2$.</p>
+                        <p class="step-title">Passo 2: Montar e calcular a integral</p>
+                        $$V = \pi \int_{-1}^{1} (1 - y^2)^2 dy = 2\pi \int_{0}^{1} (1 - 2y^2 + y^4) dy$$
+                        $$V = 2\pi \left[ y - \frac{2}{3}y^3 + \frac{1}{5}y^5 \right]_{0}^{1} = 2\pi \left(1 - \frac{2}{3} + \frac{1}{5}\right) = \frac{16\pi}{15}$$
+                        <div class="final-answer">Resultado Final: $V = \frac{16\pi}{15}$</div>
+                    </div>
+                </div>
+
+                <!-- ITEM (j) -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-title">
+                            <strong>(j)</strong> $y = x, \quad y = \sqrt{x}; \quad \text{em torno de } x = 2$
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-graph" onclick="toggleGraph('graph-j', initChart3DJ)">Ver gráfico 3D</button>
+                            <button class="btn-solution" onclick="toggleSolution('sol-j')">Ver solução</button>
+                        </div>
+                    </div>
+                    <div class="graph-container" id="graph-j"><div id="chart-j" class="chart-wrapper"></div></div>
+                    <div class="solution-container" id="sol-j">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Intersecções e Método das Arruelas</p>
+                        <p>As curvas se intersectam em $x = 0$ e $x = 1$ (de $y = 0$ a $y = 1$). Em termos de $y$, temos $x = y$ e $x = y^2$.</p>
+                        <p>A rotação é em torno da reta $x = 2$. Os raios externo e interno em relação a $x = 2$ são:</p>
+                        <p>Raio externo (curva mais distante de $x = 2$): $R(y) = 2 - y^2$</p>
+                        <p>Raio interno (curva mais próxima de $x = 2$): $r(y) = 2 - y$</p>
+                        <p class="step-title">Passo 2: Montar e calcular a integral</p>
+                        $$V = \pi \int_{0}^{1} \left( (2 - y^2)^2 - (2 - y)^2 \right) dy$$
+                        $$V = \pi \int_{0}^{1} \left( (4 - 4y^2 + y^4) - (4 - 4y + y^2) \right) dy = \pi \int_{0}^{1} (y^4 - 5y^2 + 4y) dy$$
+                        $$V = \pi \left[ \frac{y^5}{5} - \frac{5y^3}{3} + 2y^2 \right]_{0}^{1} = \pi \left( \frac{1}{5} - \frac{5}{3} + 2 \right) = \frac{8\pi}{15}$$
+                        <div class="final-answer">Resultado Final: $V = \frac{8\pi}{15}$</div>
+                    </div>
+                </div>
+
+                <!-- ITEM (k) -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-title">
+                            <strong>(k)</strong> $y = x^2, \quad x = y^2; \quad \text{em torno de } x = -1$
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-graph" onclick="toggleGraph('graph-k', initChart3DK)">Ver gráfico 3D</button>
+                            <button class="btn-solution" onclick="toggleSolution('sol-k')">Ver solução</button>
+                        </div>
+                    </div>
+                    <div class="graph-container" id="graph-k"><div id="chart-k" class="chart-wrapper"></div></div>
+                    <div class="solution-container" id="sol-k">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Intersecções e Método das Arruelas</p>
+                        <p>As curvas se intersectam em $(0,0)$ e $(1,1)$. Integrando em relação a $y \in [0, 1]$, temos $x = \sqrt{y}$ e $x = y^2$.</p>
+                        <p>Como a rotação é em torno da reta vertical $x = -1$, os raios de rotação são as distâncias até $x = -1$:</p>
+                        <p>Raio externo: $R(y) = \sqrt{y} - (-1) = \sqrt{y} + 1$</p>
+                        <p>Raio interno: $r(y) = y^2 - (-1) = y^2 + 1$</p>
+                        <p class="step-title">Passo 2: Montar e calcular a integral</p>
+                        $$V = \pi \int_{0}^{1} \left( (\sqrt{y} + 1)^2 - (y^2 + 1)^2 \right) dy$$
+                        $$V = \pi \int_{0}^{1} \left( (y + 2\sqrt{y} + 1) - (y^4 + 2y^2 + 1) \right) dy = \pi \int_{0}^{1} (y + 2y^{1/2} - y^4 - 2y^2) dy$$
+                        $$V = \pi \left[ \frac{y^2}{2} + \frac{4}{3}y^{3/2} - \frac{y^5}{5} - \frac{2}{3}y^3 \right]_{0}^{1} = \pi \left( \frac{1}{2} + \frac{4}{3} - \frac{1}{5} - \frac{2}{3} \right) = \frac{29\pi}{30}$$
+                        <div class="final-answer">Resultado Final: $V = \frac{29\pi}{30}$</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function toggleSolution(id) {
+            const solBox = document.getElementById(id);
+            const isVisible = solBox.style.display === 'block';
+            solBox.style.display = isVisible ? 'none' : 'block';
+            if (!isVisible && window.MathJax && window.MathJax.typesetPromise) {
+                MathJax.typesetPromise([solBox]);
+            }
+        }
+
+        function toggleGraph(graphId, initFn) {
+            const graphBox = document.getElementById(graphId);
+            const isVisible = graphBox.style.display === 'block';
+            graphBox.style.display = isVisible ? 'none' : 'block';
+            if (!isVisible && initFn) {
+                setTimeout(initFn, 50);
+            }
+        }
+
+        const initializedCharts = {};
+
+        // GERADOR DE EIXOS ESTILO GEOGEBRA (Eixo X Vermelho, Eixo Y Verde)
+        function getGeoGebraAxes(xMin, xMax, yMin, yMax, zMin, zMax) {
+            const nTicks = 6;
+            
+            // Eixo X (Vermelho)
+            const xValTicks = [];
+            const stepX = (xMax - xMin) / nTicks;
+            for(let i=0; i<=nTicks; i++) xValTicks.push(xMin + i*stepX);
+
+            const traceX = {
+                type: 'scatter3d',
+                mode: 'lines+markers+text',
+                x: [xMin, xMax],
+                y: [0, 0],
+                z: [0, 0],
+                line: { color: '#dc2626', width: 6 },
+                marker: { color: '#dc2626', size: 4 },
+                text: ['', 'X'],
+                textposition: 'top center',
+                textfont: { color: '#dc2626', size: 14, family: 'Arial Black' },
+                name: 'Eixo X',
+                showlegend: false
+            };
+
+            const traceXPoints = {
+                type: 'scatter3d',
+                mode: 'markers',
+                x: xValTicks,
+                y: xValTicks.map(() => 0),
+                z: xValTicks.map(() => 0),
+                marker: { color: '#dc2626', size: 3 },
+                showlegend: false
+            };
+
+            // Eixo Y (Verde)
+            const yValTicks = [];
+            const stepY = (yMax - yMin) / nTicks;
+            for(let i=0; i<=nTicks; i++) yValTicks.push(yMin + i*stepY);
+
+            const traceY = {
+                type: 'scatter3d',
+                mode: 'lines+markers+text',
+                x: [0, 0],
+                y: [yMin, yMax],
+                z: [0, 0],
+                line: { color: '#16a34a', width: 6 },
+                marker: { color: '#16a34a', size: 4 },
+                text: ['', 'Y'],
+                textposition: 'top center',
+                textfont: { color: '#16a34a', size: 14, family: 'Arial Black' },
+                name: 'Eixo Y',
+                showlegend: false
+            };
+
+            const traceYPoints = {
+                type: 'scatter3d',
+                mode: 'markers',
+                x: yValTicks.map(() => 0),
+                y: yValTicks,
+                z: yValTicks.map(() => 0),
+                marker: { color: '#16a34a', size: 3 },
+                showlegend: false
+            };
+
+            return [traceX, traceXPoints, traceY, traceYPoints];
+        }
+
+        // GERADOR DA RETA DE ROTAÇÃO PERSONALIZADA (Destaque em Laranja Tracejado)
+        function createRotationAxisLineX(xAxisVal, yMin, yMax) {
+            return {
+                type: 'scatter3d',
+                mode: 'lines+text',
+                x: [xAxisVal, xAxisVal],
+                y: [yMin, yMax],
+                z: [0, 0],
+                line: { color: '#ea580c', width: 7, dash: 'dash' },
+                text: ['', `Reta x = ${xAxisVal}`],
+                textposition: 'top center',
+                textfont: { color: '#ea580c', size: 14, family: 'Arial Black' },
+                name: `Eixo de Rotação (x = ${xAxisVal})`,
+                showlegend: false
+            };
+        }
+
+        // GERADOR DE CASCA AZUL TRANSLÚCIDA (ROTAÇÃO EM X)
+        function createShellX(radiusFunc, xMin, xMax, nX = 40, nT = 50) {
+            const xG = [], yG = [], zG = [];
+            const dx = (xMax - xMin) / (nX - 1);
+            const dT = (2 * Math.PI) / (nT - 1);
+
+            for (let i = 0; i < nX; i++) {
+                const xv = xMin + i * dx;
+                const r = radiusFunc(xv);
+                const xr = [], yr = [], zr = [];
+                for (let j = 0; j < nT; j++) {
+                    const t = j * dT;
+                    xr.push(xv);
+                    yr.push(r * Math.cos(t));
+                    zr.push(r * Math.sin(t));
+                }
+                xG.push(xr); yG.push(yr); zG.push(zr);
+            }
+            return {
+                type: 'surface',
+                x: xG, y: yG, z: zG,
+                colorscale: [[0, '#4a90e2'], [1, '#357abd']],
+                showscale: false,
+                opacity: 0.45,
+                lighting: { ambient: 0.8, diffuse: 0.8 }
+            };
+        }
+
+        // GERADOR DE CASCA AZUL TRANSLÚCIDA (ROTAÇÃO EM Y)
+        function createShellY(radiusFunc, yMin, yMax, nY = 40, nT = 50) {
+            const xG = [], yG = [], zG = [];
+            const dy = (yMax - yMin) / (nY - 1);
+            const dT = (2 * Math.PI) / (nT - 1);
+
+            for (let i = 0; i < nY; i++) {
+                const yv = yMin + i * dy;
+                const r = radiusFunc(yv);
+                const xr = [], yr = [], zr = [];
+                for (let j = 0; j < nT; j++) {
+                    const t = j * dT;
+                    xr.push(r * Math.cos(t));
+                    yr.push(yv);
+                    zr.push(r * Math.sin(t));
+                }
+                xG.push(xr); yG.push(yr); zG.push(zr);
+            }
+            return {
+                type: 'surface',
+                x: xG, y: yG, z: zG,
+                colorscale: [[0, '#4a90e2'], [1, '#357abd']],
+                showscale: false,
+                opacity: 0.45,
+                lighting: { ambient: 0.8, diffuse: 0.8 }
+            };
+        }
+
+        // GERADOR DE CASCA TRANSLÚCIDA PARA ROTAÇÃO EM TORNO DE RETA VERTICAL X = xAxis
+        function createShellRotXLine(rFunc, yMin, yMax, xAxis, nY = 40, nT = 50) {
+            const xG = [], yG = [], zG = [];
+            const dy = (yMax - yMin) / (nY - 1);
+            const dT = (2 * Math.PI) / (nT - 1);
+
+            for (let i = 0; i < nY; i++) {
+                const yv = yMin + i * dy;
+                const r = rFunc(yv);
+                const xr = [], yr = [], zr = [];
+                for (let j = 0; j < nT; j++) {
+                    const t = j * dT;
+                    xr.push(xAxis + r * Math.cos(t));
+                    yr.push(yv);
+                    zr.push(r * Math.sin(t));
+                }
+                xG.push(xr); yG.push(yr); zG.push(zr);
+            }
+            return {
+                type: 'surface',
+                x: xG, y: yG, z: zG,
+                colorscale: [[0, '#4a90e2'], [1, '#357abd']],
+                showscale: false,
+                opacity: 0.45,
+                lighting: { ambient: 0.8, diffuse: 0.8 }
+            };
+        }
+
+        // GERADOR DE DISCO/FATIA VERMELHA (ROTAÇÃO EM X)
+        function createRedDiskX(rOuterFunc, xPos, thickness = 0.05, rInnerFunc = null) {
+            const rOut = rOuterFunc(xPos);
+            const rIn = rInnerFunc ? rInnerFunc(xPos) : 0;
+            const nT = 50;
+            const nR = 10;
+            const dT = (2 * Math.PI) / (nT - 1);
+
+            const xG = [], yG = [], zG = [];
+            for (let i = 0; i < nR; i++) {
+                const r = rIn + (i / (nR - 1)) * (rOut - rIn);
+                const xr = [], yr = [], zr = [];
+                for (let j = 0; j < nT; j++) {
+                    const t = j * dT;
+                    xr.push(xPos);
+                    yr.push(r * Math.cos(t));
+                    zr.push(r * Math.sin(t));
+                }
+                xG.push(xr); yG.push(yr); zG.push(zr);
+            }
+
+            const ringFace = {
+                type: 'surface',
+                x: xG, y: yG, z: zG,
+                colorscale: [[0, '#e11d48'], [1, '#be123c']],
+                showscale: false,
+                opacity: 0.95
+            };
+
+            const xC = [], yC = [], zC = [];
+            const dx = thickness;
+            for (let i = 0; i < 2; i++) {
+                const xv = xPos + i * dx;
+                const xr = [], yr = [], zr = [];
+                for (let j = 0; j < nT; j++) {
+                    const t = j * dT;
+                    xr.push(xv);
+                    yr.push(rOut * Math.cos(t));
+                    zr.push(rOut * Math.sin(t));
+                }
+                xC.push(xr); yC.push(yr); zC.push(zr);
+            }
+
+            const outerBand = {
+                type: 'surface',
+                x: xC, y: yC, z: zC,
+                colorscale: [[0, '#be123c'], [1, '#9f1239']],
+                showscale: false,
+                opacity: 0.95
+            };
+
+            return [ringFace, outerBand];
+        }
+
+        // GERADOR DE DISCO/FATIA VERMELHA (ROTAÇÃO EM Y)
+        function createRedDiskY(rOuterFunc, yPos, thickness = 0.1, rInnerFunc = null) {
+            const rOut = rOuterFunc(yPos);
+            const rIn = rInnerFunc ? rInnerFunc(yPos) : 0;
+            const nT = 50;
+            const nR = 10;
+            const dT = (2 * Math.PI) / (nT - 1);
+
+            const xG = [], yG = [], zG = [];
+            for (let i = 0; i < nR; i++) {
+                const r = rIn + (i / (nR - 1)) * (rOut - rIn);
+                const xr = [], yr = [], zr = [];
+                for (let j = 0; j < nT; j++) {
+                    const t = j * dT;
+                    xr.push(r * Math.cos(t));
+                    yr.push(yPos);
+                    zr.push(r * Math.sin(t));
+                }
+                xG.push(xr); yG.push(yr); zG.push(zr);
+            }
+
+            const ringFace = {
+                type: 'surface',
+                x: xG, y: yG, z: zG,
+                colorscale: [[0, '#e11d48'], [1, '#be123c']],
+                showscale: false,
+                opacity: 0.95
+            };
+
+            const xC = [], yC = [], zC = [];
+            for (let i = 0; i < 2; i++) {
+                const yv = yPos + i * thickness;
+                const xr = [], yr = [], zr = [];
+                for (let j = 0; j < nT; j++) {
+                    const t = j * dT;
+                    xr.push(rOut * Math.cos(t));
+                    yr.push(yv);
+                    zr.push(rOut * Math.sin(t));
+                }
+                xC.push(xr); yC.push(yr); zC.push(zr);
+            }
+
+            const outerBand = {
+                type: 'surface',
+                x: xC, y: yC, z: zC,
+                colorscale: [[0, '#be123c'], [1, '#9f1239']],
+                showscale: false,
+                opacity: 0.95
+            };
+
+            return [ringFace, outerBand];
+        }
+
+        // GERADOR DE DISCO/ARRUELA VERMELHA PARA ROTAÇÃO EM TORNO DE RETA VERTICAL X = xAxis
+        function createRedDiskVertLine(rOuterFunc, rInnerFunc, yPos, xAxis, thickness = 0.05) {
+            const rOut = rOuterFunc(yPos);
+            const rIn = rInnerFunc ? rInnerFunc(yPos) : 0;
+            const nT = 50;
+            const nR = 10;
+            const dT = (2 * Math.PI) / (nT - 1);
+
+            const xG = [], yG = [], zG = [];
+            for (let i = 0; i < nR; i++) {
+                const r = rIn + (i / (nR - 1)) * (rOut - rIn);
+                const xr = [], yr = [], zr = [];
+                for (let j = 0; j < nT; j++) {
+                    const t = j * dT;
+                    xr.push(xAxis + r * Math.cos(t));
+                    yr.push(yPos);
+                    zr.push(r * Math.sin(t));
+                }
+                xG.push(xr); yG.push(yr); zG.push(zr);
+            }
+
+            const ringFace = {
+                type: 'surface',
+                x: xG, y: yG, z: zG,
+                colorscale: [[0, '#e11d48'], [1, '#be123c']],
+                showscale: false,
+                opacity: 0.95
+            };
+
+            const xC = [], yC = [], zC = [];
+            for (let i = 0; i < 2; i++) {
+                const yv = yPos + i * thickness;
+                const xr = [], yr = [], zr = [];
+                for (let j = 0; j < nT; j++) {
+                    const t = j * dT;
+                    xr.push(xAxis + rOut * Math.cos(t));
+                    yr.push(yv);
+                    zr.push(rOut * Math.sin(t));
+                }
+                xC.push(xr); yC.push(yr); zC.push(zr);
+            }
+
+            const outerBand = {
+                type: 'surface',
+                x: xC, y: yC, z: zC,
+                colorscale: [[0, '#be123c'], [1, '#9f1239']],
+                showscale: false,
+                opacity: 0.95
+            };
+
+            return [ringFace, outerBand];
+        }
+
+        // LAYOUT GEOGEBRA CLEAN
+        function getGeoGebraLayout() {
+            return {
+                autosize: true,
+                margin: { l: 0, r: 0, b: 0, t: 10 },
+                paper_bgcolor: '#ffffff',
+                plot_bgcolor: '#ffffff',
+                scene: {
+                    aspectmode: 'data',
+                    xaxis: { visible: false },
+                    yaxis: { visible: false },
+                    zaxis: { visible: false },
+                    camera: { eye: { x: 1.4, y: 1.4, z: 1.1 } }
+                }
+            };
+        }
+
+        // RENDERIZADORES DE CADA ITEM
+
+        function initChart3DA() {
+            if (initializedCharts['a']) return;
+            const rFunc = x => 2 - 0.5 * x;
+            const shell = createShellX(rFunc, 1, 2);
+            const disk = createRedDiskX(rFunc, 1.5, 0.04);
+            const axes = getGeoGebraAxes(0, 2.5, -2, 2, -2, 2);
+            Plotly.newPlot('chart-a', [shell, ...disk, ...axes], getGeoGebraLayout());
+            initializedCharts['a'] = true;
+        }
+
+        function initChart3DB() {
+            if (initializedCharts['b']) return;
+            const rFunc = x => 1 - x * x;
+            const shell = createShellX(rFunc, -1, 1);
+            const disk = createRedDiskX(rFunc, 0.3, 0.05);
+            const axes = getGeoGebraAxes(-1.5, 1.5, -1.2, 1.2, -1.2, 1.2);
+            Plotly.newPlot('chart-b', [shell, ...disk, ...axes], getGeoGebraLayout());
+            initializedCharts['b'] = true;
+        }
+
+        function initChart3DC() {
+            if (initializedCharts['c']) return;
+            const rFunc = x => 1 / x;
+            const shell = createShellX(rFunc, 1, 2);
+            const disk = createRedDiskX(rFunc, 1.4, 0.04);
+            const axes = getGeoGebraAxes(0, 2.5, -1.2, 1.2, -1.2, 1.2);
+            Plotly.newPlot('chart-c', [shell, ...disk, ...axes], getGeoGebraLayout());
+            initializedCharts['c'] = true;
+        }
+
+        function initChart3DD() {
+            if (initializedCharts['d']) return;
+            const rFunc = x => Math.sqrt(25 - x * x);
+            const shell = createShellX(rFunc, 2, 4);
+            const disk = createRedDiskX(rFunc, 3.0, 0.08);
+            const axes = getGeoGebraAxes(0, 5, -5, 5, -5, 5);
+            Plotly.newPlot('chart-d', [shell, ...disk, ...axes], getGeoGebraLayout());
+            initializedCharts['d'] = true;
+        }
+
+        function initChart3DE() {
+            if (initializedCharts['e']) return;
+            const rFunc = y => 2 * Math.sqrt(y);
+            const shell = createShellY(rFunc, 0, 9);
+            const disk = createRedDiskY(rFunc, 4.5, 0.2);
+            const axes = getGeoGebraAxes(-7, 7, -1, 10, -7, 7);
+            Plotly.newPlot('chart-e', [shell, ...disk, ...axes], getGeoGebraLayout());
+            initializedCharts['e'] = true;
+        }
+
+        function initChart3DF() {
+            if (initializedCharts['f']) return;
+            const rFunc = y => Math.exp(y);
+            const shell = createShellY(rFunc, 1, 2);
+            const disk = createRedDiskY(rFunc, 1.5, 0.04);
+            const axes = getGeoGebraAxes(-8, 8, 0, 2.5, -8, 8);
+            Plotly.newPlot('chart-f', [shell, ...disk, ...axes], getGeoGebraLayout());
+            initializedCharts['f'] = true;
+        }
+
+        function initChart3DG() {
+            if (initializedCharts['g']) return;
+            const rOut = x => x;
+            const rIn = x => Math.pow(x, 3);
+            const shellOuter = createShellX(rOut, 0, 1);
+            const shellInner = createShellX(rIn, 0, 1);
+            const washer = createRedDiskX(rOut, 0.65, 0.03, rIn);
+            const axes = getGeoGebraAxes(-0.2, 1.3, -1.1, 1.1, -1.1, 1.1);
+            Plotly.newPlot('chart-g', [shellOuter, shellInner, ...washer, ...axes], getGeoGebraLayout());
+            initializedCharts['g'] = true;
+        }
+
+        function initChart3DH() {
+            if (initializedCharts['h']) return;
+            const rOut = y => 2;
+            const rIn = y => 2 * Math.sqrt(y);
+            const shellOuter = createShellY(rOut, 0, 1);
+            const shellInner = createShellY(rIn, 0, 1);
+            const washer = createRedDiskY(rOut, 0.5, 0.04, rIn);
+            const axes = getGeoGebraAxes(-2.5, 2.5, -0.2, 1.3, -2.5, 2.5);
+            Plotly.newPlot('chart-h', [shellOuter, shellInner, ...washer, ...axes], getGeoGebraLayout());
+            initializedCharts['h'] = true;
+        }
+
+        function initChart3DI() {
+            if (initializedCharts['i']) return;
+            const rFunc = y => 1 - y * y;
+            const shell = createShellRotXLine(rFunc, -1, 1, 1);
+            const disk = createRedDiskVertLine(rFunc, null, 0.2, 1, 0.05);
+            const rotAxis = createRotationAxisLineX(1, -1.4, 1.4);
+            const axes = getGeoGebraAxes(-0.5, 2.5, -1.5, 1.5, -1.5, 1.5);
+            Plotly.newPlot('chart-i', [shell, ...disk, rotAxis, ...axes], getGeoGebraLayout());
+            initializedCharts['i'] = true;
+        }
+
+        function initChart3DJ() {
+            if (initializedCharts['j']) return;
+            const rOut = y => 2 - y * y;
+            const rIn = y => 2 - y;
+            const shellOuter = createShellRotXLine(rOut, 0, 1, 2);
+            const shellInner = createShellRotXLine(rIn, 0, 1, 2);
+            const washer = createRedDiskVertLine(rOut, rIn, 0.5, 2, 0.04);
+            const rotAxis = createRotationAxisLineX(2, -0.3, 1.3);
+            const axes = getGeoGebraAxes(-0.5, 3.5, -0.5, 1.5, -2, 2);
+            Plotly.newPlot('chart-j', [shellOuter, shellInner, ...washer, rotAxis, ...axes], getGeoGebraLayout());
+            initializedCharts['j'] = true;
+        }
+
+        function initChart3DK() {
+            if (initializedCharts['k']) return;
+            const rOut = y => Math.sqrt(y) + 1;
+            const rIn = y => y * y + 1;
+            const shellOuter = createShellRotXLine(rOut, 0, 1, -1);
+            const shellInner = createShellRotXLine(rIn, 0, 1, -1);
+            const washer = createRedDiskVertLine(rOut, rIn, 0.5, -1, 0.04);
+            const rotAxis = createRotationAxisLineX(-1, -0.3, 1.3);
+            const axes = getGeoGebraAxes(-3, 2, -0.5, 1.5, -2.5, 2.5);
+            Plotly.newPlot('chart-k', [shellOuter, shellInner, ...washer, rotAxis, ...axes], getGeoGebraLayout());
+            initializedCharts['k'] = true;
+        }
+    </script>
+</body>
+</html>
