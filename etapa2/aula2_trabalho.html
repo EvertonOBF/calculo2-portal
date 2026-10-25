@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo 2: Trabalho e Aplicações de Integração</title>
+    
+    <!-- Configuração do MathJax -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <!-- Biblioteca Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e293b;
+            --accent-color: #059669;
+            --purple-accent: #7c3aed;
+            --amber-accent: #d97706;
+            --red-solid: #dc2626;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #334155;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        p, li {
+            text-align: justify;
+            font-size: 1.05rem;
+            margin-bottom: 16px;
+        }
+
+        .navbar {
+            background-color: var(--secondary-color);
+            padding: 15px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: #93c5fd;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .content-section {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 35px;
+            margin-bottom: 35px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-left: 6px solid var(--primary-color);
+        }
+
+        h1 {
+            color: var(--secondary-color);
+            font-size: 1.8rem;
+            margin-top: 0;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        h2 { font-size: 1.3rem; margin-top: 25px; margin-bottom: 15px; }
+        h3 { color: var(--secondary-color); font-size: 1.25rem; margin-top: 0; }
+
+        .definition-box {
+            background-color: #fff7ed;
+            border-radius: 8px;
+            padding: 22px;
+            margin: 25px 0;
+            border-left: 5px solid var(--amber-accent);
+            font-size: 1.05rem;
+        }
+
+        .final-formula-highlight {
+            background-color: #f3e8ff;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.5rem;
+            margin-top: 15px;
+            color: var(--secondary-color);
+        }
+
+        .example-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .btn-group { display: flex; gap: 12px; margin: 18px 0; flex-wrap: wrap; }
+        .btn-toggle {
+            padding: 10px 18px; border: none; border-radius: 6px;
+            font-weight: 600; font-size: 0.95rem; cursor: pointer;
+            transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .btn-blue { background-color: var(--primary-color); color: white; }
+        .btn-purple-outline { background-color: #f3e8ff; color: var(--purple-accent); border: 1px solid var(--purple-accent); }
+
+        .toggle-content { display: none; margin-top: 15px; animation: fadeIn 0.3s ease-in-out; }
+        .resolution-box { background-color: #f8fafc; border: 1px solid #cbd5e1; border-left: 5px solid var(--primary-color); border-radius: 8px; padding: 22px; }
+
+        .simulation-container {
+            background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 20px; margin: 20px 0;
+        }
+        
+        .controls-bar {
+            background: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px;
+            padding: 15px 20px; margin-top: 15px; display: flex; gap: 20px; align-items: center; justify-content: center; flex-wrap: wrap;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="etapa2.html">← Voltar ao Menu Principal</a>
+        <span>Cálculo 2 - Aplicações de Integração</span>
+    </div>
+
+    <div class="container">
+
+        <!-- CONCEITO DE TRABALHO -->
+        <div class="content-section" style="border-left-color: var(--amber-accent);">
+            <h1 style="color: var(--amber-accent);">Trabalho</h1>
+            
+            <p>O termo <em>trabalho</em> é usado na linguagem cotidiana significando a quantidade de esforço necessária para executar uma tarefa. Na física, esse termo tem um significado técnico que depende do conceito de <em>força</em>. Se um objeto se move ao longo de uma reta com função de posição $s(t)$, então a <strong>força $F$</strong> é definida pela Segunda Lei de Newton do Movimento como o produto de sua massa $m$ pela sua aceleração:</p>
+
+            $$F = m \frac{d^2s}{dt^2}$$
+
+            <p>No caso de aceleração constante, a força $F$ também é constante, e o <strong>trabalho feito</strong> é definido pelo produto da força $F$ pela distância $d$ na qual o objeto se move:</p>
+
+            <div class="final-formula-highlight" style="background-color: #fff7ed;">
+                $$W = Fd \quad \text{(trabalho = força } \times \text{ distância)}$$
+            </div>
+        </div>
+
+        <!-- FORÇA VARIÁVEL E INTEGRAL -->
+        <div class="content-section" style="border-left-color: var(--purple-accent);">
+            <h1 style="color: var(--purple-accent);">Trabalho Exercido por Força Variável</h1>
+
+            <p>A fórmula $W = Fd$ define trabalho desde que a força seja constante. Se a força for variável, suponha que o objeto se mova de $x = a$ para $x = b$, e uma força contínua $f(x)$ atue no objeto. Dividimos o intervalo em subintervalos $\Delta x$. O trabalho $W_i$ executado na $i$-ésima parte é aproximadamente $W_i \approx f(x_i^*) \Delta x$.</p>
+            <p>Aproximando o trabalho total por uma soma de Riemann e tomando o limite quando $n \to \infty$, obtemos a integral definida para o trabalho:</p>
+
+            <div class="final-formula-highlight">
+                $$W = \lim_{n \to \infty} \sum_{i=1}^{n} f(x_i^*) \Delta x = \int_{a}^{b} f(x) \, dx$$
+            </div>
+
+            <!-- EXEMPLO 2: PARTÍCULA -->
+            <div class="example-card" style="margin-top:30px;">
+                <h3>Exemplo 2: Movimento de uma Partícula</h3>
+                <p>Quando uma partícula está localizada a uma distância de $x$ metros da origem, uma força de $x^2 + 2x$ newtons age sobre ela. Quanto trabalho é realizado movendo-a de $x = 1$ para $x = 3$?</p>
+
+                <div class="btn-group">
+                    <button class="btn-toggle btn-blue" onclick="toggleDisplay('res2')">📖 Ver Resolução</button>
+                    <button class="btn-toggle btn-purple-outline" onclick="toggleDisplay('graph2'); renderEx2();">📊 Visualizar Gráfico (Área = Trabalho)</button>
+                </div>
+
+                <div id="res2" class="toggle-content resolution-box">
+                    $$W = \int_{1}^{3} (x^2 + 2x) \, dx = \left[ \frac{x^3}{3} + x^2 \right]_1^3 = \left( 9 + 9 \right) - \left( \frac{1}{3} + 1 \right) = 18 - \frac{4}{3} = \frac{50}{3}\text{ J}$$
+                </div>
+
+                <div id="graph2" class="toggle-content simulation-container">
+                    <div id="plot_ex2" style="width: 100%; height: 350px;"></div>
+                    <p style="text-align:center; font-size:0.9rem; color:#666;">A área colorida sob a curva da força representa o trabalho total realizado (Integral).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- LEI DE HOOKE E MOLA -->
+        <div class="content-section" style="border-left-color: var(--primary-color);">
+            <h1 style="color: var(--primary-color);">Lei de Hooke e Molas</h1>
+
+            <div class="definition-box">
+                <strong>Lei de Hooke:</strong> A força necessária para manter uma mola esticada $x$ unidades além do seu comprimento natural é proporcional a $x$:
+                $$f(x) = kx$$
+            </div>
+
+            <div class="example-card">
+                <h3>Exemplo 3: Trabalho em uma Mola</h3>
+                <p>Uma força de $40\text{ N}$ é necessária para segurar uma mola esticada de $10\text{ cm}$ (natural) para $15\text{ cm}$. Quanto trabalho é feito esticando-a de $15\text{ cm}$ para $18\text{ cm}$?</p>
+
+                <div class="btn-group">
+                    <button class="btn-toggle btn-blue" onclick="toggleDisplay('res3')">📖 Ver Resolução</button>
+                    <button class="btn-toggle btn-purple-outline" onclick="toggleDisplay('sim_mola'); renderMola(0);">⚙️ Simular Mola</button>
+                </div>
+
+                <div id="res3" class="toggle-content resolution-box">
+                    <p>1. Constante da mola: A mola esticou $0{,}05\text{ m}$. $40 = k(0{,}05) \implies k = 800$. Então $f(x) = 800x$.</p>
+                    <p>2. Trabalho de $15\text{ cm}$ ($x=0{,}05$) para $18\text{ cm}$ ($x=0{,}08$):</p>
+                    $$W = \int_{0{,}05}^{0{,}08} 800x \, dx = 800 \left[ \frac{x^2}{2} \right]_{0{,}05}^{0{,}08} = 400(0{,}0064 - 0{,}0025) = 1{,}56\text{ J}$$
+                </div>
+
+                <div id="sim_mola" class="toggle-content simulation-container">
+                    <div id="plot_mola" style="width: 100%; height: 280px;"></div>
+                    <div class="controls-bar">
+                        <label>Deformação $x$ (m):</label>
+                        <input type="range" id="mola_slider" min="0" max="0.30" step="0.01" value="0" oninput="updateMola()">
+                        <span id="mola_val" style="font-weight: bold; width: 60px;">0.00 m</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CABO PENDURADO -->
+        <div class="content-section" style="border-left-color: var(--amber-accent);">
+            <h1 style="color: var(--amber-accent);">Aplicações: Cabo Vertical</h1>
+
+            <div class="example-card">
+                <h3>Exemplo 4: Puxando um Cabo</h3>
+                <p>Um cabo de $200\text{ lb}$ tem $100\text{ pés}$ de comprimento e está pendurado verticalmente de um edifício. Qual o trabalho para puxar o cabo para o topo?</p>
+
+                <div class="btn-group">
+                    <button class="btn-toggle btn-blue" onclick="toggleDisplay('res4')">📖 Ver Resolução</button>
+                    <button class="btn-toggle btn-purple-outline" onclick="toggleDisplay('sim_cabo'); renderCabo(100);">⚙️ Simular Cabo</button>
+                </div>
+
+                <div id="res4" class="toggle-content resolution-box">
+                    <p>O cabo pesa $2\text{ lb/pé}$. Dividindo em partes $\Delta x$, a força é $2\Delta x$ e a distância é $x$.</p>
+                    $$W = \int_{0}^{100} 2x \, dx = \left[ x^2 \right]_0^{100} = 10.000\text{ lb-pé}$$
+                </div>
+
+                <div id="sim_cabo" class="toggle-content simulation-container">
+                    <div id="plot_cabo" style="width: 100%; height: 350px;"></div>
+                    <div class="controls-bar">
+                        <label>Comprimento pendente (pés):</label>
+                        <input type="range" id="cabo_slider" min="0" max="100" step="1" value="100" oninput="updateCabo()">
+                        <span id="cabo_val" style="font-weight: bold; width: 70px;">100 pés</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TANQUE CÔNICO -->
+        <div class="content-section" style="border-left-color: var(--primary-color);">
+            <h1 style="color: var(--primary-color);">Aplicações: Bombeamento de Líquidos</h1>
+
+            <div class="example-card">
+                <h3>Exemplo 5: Tanque Cônico Invertido</h3>
+                <p>Um tanque (cone invertido) de altura $10\text{ m}$ e raio $4\text{ m}$ está cheio de água até $8\text{ m}$. Encontre o trabalho para esvaziar o tanque bombeando a água pelo topo.</p>
+
+                <div class="btn-group">
+                    <button class="btn-toggle btn-blue" onclick="toggleDisplay('res5')">📖 Ver Resolução</button>
+                    <button class="btn-toggle btn-purple-outline" onclick="toggleDisplay('sim_cone'); renderCone(2);">⚙️ Simular Tanque</button>
+                </div>
+
+                <div id="res5" class="toggle-content resolution-box">
+                    <p>Origem no topo, eixo x para baixo. Água de $x=2$ a $x=10$. Raio $r_i = \frac{2}{5}(10-x)$. Força da fatia $F_i = 9{,}8 \cdot 1000 \cdot \pi r_i^2 \Delta x$. Distância = $x$.</p>
+                    $$W = \int_{2}^{10} 1568\pi x (10 - x)^2 \, dx = 1568\pi \left[ 50x^2 - \frac{20x^3}{3} + \frac{x^4}{4} \right]_2^{10} \approx 3{,}4 \times 10^6\text{ J}$$
+                </div>
+
+                <div id="sim_cone" class="toggle-content simulation-container">
+                    <div id="plot_cone" style="width: 100%; height: 350px;"></div>
+                    <div class="controls-bar">
+                        <label>Nível da superfície da água (x metros do topo):</label>
+                        <input type="range" id="cone_slider" min="2" max="10" step="0.1" value="2" oninput="updateCone()">
+                        <span id="cone_val">2.0 m</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleDisplay(id) {
+            const el = document.getElementById(id);
+            el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+        }
+
+        // Gráfico Exemplo 2: Área sob a curva
+        function renderEx2() {
+            let xVals = [], yVals = [];
+            for (let x = 1; x <= 3; x += 0.05) {
+                xVals.push(x);
+                yVals.push(x*x + 2*x);
+            }
+            const area = { x: xVals, y: yVals, fill: 'tozeroy', type: 'scatter', name: 'Trabalho (J)', marker: {color: 'rgba(124, 58, 237, 0.5)'} };
+            const linha = { x: xVals, y: yVals, type: 'scatter', mode: 'lines', name: 'f(x)', line: {color: '#7c3aed', width: 3} };
+            Plotly.newPlot('plot_ex2', [area, linha], { margin: {t:20, b:40, l:40, r:20}, xaxis: {title: 'Posição x (m)'}, yaxis: {title: 'Força f(x) (N)'} }, {displayModeBar: false});
+        }
+
+        // Simulação Mola (Exemplo 3) 
+        function renderMola(x) {
+            let k = 800;
+            let force = k * x;
+            
+            let wallX = -0.2; 
+            let blockX = x; 
+            
+            let numCoils = 10;
+            let xVals = [wallX], yVals = [0];
+            
+            for (let i = 1; i <= numCoils * 2; i++) {
+                xVals.push(wallX + ((blockX - wallX) / (numCoils * 2)) * i);
+                yVals.push(i % 2 === 0 ? 0 : (i % 4 === 1 ? 1 : -1));
+            }
+            
+            let blockWidth = 0.15;
+            let blockHeight = 2.0;
+            const block = {
+                x: [blockX, blockX + blockWidth, blockX + blockWidth, blockX, blockX],
+                y: [-blockHeight/2, -blockHeight/2, blockHeight/2, blockHeight/2, -blockHeight/2],
+                fill: 'toself', type: 'scatter', mode: 'lines', line: {color: '#d97706', width: 2}, fillcolor: '#fcd34d'
+            };
+            
+            const spring = { x: xVals, y: yVals, type: 'scatter', mode: 'lines', line: {color: '#64748b', width: 3} };
+            
+            const wall = {
+                x: [wallX, wallX, wallX-0.1, wallX-0.1, wallX],
+                y: [-3, 3, 3, -3, -3],
+                fill: 'toself', type: 'scatter', mode: 'lines', line: {color: '#475569'}, fillcolor: '#94a3b8'
+            };
+
+            const axis = {
+                x: [-0.3, 1.2], y: [-1.1, -1.1], type: 'scatter', mode: 'lines', line: {color: '#334155', width: 2}
+            };
+            
+            const eqMark = {
+                x: [0, 0], y: [-1.5, 1.5], type: 'scatter', mode: 'lines', line: {color: '#16a34a', width: 2, dash: 'dash'}
+            };
+
+            const annotations = [
+                {
+                    x: 0, y: -1.8, xref: 'x', yref: 'y',
+                    text: 'x = 0<br>(Equilíbrio)', showarrow: false, font: {color: '#16a34a', size: 12, weight: 'bold'}
+                }
+            ];
+
+            if (x > 0) {
+                annotations.push({
+                    x: blockX + blockWidth/2, y: -1.8, xref: 'x', yref: 'y',
+                    text: `x = ${x.toFixed(2)} m`, showarrow: false, font: {color: '#d97706', size: 12, weight: 'bold'}
+                });
+
+                annotations.push({
+                    x: blockX + blockWidth, y: 0, xref: 'x', yref: 'y',
+                    ax: blockX + blockWidth + 0.1 + (x * 1.5), ay: 0, 
+                    axref: 'x', ayref: 'y',
+                    arrowcolor: '#dc2626', arrowsize: 1.5, arrowwidth: 3, arrowhead: 2
+                });
+                
+                annotations.push({
+                    x: blockX + blockWidth + 0.15 + (x * 1.5)/2, y: 0.6, xref: 'x', yref: 'y',
+                    text: `F = ${force.toFixed(1)} N`, showarrow: false, font: {color: '#dc2626', size: 13, weight: 'bold'}
+                });
+            } else {
+                annotations.push({
+                    x: blockX + blockWidth/2, y: 1.5, xref: 'x', yref: 'y',
+                    text: `F = 0 N`, showarrow: false, font: {color: '#dc2626', size: 13, weight: 'bold'}
+                });
+            }
+
+            Plotly.react('plot_mola', [wall, axis, spring, block, eqMark], { 
+                margin: {t:30, b:20, l:20, r:20}, 
+                xaxis: {range: [-0.3, 1.2], visible: false}, 
+                yaxis: {range: [-2.5, 2.5], visible: false}, 
+                showlegend: false,
+                annotations: annotations
+            }, {displayModeBar: false});
+        }
+
+        function updateMola() {
+            let val = parseFloat(document.getElementById('mola_slider').value);
+            document.getElementById('mola_val').innerText = val.toFixed(2) + " m";
+            renderMola(val);
+        }
+
+        // Simulação Cabo (Exemplo 4) Atualizada com Prédio Estreito e Boneco
+        function renderCabo(length) {
+            // Chão
+            const chao = {
+                x: [-15, 10], y: [0, 0], type: 'scatter', mode: 'lines', line: {color: '#334155', width: 4}
+            };
+
+            // Prédio mais estreito (2 colunas de janelas)
+            const predio = { 
+                x: [-6, 0, 0, -6, -6], 
+                y: [0, 0, 110, 110, 0], 
+                fill: 'toself', type: 'scatter', mode: 'lines', fillcolor: '#94a3b8', line: {color: '#475569', width: 2} 
+            };
+
+            // Cabo pendurado (x = 1.0)
+            const caboX = 1.0;
+            const cabo = { 
+                x: [caboX, caboX], y: [110, 110 - length], 
+                type: 'scatter', mode: 'lines', line: {color: '#dc2626', width: 4} 
+            };
+
+            // Peso/Gancho na ponta do cabo
+            const gancho = {
+                x: [caboX], y: [110 - length],
+                type: 'scatter', mode: 'markers', marker: {color: '#b91c1c', size: 10, symbol: 'square'}
+            };
+
+            // Construção do Boneco ("Stickman") puxando o cabo
+            const boneco_cabeca = {
+                x: [-0.5], y: [114.5], type: 'scatter', mode: 'markers', marker: {color: '#0f172a', size: 14}
+            };
+            
+            const boneco_corpo = {
+                // Pontos: pernaEsq->quadril, pernaDir->quadril, quebra(null), quadril->pescoço, quebra(null), ombros->mão no cabo
+                x: [-1.2, -0.5, 0.2, null, -0.5, -0.5, null, -0.5, caboX], 
+                y: [110, 112, 110, null, 112, 114, null, 113.5, 110],
+                type: 'scatter', mode: 'lines', line: {color: '#0f172a', width: 4}
+            };
+
+            // Criando as janelas do prédio (Apenas 2 colunas: em x=-4 e x=-1.5)
+            let shapes = [];
+            const colunas = [-4.2, -1.8];
+            for (let col of colunas) {
+                for (let row = 10; row <= 100; row += 10) {
+                    shapes.push({
+                        type: 'rect',
+                        x0: col - 0.8, x1: col + 0.8,
+                        y0: row - 3, y1: row + 3,
+                        fillcolor: '#60a5fa',
+                        line: {color: '#1e3a8a', width: 1}
+                    });
+                }
+            }
+
+            Plotly.react('plot_cabo', [chao, predio, cabo, gancho, boneco_cabeca, boneco_corpo], { 
+                margin: {t:30, b:20, l:40, r:20}, 
+                xaxis: {range: [-9, 5], visible: false}, // Câmera ajustada para o prédio mais fino
+                yaxis: {range: [-5, 120], visible: false}, 
+                shapes: shapes,
+                showlegend: false 
+            }, {displayModeBar: false});
+        }
+
+        function updateCabo() {
+            let val = parseInt(document.getElementById('cabo_slider').value);
+            document.getElementById('cabo_val').innerText = val + " pés";
+            renderCabo(val);
+        }
+
+        // Simulação Tanque Cônico (Exemplo 5)
+        function renderCone(waterLevelX) {
+            const tanque = { 
+                x: [-4, 0, 4, -4], 
+                y: [0, -10, 0, 0], 
+                type: 'scatter', mode: 'lines', line: {color: '#334155', width: 2} 
+            };
+            let rTopWater = (2/5) * (10 - waterLevelX);
+            const agua = {
+                x: [-rTopWater, 0, rTopWater, -rTopWater],
+                y: [-waterLevelX, -10, -waterLevelX, -waterLevelX],
+                fill: 'toself', type: 'scatter', mode: 'lines', fillcolor: 'rgba(59, 130, 246, 0.6)', line: {color: '#2563eb'}
+            };
+            Plotly.react('plot_cone', [tanque, agua], { 
+                margin: {t:20, b:20, l:40, r:40}, 
+                xaxis: {range: [-5, 5], visible: false}, 
+                yaxis: {range: [-11, 2], title: 'Eixo x (Profundidade)', tickvals: [0, -2, -4, -6, -8, -10], ticktext: ['0 (Topo)', '2', '4', '6', '8', '10 (Fundo)']}, 
+                showlegend: false 
+            }, {displayModeBar: false});
+        }
+
+        function updateCone() {
+            let val = parseFloat(document.getElementById('cone_slider').value);
+            document.getElementById('cone_val').innerText = val.toFixed(1) + " m";
+            renderCone(val);
+        }
+    </script>
+</body>
+</html>
