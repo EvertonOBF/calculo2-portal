@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo 2: Volume por Cascas Cilíndricas</title>
+    
+    <!-- Configuração do MathJax -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <!-- Biblioteca Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e293b;
+            --accent-color: #059669;
+            --purple-accent: #7c3aed;
+            --amber-accent: #d97706;
+            --red-solid: #dc2626;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #334155;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        p, li {
+            text-align: justify;
+            font-size: 1.05rem;
+            margin-bottom: 16px;
+        }
+
+        .navbar {
+            background-color: var(--secondary-color);
+            padding: 15px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: #93c5fd;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .navbar a:hover {
+            color: #ffffff;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .content-section {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 35px;
+            margin-bottom: 35px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-left: 6px solid var(--primary-color);
+        }
+
+        h1 {
+            color: var(--secondary-color);
+            font-size: 1.8rem;
+            margin-top: 0;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 1.3rem;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        .definition-box {
+            background-color: #fff7ed;
+            border-radius: 8px;
+            padding: 22px;
+            margin: 25px 0;
+            border-left: 5px solid var(--amber-accent);
+            font-size: 1.05rem;
+        }
+
+        .simulation-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .single-plot-container {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @media (max-width: 850px) {
+            .simulation-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .plot-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .plot-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--secondary-color);
+            margin-bottom: 8px;
+        }
+
+        .controls-bar {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-top: 15px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        button.btn-anim {
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-purple { background-color: var(--purple-accent); }
+        .btn-purple:hover { background-color: #6d28d9; }
+
+        .btn-magenta { background-color: #c026d3; }
+        .btn-magenta:hover { background-color: #a21caf; }
+
+        .single-formula-card {
+            background: transparent;
+            border: none;
+            padding: 0;
+            margin: 25px 0;
+        }
+
+        .step-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--purple-accent);
+            color: white;
+            border-radius: 50%;
+            width: 26px;
+            height: 26px;
+            font-weight: 700;
+            margin-right: 8px;
+            font-size: 0.85rem;
+        }
+
+        .final-formula-highlight {
+            background-color: #f3e8ff;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.5rem;
+            margin-top: 15px;
+            color: var(--secondary-color);
+        }
+
+        .example-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .example-card h3 {
+            margin-top: 0;
+            color: var(--secondary-color);
+            font-size: 1.25rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin: 18px 0;
+            flex-wrap: wrap;
+        }
+
+        .btn-toggle {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-blue { background-color: var(--primary-color); color: white; }
+        .btn-blue:hover { background-color: #1d4ed8; }
+
+        .btn-purple-outline { 
+            background-color: #f3e8ff; 
+            color: var(--purple-accent); 
+            border: 1px solid var(--purple-accent);
+        }
+        .btn-purple-outline:hover { 
+            background-color: var(--purple-accent); 
+            color: white; 
+        }
+
+        .toggle-content {
+            display: none;
+            margin-top: 15px;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .resolution-box {
+            background-color: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-left: 5px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 22px;
+        }
+
+        .resolution-box h4 {
+            margin-top: 0;
+            color: var(--secondary-color);
+            font-size: 1.1rem;
+        }
+
+        .btn-exercise-list {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(5, 150, 105, 0.2);
+        }
+
+        .btn-exercise-list:hover {
+            background-color: #047857;
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="etapa2.html">← Voltar ao Menu Principal</a>
+        <span>Cálculo 2 - Volumes por Cascas Cilíndricas</span>
+    </div>
+
+    <div class="container">
+
+        <!-- INTRODUÇÃO E MOTIVAÇÃO DO MÉTODO -->
+        <div class="content-section" style="border-left-color: var(--amber-accent);">
+            <h1 style="color: var(--amber-accent);">Volumes por Cascas Cilíndricas: Conceito e Motivação</h1>
+            
+            <p>
+                Alguns problemas de determinação de volume são extremamente difíceis de resolver usando o método das arruelas ou discos. Considere, por exemplo, encontrar o volume do sólido obtido pela rotação em torno do eixo $Y$ da região delimitada por $y = 2x^2 - x^3$ e $y = 0$.
+            </p>
+            <p>
+                Se fatiarmos o sólido perpendicularmente ao eixo $Y$ (usando arruelas), precisaremos determinar o raio interno $x_L$ e o raio externo $x_R$. Para isso, teríamos que resolver a equação cúbica $y = 2x^2 - x^3$ para expressar $x$ em termos de $y$, o que não é uma tarefa fácil.
+            </p>
+
+            <!-- FIGURA 1: DIFICULDADE COM ARRUELAS -->
+            <div class="single-plot-container">
+                <div class="plot-title">Figura 1: Dificuldade em Isolando $x$ em Função de $y$ (Método das Arruelas)</div>
+                <div id="plot_motivation_1" style="width: 100%; max-width: 650px; height: 350px;"></div>
+            </div>
+
+            <div class="definition-box">
+                <p style="margin: 0; font-weight: 500;">
+                    <strong>O Método das Cascas Cilíndricas:</strong> Felizmente, existe um método mais simples para esses casos. Em vez de fatiar o sólido perpendicularmente ao eixo de rotação, fatiamos o sólido em <strong>cascas cilíndricas concêntricas</strong> verticais paralelas ao eixo $Y$.
+                </p>
+            </div>
+        </div>
+
+        <!-- DEDUÇÃO DA FÓRMULA DE UMA CASCA CILÍNDRICA -->
+        <div class="content-section" style="border-left-color: var(--purple-accent);">
+            <h1 style="color: var(--purple-accent);">Dedução Matemática e Geometria da Casca</h1>
+
+            <p>
+                A <strong>Figura 2</strong> mostra o processo de geração de uma casca cilíndrica. Ao lado do gráfico da função $f(x)$, uma faixa vertical rosa é rotacionada em torno do eixo $Y$, formando a casca com raio médio $r$, altura $h$ e espessura $\Delta r$.
+            </p>
+
+            $$V = V_2 - V_1 = \pi r_2^2 h - \pi r_1^2 h = \pi (r_2^2 - r_1^2) h = \pi (r_2 + r_1)(r_2 - r_1) h$$
+
+            <p>
+                Reescrevendo a expressão, temos:
+            </p>
+
+            $$V = 2\pi \cdot \left( \frac{r_2 + r_1}{2} \right) \cdot h \cdot (r_2 - r_1)$$
+
+            <p>
+                Se definirmos $\Delta r = r_2 - r_1$ (a espessura da casca) e $r = \frac{r_2 + r_1}{2}$ (o raio médio da casca), a fórmula para o volume de uma casca cilíndrica se torna:
+            </p>
+
+            <div class="final-formula-highlight" style="background-color: #fff7ed;">
+                $$V = 2\pi r h \, \Delta r$$
+            </div>
+
+            <!-- FIGURA 2: LADO A LADO COM ANIMAÇÃO DA CASCA -->
+            <div class="simulation-container">
+                <div class="plot-box">
+                    <div class="plot-title">Região Geratriz $f(x)$ com Faixa Vertical</div>
+                    <div id="plot2d_single_shell" style="width: 100%; height: 360px;"></div>
+                </div>
+
+                <div class="plot-box">
+                    <div class="plot-title">Casca Cilíndrica Gerada em 3D</div>
+                    <div id="plot3d_single_shell" style="width: 100%; height: 360px;"></div>
+                </div>
+            </div>
+
+            <div class="controls-bar">
+                <button id="btnPlaySingleShell" class="btn-anim btn-magenta" onclick="toggleSingleShellAnimation()">
+                    ▶ Iniciar Rotação da Casca
+                </button>
+                
+                <div class="control-group">
+                    <label for="sliderSingleShellAngle">Ângulo ($\theta$):</label>
+                    <input type="range" id="sliderSingleShellAngle" min="0" max="360" value="0" step="5" style="width: 180px;" oninput="updateSingleShellRotation()">
+                    <span id="textSingleShellAngle" style="font-weight: 700; color: #c026d3; min-width: 45px;">0°</span>
+                </div>
+            </div>
+
+            <p style="text-align: center; font-weight: 600; margin-top: 20px;">
+                Essa fórmula pode ser memorizada como: $\text{Volume} = [\text{circunferência}] \times [\text{altura}] \times [\text{espessura}]$
+            </p>
+        </div>
+
+        <!-- SIMULAÇÃO E DEMONSTRAÇÃO DO LIMITE DA SOMA DE RIEMANN -->
+        <div class="content-section" style="border-left-color: var(--primary-color);">
+            <h1 style="color: var(--primary-color);">Aproximação do Sólido por Cascas Cilíndricas</h1>
+
+            <p>
+                Dado um sólido gerado pela rotação da região sob $y = f(x)$ no intervalo $[a, b]$ em torno do eixo $Y$, dividimos o intervalo $[a, b]$ em $n$ subintervalos de largura $\Delta x$. Em cada subintervalo, o retângulo gera uma casca cilíndrica com raio médio $\bar{x}_i$, altura $f(\bar{x}_i)$ e espessura $\Delta x$.
+            </p>
+
+            <div class="simulation-container">
+                <div class="plot-box">
+                    <div class="plot-title">1. Discretização Plana por Retângulos Verticais</div>
+                    <div id="plot2d_shells" style="width: 100%; height: 360px;"></div>
+                </div>
+
+                <div class="plot-box">
+                    <div class="plot-title">2. Aproximação por Cascas Cilíndricas 3D</div>
+                    <div id="plot3d_shells" style="width: 100%; height: 360px;"></div>
+                </div>
+            </div>
+
+            <div class="controls-bar">
+                <div class="control-group">
+                    <label for="sliderNShells">Subdivisões ($n$):</label>
+                    <input type="range" id="sliderNShells" min="2" max="25" value="6" step="1" oninput="updateShells()">
+                    <span id="textNShells" style="color: var(--primary-color); font-weight: 700; min-width: 25px;">6</span>
+                </div>
+
+                <div class="control-group">
+                    <label for="sliderAngleShells">Ângulo ($\theta$):</label>
+                    <input type="range" id="sliderAngleShells" min="0" max="360" value="0" step="5" oninput="updateShells()">
+                    <span id="textAngleShells" style="color: var(--primary-color); font-weight: 700; min-width: 40px;">0°</span>
+                </div>
+
+                <button class="btn-anim btn-purple" onclick="toggleAnimationShells()" id="btnPlayShells">
+                    ▶ Animar Rotação
+                </button>
+            </div>
+
+            <h2 style="color: var(--primary-color);">Obtenção da Integral Definida</h2>
+
+            <div class="single-formula-card">
+                <p>
+                    <span class="step-num">1</span> <strong>Soma de Riemann dos Volumes das Cascas:</strong> O volume total do sólido é aproximado pela soma dos volumes de $n$ cascas cilíndricas:
+                </p>
+                $$V \approx \sum_{i=1}^{n} V_i = \sum_{i=1}^{n} 2\pi \bar{x}_i f(\bar{x}_i) \, \Delta x$$
+
+                <p style="margin-top: 20px;">
+                    <span class="step-num">2</span> <strong>Passagem ao Limite ($n \to \infty$):</strong> Tomando o limite quando a espessura das cascas tende a zero ($n \to \infty$), a soma de Riemann converge para a integral definida:
+                </p>
+
+                <div class="final-formula-highlight">
+                    $$V = \lim_{n \to \infty} \sum_{i=1}^{n} 2\pi \bar{x}_i f(\bar{x}_i) \, \Delta x = \int_{a}^{b} 2\pi x f(x) \, dx$$
+                </div>
+
+                <p style="text-align: center; font-weight: 600; margin-top: 15px;">
+                    Fórmula Geral para Rotação em Torno do Eixo Y ($0 \le a < b$):
+                </p>
+                <div class="final-formula-highlight" style="background-color: #f1f5f9;">
+                    $$V = \int_{a}^{b} \underbrace{(2\pi x)}_{\text{circunferência}} \cdot \underbrace{[f(x)]}_{\text{altura}} \cdot \underbrace{dx}_{\text{espessura}}$$
+                </div>
+            </div>
+        </div>
+
+        <!-- EXEMPLOS RESOLVIDOS -->
+        <div class="content-section" style="border-left-color: var(--primary-color);">
+            <h1 style="color: var(--primary-color);">Exemplos Resolvidos: Cascas Cilíndricas</h1>
+
+            <!-- EXEMPLO 1 -->
+            <div class="example-card">
+                <h3>Exemplo 1: Rotação de $y = 2x^2 - x^3$ em torno do Eixo Y</h3>
+                <p>Encontre o volume do sólido obtido pela rotação em torno do eixo $Y$ da região delimitada por $y = 2x^2 - x^3$ e $y = 0$.</p>
+
+                <div class="btn-group">
+                    <button class="btn-toggle btn-blue" onclick="toggleResolution('res1')">📖 Resolução Matemática</button>
+                    <button class="btn-toggle btn-purple-outline" onclick="toggleGraph('graph1', renderEx1)">📊 Visualizar Gráfico (2D / 3D)</button>
+                </div>
+
+                <div id="res1" class="toggle-content resolution-box">
+                    <h4>Resolução Passo a Passo:</h4>
+                    <p><strong>1. Identificação dos Limites:</strong> A curva intercepta o eixo $X$ nos pontos onde $y = 0 \implies 2x^2 - x^3 = 0 \implies x^2(2 - x) = 0$. Portanto, os limites de integração são de $x = 0$ a $x = 2$.</p>
+                    <p><strong>2. Elementos da Casca Cilíndrica:</strong></p>
+                    <ul>
+                        <li><strong>Raio da casca:</strong> $r(x) = x$</li>
+                        <li><strong>Circunferência:</strong> $2\pi x$</li>
+                        <li><strong>Altura da casca:</strong> $h(x) = f(x) = 2x^2 - x^3$</li>
+                    </ul>
+                    <p><strong>3. Integração Definida:</strong></p>
+                    $$V = \int_{0}^{2} (2\pi x)(2x^2 - x^3) \, dx = 2\pi \int_{0}^{2} (2x^3 - x^4) \, dx$$
+                    $$V = 2\pi \left[ \frac{2x^4}{4} - \frac{x^5}{5} \right]_0^2 = 2\pi \left[ \frac{x^4}{2} - \frac{x^5}{5} \right]_0^2$$
+                    $$V = 2\pi \left( \frac{16}{2} - \frac{32}{5} \right) = 2\pi \left( 8 - \frac{32}{5} \right) = 2\pi \left( \frac{8}{5} \right) = \frac{16\pi}{5}$$
+                </div>
+
+                <div id="graph1" class="toggle-content">
+                    <div class="simulation-container">
+                        <div class="plot-box">
+                            <div class="plot-title">(a) Região no Plano XY com Faixa Vertical</div>
+                            <div id="plot2d_ex1" style="width: 100%; height: 350px;"></div>
+                        </div>
+                        <div class="plot-box">
+                            <div class="plot-title">(b) Sólido 3D com Casca Cilíndrica Típica</div>
+                            <div id="plot3d_ex1" style="width: 100%; height: 350px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EXEMPLO 2 -->
+            <div class="example-card">
+                <h3>Exemplo 2: Região entre Duas Curvas em Torno do Eixo Y</h3>
+                <p>Encontre o volume do sólido obtido pela rotação em torno do eixo $Y$ da região limitada por $y = x$ e $y = x^2$.</p>
+
+                <div class="btn-group">
+                    <button class="btn-toggle btn-blue" onclick="toggleResolution('res2')">📖 Resolução Matemática</button>
+                    <button class="btn-toggle btn-purple-outline" onclick="toggleGraph('graph2', renderEx2)">📊 Visualizar Gráfico (2D / 3D)</button>
+                </div>
+
+                <div id="res2" class="toggle-content resolution-box">
+                    <h4>Resolução Passo a Passo:</h4>
+                    <p><strong>1. Pontos de Intersecção:</strong> $x = x^2 \implies x(1 - x) = 0 \implies x = 0$ e $x = 1$.</p>
+                    <p><strong>2. Elementos da Casca:</strong> No intervalo $[0, 1]$, a reta $y = x$ fica acima da parábola $y = x^2$.</p>
+                    <ul>
+                        <li><strong>Raio da casca:</strong> $r = x$</li>
+                        <li><strong>Altura da casca:</strong> $h = y_{\text{topo}} - y_{\text{base}} = x - x^2$</li>
+                    </ul>
+                    <p><strong>3. Integração Definida:</strong></p>
+                    $$V = \int_{0}^{1} (2\pi x)(x - x^2) \, dx = 2\pi \int_{0}^{1} (x^2 - x^3) \, dx$$
+                    $$V = 2\pi \left[ \frac{x^3}{3} - \frac{x^4}{4} \right]_0^1 = 2\pi \left( \frac{1}{3} - \frac{1}{4} \right) = 2\pi \left( \frac{1}{12} \right) = \frac{\pi}{6}$$
+                </div>
+
+                <div id="graph2" class="toggle-content">
+                    <div class="simulation-container">
+                        <div class="plot-box">
+                            <div class="plot-title">(a) Região entre $y=x$ e $y=x^2$</div>
+                            <div id="plot2d_ex2" style="width: 100%; height: 350px;"></div>
+                        </div>
+                        <div class="plot-box">
+                            <div class="plot-title">(b) Sólido de Revolução com Casca Cilíndrica</div>
+                            <div id="plot3d_ex2" style="width: 100%; height: 350px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EXEMPLO 3 -->
+            <div class="example-card">
+                <h3>Exemplo 3: Rotação em Torno do Eixo X (Cascas Horizontais em $y$)</h3>
+                <p>Use cascas cilíndricas para encontrar o volume do sólido obtido pela rotação em torno do eixo $X$ da região sob $y = \sqrt{x}$ de $0$ a $1$.</p>
+
+                <div class="btn-group">
+                    <button class="btn-toggle btn-blue" onclick="toggleResolution('res3')">📖 Resolução Matemática</button>
+                    <button class="btn-toggle btn-purple-outline" onclick="toggleGraph('graph3', renderEx3)">📊 Visualizar Gráfico (2D / 3D)</button>
+                </div>
+
+                <div id="res3" class="toggle-content resolution-box">
+                    <h4>Resolução Passo a Passo:</h4>
+                    <p><strong>1. Reescrita em Função de $y$:</strong> Para girar em torno do eixo $X$ usando cascas cilíndricas, integramos em relação a $y$. A curva $y = \sqrt{x}$ torna-se $x = y^2$. Quando $x$ varia de $0$ a $1$, $y$ varia de $0$ a $1$.</p>
+                    <p><strong>2. Elementos da Casca Horizontal:</strong></p>
+                    <ul>
+                        <li><strong>Raio da casca (distância ao eixo X):</strong> $r = y$</li>
+                        <li><strong>Altura da casca (comprimento em x):</strong> $h = 1 - y^2$</li>
+                    </ul>
+                    <p><strong>3. Integração Definida:</strong></p>
+                    $$V = \int_{0}^{1} (2\pi y)(1 - y^2) \, dy = 2\pi \int_{0}^{1} (y - y^3) \, dy$$
+                    $$V = 2\pi \left[ \frac{y^2}{2} - \frac{y^4}{4} \right]_0^1 = 2\pi \left( \frac{1}{2} - \frac{1}{4} \right) = 2\pi \left( \frac{1}{4} \right) = \frac{\pi}{2}$$
+                </div>
+
+                <div id="graph3" class="toggle-content">
+                    <div class="simulation-container">
+                        <div class="plot-box">
+                            <div class="plot-title">(a) Região com Faixa Horizontal em $y$</div>
+                            <div id="plot2d_ex3" style="width: 100%; height: 350px;"></div>
+                        </div>
+                        <div class="plot-box">
+                            <div class="plot-title">(b) Paraboloide 3D com Casca Cilíndrica Horizontal</div>
+                            <div id="plot3d_ex3" style="width: 100%; height: 350px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EXEMPLO 4 -->
+            <div class="example-card">
+                <h3>Exemplo 4: Rotação em Torno de uma Reta Paralela ao Eixo Y ($x = -1$)</h3>
+                <p>Encontre o volume do sólido obtido pela rotação da região delimitada por $y = x - x^2$ e $y = 0$ em torno da reta vertical $x = -1$.</p>
+
+                <div class="btn-group">
+                    <button class="btn-toggle btn-blue" onclick="toggleResolution('res4')">📖 Resolução Matemática</button>
+                    <button class="btn-toggle btn-purple-outline" onclick="toggleGraph('graph4', renderEx4)">📊 Visualizar Gráfico (2D / 3D)</button>
+                </div>
+
+                <div id="res4" class="toggle-content resolution-box">
+                    <h4>Resolução Passo a Passo:</h4>
+                    <p><strong>1. Limites de Integração:</strong> $y = x(1 - x) = 0 \implies x = 0$ e $x = 1$.</p>
+                    <p><strong>2. Ajuste do Raio para o Eixo de Rotação $x = -1$:</strong> A distância de um ponto $x$ até a reta $x = -1$ é $r(x) = x - (-1) = x + 1$.</p>
+                    <ul>
+                        <li><strong>Raio da casca:</strong> $r = x + 1$</li>
+                        <li><strong>Altura da casca:</strong> $h = x - x^2$</li>
+                    </ul>
+                    <p><strong>3. Integração Definida:</strong></p>
+                    $$V = \int_{0}^{1} 2\pi (x + 1)(x - x^2) \, dx = 2\pi \int_{0}^{1} (x^2 - x^3 + x - x^2) \, dx = 2\pi \int_{0}^{1} (x - x^3) \, dx$$
+                    $$V = 2\pi \left[ \frac{x^2}{2} - \frac{x^4}{4} \right]_0^1 = 2\pi \left( \frac{1}{2} - \frac{1}{4} \right) = \frac{\pi}{2}$$
+                </div>
+
+                <div id="graph4" class="toggle-content">
+                    <div class="simulation-container">
+                        <div class="plot-box">
+                            <div class="plot-title">(a) Região e Eixo de Rotação $x = -1$</div>
+                            <div id="plot2d_ex4" style="width: 100%; height: 350px;"></div>
+                        </div>
+                        <div class="plot-box">
+                            <div class="plot-title">(b) Sólido 3D em Torno de $x = -1$ com Casca Cilíndrica</div>
+                            <div id="plot3d_ex4" style="width: 100%; height: 350px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LISTA DE QUESTÕES -->
+        <div class="content-section" style="border-left-color: var(--accent-color); text-align: center; background-color: #f0fdf4;">
+            <h2 style="color: var(--accent-color); margin-bottom: 10px;">Pratique o Conteúdo</h2>
+            <p style="text-align: center; font-size: 1.1rem; margin-bottom: 25px;">
+                Acesse a lista de exercícios referente ao cálculo de volumes por cascas cilíndricas.
+            </p>
+            <a href="listas/lista_4.html" class="btn-exercise-list">
+                📋 Acessar Lista de Exercícios (Lista 4)
+            </a>
+        </div>
+
+    </div>
+
+    <script>
+        // FUNÇÃO AUXILIAR PARA CRIAR OS EIXOS 3D
+        function createExplicitAxes3D(xPts, yPts) {
+            const traceX = {
+                type: 'scatter3d', mode: 'lines+markers',
+                x: xPts, y: xPts.map(() => 0), z: xPts.map(() => 0),
+                line: { color: '#dc2626', width: 2.5 },
+                marker: { size: 2.0, color: '#991b1b', symbol: 'circle' },
+                hoverinfo: 'none', showlegend: false
+            };
+
+            const traceY = {
+                type: 'scatter3d', mode: 'lines+markers',
+                x: yPts.map(() => 0), y: yPts, z: yPts.map(() => 0),
+                line: { color: '#16a34a', width: 2.5 },
+                marker: { size: 2.0, color: '#14532d', symbol: 'circle' },
+                hoverinfo: 'none', showlegend: false
+            };
+
+            const maxX = Math.max(...xPts), maxY = Math.max(...yPts);
+            const offsetX = (maxX - Math.min(...xPts)) * 0.18 || 0.6;
+            const offsetY = (maxY - Math.min(...yPts)) * 0.18 || 0.6;
+
+            const traceLabels = {
+                type: 'scatter3d', mode: 'text',
+                x: [maxX + offsetX, 0], y: [0, maxY + offsetY], z: [0, 0],
+                text: ['<b>X</b>', '<b>Y</b>'],
+                textfont: { color: ['#dc2626', '#16a34a'], size: 16, family: 'Segoe UI, sans-serif' },
+                textposition: 'middle center', hoverinfo: 'none', showlegend: false
+            };
+
+            return [traceX, traceY, traceLabels];
+        }
+
+        // RENDERIZAÇÃO DA FIGURA 1: DIFICULDADE COM ARRUELAS (LIMITES EXATOS NA CURVA)
+        function renderMotivation1() {
+            let xVals = [], yVals = [];
+            for (let i = 0; i <= 100; i++) {
+                let x = (i / 100) * 2;
+                xVals.push(x);
+                yVals.push(2 * x * x - x * x * x);
+            }
+
+            const curveTrace = {
+                x: xVals, y: yVals, mode: 'lines',
+                line: { color: '#0284c7', width: 3 },
+                name: 'y = 2x² - x³'
+            };
+
+            const fillArea = {
+                x: xVals, y: yVals, fill: 'tozeroy',
+                fillcolor: 'rgba(56, 189, 248, 0.35)', mode: 'none'
+            };
+
+            // Cálculo dos pontos exatos de intersecção em y = 0.8:
+            // 2x^2 - x^3 = 0.8 => x_L ≈ 0.7788, x_R ≈ 1.7729
+            const xL = 0.7788;
+            const xR = 1.7729;
+            const yBar = 0.8;
+            const dy = 0.04;
+
+            const stripRect = {
+                x: [xL, xR, xR, xL, xL],
+                y: [yBar - dy, yBar - dy, yBar + dy, yBar + dy, yBar - dy],
+                fill: 'toself', fillcolor: 'rgba(217, 70, 239, 0.5)',
+                line: { color: '#c026d3', width: 2 },
+                type: 'scatter', mode: 'lines'
+            };
+
+            const layout = {
+                margin: { l: 40, r: 20, t: 20, b: 40 },
+                xaxis: { title: 'x', range: [-0.2, 2.3], zeroline: true },
+                yaxis: { title: 'y', range: [-0.1, 1.3], zeroline: true },
+                showlegend: false,
+                annotations: [
+                    { x: xL, y: yBar, xref: 'x', yref: 'y', text: '<b>x<sub>L</sub> = ?</b>', showarrow: true, arrowhead: 2, ax: -45, ay: -25 },
+                    { x: xR, y: yBar, xref: 'x', yref: 'y', text: '<b>x<sub>R</sub> = ?</b>', showarrow: true, arrowhead: 2, ax: 45, ay: -25 },
+                    { x: 1.2, y: 1.25, xref: 'x', yref: 'y', text: '<i>y = 2x² - x³</i>', showarrow: false, font: { size: 14, color: '#0369a1' } }
+                ]
+            };
+
+            Plotly.react('plot_motivation_1', [fillArea, curveTrace, stripRect], layout, { displayModeBar: false, responsive: true });
+        }
+
+        // LÓGICA DA FIGURA 2: ANIMAÇÃO LADO A LADO DA CASCA CILÍNDRICA
+        let isAnimatingSingleShell = false;
+        let timerSingleShell = null;
+
+        const xL_s = 1.15, xR_s = 1.35;
+        const h_single = 2 * (1.25)**2 - (1.25)**3; // h na altura média x=1.25
+
+        function updateSingleShellRotation() {
+            const angleDeg = parseFloat(document.getElementById('sliderSingleShellAngle').value);
+            document.getElementById('textSingleShellAngle').textContent = angleDeg + '°';
+            render2DSingleShell();
+            render3DSingleShell(angleDeg);
+        }
+
+        function render2DSingleShell() {
+            let xVals = [], yVals = [];
+            for (let i = 0; i <= 100; i++) {
+                let x = (i / 100) * 2;
+                xVals.push(x); yVals.push(2 * x * x - x * x * x);
+            }
+
+            const curveTrace = { x: xVals, y: yVals, mode: 'lines', line: { color: '#0284c7', width: 3 } };
+            const fillArea = { x: xVals, y: yVals, fill: 'tozeroy', fillcolor: 'rgba(56, 189, 248, 0.35)', mode: 'none' };
+
+            // Faixa vertical rosa
+            const verticalStrip = {
+                x: [xL_s, xR_s, xR_s, xL_s, xL_s],
+                y: [0, 0, h_single, h_single, 0],
+                fill: 'toself', fillcolor: 'rgba(217, 70, 239, 0.65)',
+                line: { color: '#c026d3', width: 2 },
+                type: 'scatter', mode: 'lines'
+            };
+
+            const layout2D = {
+                margin: { l: 30, r: 20, t: 20, b: 30 },
+                xaxis: { title: 'x', range: [-0.2, 2.3], zeroline: true },
+                yaxis: { title: 'y', range: [-0.1, 1.4], zeroline: true },
+                showlegend: false
+            };
+
+            Plotly.react('plot2d_single_shell', [fillArea, curveTrace, verticalStrip], layout2D, { displayModeBar: false, responsive: true });
+        }
+
+        function render3DSingleShell(angleDeg) {
+            const maxThetaRad = (angleDeg * Math.PI) / 180.0;
+            const numTheta = 36;
+
+            let x3D = [], y3D = [], z3D = [];
+            for (let j = 0; j <= numTheta; j++) {
+                let theta = (j / numTheta) * maxThetaRad;
+                let cosT = Math.cos(theta), sinT = Math.sin(theta);
+                
+                x3D.push([xL_s * cosT, xL_s * cosT, xR_s * cosT, xR_s * cosT, xL_s * cosT]);
+                y3D.push([xL_s * sinT, xL_s * sinT, xR_s * sinT, xR_s * sinT, xL_s * sinT]);
+                z3D.push([0, h_single, h_single, 0, 0]);
+            }
+
+            const shellSurface = {
+                type: 'surface', x: x3D, y: y3D, z: z3D,
+                colorscale: [[0, '#f472b6'], [0.5, '#c026d3'], [1, '#701a75']],
+                showscale: false, opacity: angleDeg === 0 ? 0.3 : 0.85,
+                lighting: { ambient: 0.6, diffuse: 0.8, specular: 0.3, roughness: 0.4 },
+                hoverinfo: 'none'
+            };
+
+            const axes = createExplicitAxes3D(
+                [-1.8, -0.9, 0, 0.9, 1.8],
+                [-1.8, -0.9, 0, 0.9, 1.8]
+            );
+
+            const layout3D = {
+                margin: { l: 0, r: 0, b: 0, t: 0 }, hovermode: false,
+                scene: {
+                    xaxis: { visible: false, range: [-2.0, 2.0] },
+                    yaxis: { visible: false, range: [-2.0, 2.0] },
+                    zaxis: { visible: false, range: [-0.2, 1.6] },
+                    aspectratio: { x: 1.1, y: 1.1, z: 0.8 },
+                    camera: { eye: { x: 1.4, y: -1.5, z: 1.1 } }
+                },
+                showlegend: false
+            };
+
+            Plotly.react('plot3d_single_shell', [shellSurface, ...axes], layout3D, { displayModeBar: false, responsive: true });
+        }
+
+        function toggleSingleShellAnimation() {
+            const btn = document.getElementById('btnPlaySingleShell');
+            const slider = document.getElementById('sliderSingleShellAngle');
+            if (isAnimatingSingleShell) {
+                clearInterval(timerSingleShell);
+                isAnimatingSingleShell = false;
+                btn.innerHTML = '▶ Iniciar Rotação da Casca';
+            } else {
+                isAnimatingSingleShell = true;
+                btn.innerHTML = '⏸ Pausar';
+                if (parseInt(slider.value) >= 360) slider.value = 0;
+                timerSingleShell = setInterval(() => {
+                    let currentAngle = parseInt(slider.value);
+                    if (currentAngle >= 360) {
+                        slider.value = 360;
+                        updateSingleShellRotation();
+                        clearInterval(timerSingleShell);
+                        isAnimatingSingleShell = false;
+                        btn.innerHTML = '▶ Iniciar Rotação da Casca';
+                    } else {
+                        slider.value = currentAngle + 5;
+                        updateSingleShellRotation();
+                    }
+                }, 50);
+            }
+        }
+
+        // LÓGICA DA SIMULAÇÃO PRINCIPAL DE CASCAS CILÍNDRICAS
+        const a_s = 0.2, b_s = 2.0;
+        const f_s = x => 2 * x * x - x * x * x;
+
+        let isAnimatingShells = false, timerShells = null;
+
+        function updateShells() {
+            const n = parseInt(document.getElementById('sliderNShells').value);
+            const angleDeg = parseFloat(document.getElementById('sliderAngleShells').value);
+            document.getElementById('textNShells').textContent = n;
+            document.getElementById('textAngleShells').textContent = angleDeg + '°';
+            render2DShells(n);
+            render3DShellsFast(n, angleDeg);
+        }
+
+        function render2DShells(n) {
+            const dx = (b_s - a_s) / n;
+            let xSmooth = [], ySmooth = [];
+            for (let i = 0; i <= 100; i++) {
+                let x = a_s + (i / 100) * (b_s - a_s);
+                xSmooth.push(x); ySmooth.push(f_s(x));
+            }
+
+            const traceCurve = { x: xSmooth, y: ySmooth, mode: 'lines', line: { color: '#2563eb', width: 3 } };
+            let xShapes = [], yShapes = [];
+
+            for (let i = 0; i < n; i++) {
+                let xStart = a_s + i * dx, xEnd = xStart + dx;
+                let xMid = (xStart + xEnd) / 2;
+                let h = f_s(xMid);
+                xShapes.push(xStart, xStart, xEnd, xEnd, xStart, null);
+                yShapes.push(0, h, h, 0, 0, null);
+            }
+
+            const traceRects = { x: xShapes, y: yShapes, fill: 'toself', fillcolor: 'rgba(37, 99, 235, 0.3)', line: { color: '#1d4ed8', width: 1.5 }, mode: 'lines' };
+            const layout2D = { margin: { l: 30, r: 20, t: 20, b: 30 }, xaxis: { title: 'x', range: [-0.2, 2.3], zeroline: true }, yaxis: { title: 'y', range: [-0.1, 1.4], zeroline: true }, showlegend: false };
+
+            Plotly.react('plot2d_shells', [traceRects, traceCurve], layout2D, { displayModeBar: false, responsive: true });
+        }
+
+        function render3DShellsFast(n, angleDeg) {
+            const dx = (b_s - a_s) / n;
+            const maxThetaRad = (angleDeg * Math.PI) / 180.0;
+            const numTheta = 36;
+            
+            let traces = [];
+
+            for (let i = 0; i < n; i++) {
+                let xStart = a_s + i * dx, xEnd = xStart + dx;
+                let xMid = (xStart + xEnd) / 2;
+                let h = f_s(xMid);
+
+                let x3D = [], y3D = [], z3D = [];
+                for (let j = 0; j <= numTheta; j++) {
+                    let theta = (j / numTheta) * maxThetaRad;
+                    let cosT = Math.cos(theta), sinT = Math.sin(theta);
+                    
+                    x3D.push([xStart * cosT, xStart * cosT, xEnd * cosT, xEnd * cosT, xStart * cosT]);
+                    y3D.push([xStart * sinT, xStart * sinT, xEnd * sinT, xEnd * sinT, xStart * sinT]);
+                    z3D.push([0, h, h, 0, 0]);
+                }
+
+                traces.push({
+                    type: 'surface', x: x3D, y: y3D, z: z3D,
+                    colorscale: [[0, '#60a5fa'], [0.5, '#2563eb'], [1, '#1e40af']],
+                    showscale: false, opacity: angleDeg === 0 ? 0.3 : 0.8,
+                    lighting: { ambient: 0.6, diffuse: 0.8, specular: 0.3, roughness: 0.4 },
+                    hoverinfo: 'none'
+                });
+            }
+
+            const axes = createExplicitAxes3D(
+                [-2.3, -1.15, 0, 1.15, 2.3],
+                [-2.3, -1.15, 0, 1.15, 2.3]
+            );
+
+            const layout3D = {
+                margin: { l: 0, r: 0, b: 0, t: 0 }, hovermode: false,
+                scene: {
+                    xaxis: { visible: false, range: [-2.5, 2.5] },
+                    yaxis: { visible: false, range: [-2.5, 2.5] },
+                    zaxis: { visible: false, range: [-0.2, 1.6] },
+                    aspectratio: { x: 1.2, y: 1.2, z: 0.8 },
+                    camera: { eye: { x: 1.4, y: -1.5, z: 1.1 } }
+                },
+                showlegend: false
+            };
+
+            Plotly.react('plot3d_shells', [...traces, ...axes], layout3D, { displayModeBar: false, responsive: true });
+        }
+
+        function toggleAnimationShells() {
+            const btn = document.getElementById('btnPlayShells');
+            const slider = document.getElementById('sliderAngleShells');
+            if (isAnimatingShells) {
+                clearInterval(timerShells); isAnimatingShells = false; btn.innerHTML = '▶ Animar Rotação';
+            } else {
+                isAnimatingShells = true; btn.innerHTML = '⏸ Pausar';
+                if (parseInt(slider.value) >= 360) slider.value = 0;
+                timerShells = setInterval(() => {
+                    let currentAngle = parseInt(slider.value);
+                    if (currentAngle >= 360) {
+                        slider.value = 360; updateShells(); clearInterval(timerShells); isAnimatingShells = false; btn.innerHTML = '▶ Animar Rotação';
+                    } else { slider.value = currentAngle + 5; updateShells(); }
+                }, 60);
+            }
+        }
+
+        // TOGGLE RESOLUÇÃO E GRÁFICOS
+        function toggleResolution(id) {
+            const el = document.getElementById(id);
+            el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+        }
+
+        function toggleGraph(id, renderFn) {
+            const el = document.getElementById(id);
+            if (el.style.display === 'block') {
+                el.style.display = 'none';
+            } else {
+                el.style.display = 'block';
+                if (renderFn) renderFn();
+            }
+        }
+
+        // RENDERIZAÇÃO DOS EXEMPLOS
+        function renderEx1() {
+            let xVals = [], yVals = [];
+            for (let i = 0; i <= 100; i++) {
+                let x = (i / 100) * 2;
+                xVals.push(x); yVals.push(2 * x * x - x * x * x);
+            }
+
+            const trace2D_curve = { x: xVals, y: yVals, mode: 'lines', line: { color: '#2563eb', width: 3 } };
+            const trace2D_fill = { x: xVals, y: yVals, fill: 'tozeroy', fillcolor: 'rgba(37, 99, 235, 0.25)', mode: 'none' };
+            const stripX = 1.2;
+            const trace2D_strip = { x: [stripX, stripX], y: [0, 2*stripX*stripX - stripX*stripX*stripX], mode: 'lines', line: { color: '#dc2626', width: 4 } };
+
+            const layout2D = { margin: { l: 30, r: 20, t: 20, b: 30 }, xaxis: { title: 'x', range: [-0.2, 2.3], zeroline: true }, yaxis: { title: 'y', range: [-0.1, 1.4], zeroline: true }, showlegend: false };
+            Plotly.react('plot2d_ex1', [trace2D_fill, trace2D_curve, trace2D_strip], layout2D, { displayModeBar: false, responsive: true });
+
+            let numX = 40, numT = 36;
+            let x3D = [], y3D = [], z3D = [];
+            for (let j = 0; j <= numT; j++) {
+                let theta = (j / numT) * 2 * Math.PI;
+                let cosT = Math.cos(theta), sinT = Math.sin(theta);
+                let xRow = [], yRow = [], zRow = [];
+                for (let i = 0; i <= numX; i++) {
+                    let x = (i / numX) * 2;
+                    xRow.push(x * cosT); yRow.push(x * sinT); zRow.push(2 * x * x - x * x * x);
+                }
+                x3D.push(xRow); y3D.push(yRow); z3D.push(zRow);
+            }
+
+            const solidMesh = { type: 'surface', x: x3D, y: y3D, z: z3D, colorscale: [[0, '#93c5fd'], [0.5, '#2563eb'], [1, '#1e3a8a']], showscale: false, opacity: 0.4, hoverinfo: 'none' };
+
+            let rShell = 1.2, hShell = 2*rShell*rShell - rShell*rShell*rShell, dx = 0.06;
+            let shellX = [], shellY = [], shellZ = [];
+            for (let j = 0; j <= numT; j++) {
+                let t = (j / numT) * 2 * Math.PI;
+                let cosT = Math.cos(t), sinT = Math.sin(t);
+                shellX.push([(rShell - dx/2)*cosT, (rShell + dx/2)*cosT, (rShell + dx/2)*cosT, (rShell - dx/2)*cosT, (rShell - dx/2)*cosT]);
+                shellY.push([(rShell - dx/2)*sinT, (rShell + dx/2)*sinT, (rShell + dx/2)*sinT, (rShell - dx/2)*sinT, (rShell - dx/2)*sinT]);
+                shellZ.push([0, 0, hShell, hShell, 0]);
+            }
+
+            const shellMesh = { type: 'surface', x: shellX, y: shellY, z: shellZ, colorscale: [[0, '#f87171'], [1, '#dc2626']], showscale: false, opacity: 0.9, hoverinfo: 'none' };
+            const axes = createExplicitAxes3D([-2.2, -1.1, 0, 1.1, 2.2], [-2.2, -1.1, 0, 1.1, 2.2]);
+
+            const layout3D = { margin: { l: 0, r: 0, b: 0, t: 0 }, hovermode: false, scene: { xaxis: { visible: false, range: [-2.5, 2.5] }, yaxis: { visible: false, range: [-2.5, 2.5] }, zaxis: { visible: false, range: [-0.2, 1.6] }, aspectratio: { x: 1.2, y: 1.2, z: 0.8 }, camera: { eye: { x: 1.4, y: -1.5, z: 1.1 } } }, showlegend: false };
+
+            Plotly.react('plot3d_ex1', [solidMesh, shellMesh, ...axes], layout3D, { displayModeBar: false, responsive: true });
+        }
+
+        function renderEx2() {
+            let xVals = [], y1Vals = [], y2Vals = [];
+            for (let i = 0; i <= 100; i++) {
+                let x = i / 100;
+                xVals.push(x); y1Vals.push(x); y2Vals.push(x * x);
+            }
+
+            const trace2D_curve1 = { x: xVals, y: y1Vals, mode: 'lines', line: { color: '#2563eb', width: 3 } };
+            const trace2D_curve2 = { x: xVals, y: y2Vals, mode: 'lines', line: { color: '#059669', width: 3 } };
+            const trace2D_fill = { x: [...xVals, ...xVals.slice().reverse()], y: [...y1Vals, ...y2Vals.slice().reverse()], fill: 'toself', fillcolor: 'rgba(56, 189, 248, 0.35)', mode: 'none' };
+            const stripX = 0.55;
+            const trace2D_strip = { x: [stripX, stripX], y: [stripX * stripX, stripX], mode: 'lines', line: { color: '#ec4899', width: 4 } };
+
+            const layout2D = { margin: { l: 30, r: 20, t: 20, b: 30 }, xaxis: { title: 'x', range: [-0.1, 1.25], zeroline: true }, yaxis: { title: 'y', range: [-0.1, 1.25], zeroline: true }, showlegend: false };
+            Plotly.react('plot2d_ex2', [trace2D_fill, trace2D_curve1, trace2D_curve2, trace2D_strip], layout2D, { displayModeBar: false, responsive: true });
+
+            let numX = 40, numT = 36;
+            let x3D = [], y3D = [], z3D = [];
+            for (let j = 0; j <= numT; j++) {
+                let theta = (j / numT) * 2 * Math.PI;
+                let cosT = Math.cos(theta), sinT = Math.sin(theta);
+                let xRow = [], yRow = [], zRow = [];
+                for (let i = 0; i <= numX; i++) {
+                    let x = i / numX;
+                    xRow.push(x * cosT); yRow.push(x * sinT); zRow.push(x);
+                }
+                x3D.push(xRow); y3D.push(yRow); z3D.push(zRow);
+            }
+
+            const solidMesh = { type: 'surface', x: x3D, y: y3D, z: z3D, colorscale: [[0, '#38bdf8'], [1, '#0369a1']], showscale: false, opacity: 0.35, hoverinfo: 'none' };
+
+            let rShell = 0.55, hBottom = rShell * rShell, hTop = rShell, dx = 0.04;
+            let shellX = [], shellY = [], shellZ = [];
+            for (let j = 0; j <= numT; j++) {
+                let t = (j / numT) * 2 * Math.PI;
+                let cosT = Math.cos(t), sinT = Math.sin(t);
+                shellX.push([(rShell - dx/2)*cosT, (rShell + dx/2)*cosT, (rShell + dx/2)*cosT, (rShell - dx/2)*cosT, (rShell - dx/2)*cosT]);
+                shellY.push([(rShell - dx/2)*sinT, (rShell + dx/2)*sinT, (rShell + dx/2)*sinT, (rShell - dx/2)*sinT, (rShell - dx/2)*sinT]);
+                shellZ.push([hBottom, hBottom, hTop, hTop, hBottom]);
+            }
+
+            const shellMesh = { type: 'surface', x: shellX, y: shellY, z: shellZ, colorscale: [[0, '#f43f5e'], [1, '#be123c']], showscale: false, opacity: 0.95, hoverinfo: 'none' };
+            const axes = createExplicitAxes3D([-1.2, -0.6, 0, 0.6, 1.2], [-1.2, -0.6, 0, 0.6, 1.2]);
+
+            const layout3D = { margin: { l: 0, r: 0, b: 0, t: 0 }, hovermode: false, scene: { xaxis: { visible: false, range: [-1.4, 1.4] }, yaxis: { visible: false, range: [-1.4, 1.4] }, zaxis: { visible: false, range: [-0.1, 1.2] }, aspectratio: { x: 1, y: 1, z: 0.8 }, camera: { eye: { x: 1.4, y: -1.5, z: 1.1 } } }, showlegend: false };
+
+            Plotly.react('plot3d_ex2', [solidMesh, shellMesh, ...axes], layout3D, { displayModeBar: false, responsive: true });
+        }
+
+        function renderEx3() {
+            let yVals = [], xVals = [];
+            for (let i = 0; i <= 100; i++) {
+                let y = i / 100;
+                yVals.push(y); xVals.push(y * y);
+            }
+
+            const trace2D_curve = { x: xVals, y: yVals, mode: 'lines', line: { color: '#2563eb', width: 3 } };
+            const trace2D_fill = { x: [...xVals, 1, 0], y: [...yVals, 0, 0], fill: 'toself', fillcolor: 'rgba(37, 99, 235, 0.25)', mode: 'none' };
+            const stripY = 0.6;
+            const trace2D_strip = { x: [stripY * stripY, 1], y: [stripY, stripY], mode: 'lines', line: { color: '#dc2626', width: 4 } };
+
+            const layout2D = { margin: { l: 30, r: 20, t: 20, b: 30 }, xaxis: { title: 'x', range: [-0.1, 1.25], zeroline: true }, yaxis: { title: 'y', range: [-0.1, 1.25], zeroline: true }, showlegend: false };
+            Plotly.react('plot2d_ex3', [trace2D_fill, trace2D_curve, trace2D_strip], layout2D, { displayModeBar: false, responsive: true });
+
+            let numY = 40, numT = 36;
+            let x3D = [], y3D = [], z3D = [];
+            for (let j = 0; j <= numT; j++) {
+                let theta = (j / numT) * 2 * Math.PI;
+                let cosT = Math.cos(theta), sinT = Math.sin(theta);
+                let xRow = [], yRow = [], zRow = [];
+                for (let i = 0; i <= numY; i++) {
+                    let y = i / numY;
+                    xRow.push(y * y); yRow.push(y * cosT); zRow.push(y * sinT);
+                }
+                x3D.push(xRow); y3D.push(yRow); z3D.push(zRow);
+            }
+
+            const solidMesh = { type: 'surface', x: x3D, y: y3D, z: z3D, colorscale: [[0, '#93c5fd'], [1, '#1e3a8a']], showscale: false, opacity: 0.4, hoverinfo: 'none' };
+
+            let rShell = 0.6, xStart = rShell * rShell, xEnd = 1.0, dy = 0.04;
+            let shellX = [], shellY = [], shellZ = [];
+            for (let j = 0; j <= numT; j++) {
+                let t = (j / numT) * 2 * Math.PI;
+                let cosT = Math.cos(t), sinT = Math.sin(t);
+                shellX.push([xStart, xEnd, xEnd, xStart, xStart]);
+                shellY.push([(rShell - dy/2)*cosT, (rShell - dy/2)*cosT, (rShell + dy/2)*cosT, (rShell + dy/2)*cosT, (rShell - dy/2)*cosT]);
+                shellZ.push([(rShell - dy/2)*sinT, (rShell - dy/2)*sinT, (rShell + dy/2)*sinT, (rShell + dy/2)*sinT, (rShell - dy/2)*sinT]);
+            }
+
+            const shellMesh = { type: 'surface', x: shellX, y: shellY, z: shellZ, colorscale: [[0, '#f87171'], [1, '#dc2626']], showscale: false, opacity: 0.95, hoverinfo: 'none' };
+            const axes = createExplicitAxes3D([0, 0.25, 0.5, 0.75, 1.0], [-1.1, -0.55, 0, 0.55, 1.1]);
+
+            const layout3D = { margin: { l: 0, r: 0, b: 0, t: 0 }, hovermode: false, scene: { xaxis: { visible: false, range: [-0.2, 1.3] }, yaxis: { visible: false, range: [-1.3, 1.3] }, zaxis: { visible: false, range: [-1.3, 1.3] }, aspectratio: { x: 1, y: 1, z: 1 }, camera: { eye: { x: 1.4, y: -1.5, z: 1.1 } } }, showlegend: false };
+
+            Plotly.react('plot3d_ex3', [solidMesh, shellMesh, ...axes], layout3D, { displayModeBar: false, responsive: true });
+        }
+
+        function renderEx4() {
+            let xVals = [], yVals = [];
+            for (let i = 0; i <= 100; i++) {
+                let x = i / 100;
+                xVals.push(x); yVals.push(x - x * x);
+            }
+
+            const trace2D_curve = { x: xVals, y: yVals, mode: 'lines', line: { color: '#2563eb', width: 3 } };
+            const trace2D_fill = { x: xVals, y: yVals, fill: 'tozeroy', fillcolor: 'rgba(37, 99, 235, 0.25)', mode: 'none' };
+            const trace2D_axis = { x: [-1, -1], y: [-0.1, 0.35], mode: 'lines', line: { color: '#dc2626', width: 2, dash: 'dash' } };
+            const stripX = 0.6;
+            const trace2D_strip = { x: [stripX, stripX], y: [0, stripX - stripX * stripX], mode: 'lines', line: { color: '#ec4899', width: 4 } };
+
+            const layout2D = { margin: { l: 30, r: 20, t: 20, b: 30 }, xaxis: { title: 'x', range: [-1.3, 1.3], zeroline: true }, yaxis: { title: 'y', range: [-0.1, 0.35], zeroline: true }, showlegend: false };
+            Plotly.react('plot2d_ex4', [trace2D_fill, trace2D_curve, trace2D_axis, trace2D_strip], layout2D, { displayModeBar: false, responsive: true });
+
+            let numX = 40, numT = 36;
+            let x3D = [], y3D = [], z3D = [];
+            for (let j = 0; j <= numT; j++) {
+                let theta = (j / numT) * 2 * Math.PI;
+                let cosT = Math.cos(theta), sinT = Math.sin(theta);
+                let xRow = [], yRow = [], zRow = [];
+                for (let i = 0; i <= numX; i++) {
+                    let x = i / numX;
+                    let r = x + 1;
+                    xRow.push(-1 + r * cosT); yRow.push(r * sinT); zRow.push(x - x * x);
+                }
+                x3D.push(xRow); y3D.push(yRow); z3D.push(zRow);
+            }
+
+            const solidMesh = { type: 'surface', x: x3D, y: y3D, z: z3D, colorscale: [[0, '#38bdf8'], [1, '#0369a1']], showscale: false, opacity: 0.35, hoverinfo: 'none' };
+
+            let rShell = 0.6 + 1.0, hShell = 0.6 - 0.6 * 0.6, dx = 0.04;
+            let shellX = [], shellY = [], shellZ = [];
+            for (let j = 0; j <= numT; j++) {
+                let t = (j / numT) * 2 * Math.PI;
+                let cosT = Math.cos(t), sinT = Math.sin(t);
+                shellX.push([-1 + (rShell - dx/2)*cosT, -1 + (rShell + dx/2)*cosT, -1 + (rShell + dx/2)*cosT, -1 + (rShell - dx/2)*cosT, -1 + (rShell - dx/2)*cosT]);
+                shellY.push([(rShell - dx/2)*sinT, (rShell + dx/2)*sinT, (rShell + dx/2)*sinT, (rShell - dx/2)*sinT, (rShell - dx/2)*sinT]);
+                shellZ.push([0, 0, hShell, hShell, 0]);
+            }
+
+            const shellMesh = { type: 'surface', x: shellX, y: shellY, z: shellZ, colorscale: [[0, '#f43f5e'], [1, '#be123c']], showscale: false, opacity: 0.95, hoverinfo: 'none' };
+            const axes = createExplicitAxes3D([-3, -1.5, 0, 1.5], [-2, -1, 0, 1, 2]);
+
+            const layout3D = { margin: { l: 0, r: 0, b: 0, t: 0 }, hovermode: false, scene: { xaxis: { visible: false, range: [-3.2, 1.2] }, yaxis: { visible: false, range: [-2.2, 2.2] }, zaxis: { visible: false, range: [-0.1, 0.4] }, aspectratio: { x: 1.2, y: 1.2, z: 0.5 }, camera: { eye: { x: 1.4, y: -1.5, z: 1.1 } } }, showlegend: false };
+
+            Plotly.react('plot3d_ex4', [solidMesh, shellMesh, ...axes], layout3D, { displayModeBar: false, responsive: true });
+        }
+
+        // INICIALIZAÇÃO
+        window.addEventListener('load', () => {
+            renderMotivation1();
+            updateSingleShellRotation();
+            updateShells();
+        });
+    </script>
+</body>
+</html>

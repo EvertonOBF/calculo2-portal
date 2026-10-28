@@ -1,0 +1,647 @@
+<!-- Configuração do MathJax -->
+<script>
+    window.MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        }
+    };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<!-- Plotly.js para o gráfico das regiões -->
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+<style>
+    :root {
+        --primary-color: #2563eb;
+        --secondary-color: #1e293b;
+        --accent-color: #059669;
+        --bg-color: #f8fafc;
+        --card-bg: #ffffff;
+        --text-color: #334155;
+        --btn-hover: #1d4ed8;
+        --border-color: #cbd5e1;
+    }
+
+    body {
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        margin: 0;
+        padding: 0;
+        line-height: 1.6;
+    }
+
+    p, li {
+        text-align: justify;
+    }
+
+    p {
+        margin-bottom: 12px;
+    }
+
+    .navbar {
+        background-color: var(--secondary-color);
+        padding: 15px 30px;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .navbar a {
+        color: #93c5fd;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .container {
+        max-width: 950px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    .content-section {
+        background-color: var(--card-bg);
+        border-radius: 12px;
+        padding: 35px;
+        margin-bottom: 35px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        border-left: 6px solid var(--primary-color);
+    }
+
+    h1 {
+        color: var(--secondary-color);
+        font-size: 2rem;
+        margin-top: 0;
+        border-bottom: 2px solid #e2e8f0;
+        padding-bottom: 10px;
+    }
+
+    .region-plot-box {
+        background-color: #ffffff;
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px 0 30px 0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .controls-regions {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .btn-toggle-region {
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: 2px solid var(--border-color);
+        background-color: #f1f5f9;
+        color: var(--text-color);
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .btn-toggle-region.active-r1 {
+        background-color: #bae6fd;
+        border-color: #0284c7;
+        color: #0369a1;
+    }
+
+    .btn-toggle-region.active-r2 {
+        background-color: #bbf7d0;
+        border-color: #16a34a;
+        color: #15803d;
+    }
+
+    .btn-toggle-region.active-r3 {
+        background-color: #fed7aa;
+        border-color: #ea580c;
+        color: #c2410c;
+    }
+
+    .exercise-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+        margin-top: 25px;
+    }
+
+    .exercise-card {
+        background: #ffffff;
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+    }
+
+    .exercise-card:hover {
+        border-color: var(--primary-color);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+    }
+
+    .exercise-header {
+        padding: 20px 25px;
+        background: #f8fafc;
+    }
+
+    .exercise-title {
+        font-size: 1.05rem;
+        color: var(--secondary-color);
+        margin-bottom: 15px;
+        text-align: justify;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .btn-solution {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 8px 18px;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    .btn-solution:hover {
+        background-color: var(--btn-hover);
+    }
+
+    .solution-container {
+        display: none;
+        padding: 25px;
+        background-color: #f0fdf4;
+        border-top: 2px dashed #86efac;
+        text-align: justify;
+    }
+
+    .solution-container h4 {
+        margin-top: 0;
+        color: var(--accent-color);
+        font-size: 1.15rem;
+        border-bottom: 1px solid #bbf7d0;
+        padding-bottom: 8px;
+        text-align: left;
+    }
+
+    .step-title {
+        font-weight: 700;
+        color: var(--secondary-color);
+        margin-top: 15px;
+        text-align: justify;
+    }
+
+    .final-answer {
+        background-color: #dcfce7;
+        border: 1px solid #86efac;
+        color: #166534;
+        padding: 12px 18px;
+        border-radius: 8px;
+        font-weight: bold;
+        text-align: center;
+        font-size: 1.15rem;
+        margin-top: 20px;
+    }
+</style>
+
+
+<div class="navbar">
+    <div>
+       <a href="../etapa2.html">← Voltar ao menu</a>
+    </div>
+    <span>Cálculo 2 - Volume de Sólidos de Revolução</span>
+</div>
+
+<div class="container">
+
+    <div class="content-section">
+        <h1>Lista 6: Volume de Sólidos de Revolução</h1>
+        <p style="font-size: 1.1rem;">
+            Considere a figura abaixo e encontre o volume gerado pela rotação da região indicada ao redor da reta especificada. Utilize os botões para destacar as regiões de interesse.
+        </p>
+
+        <!-- GRÁFICO INTERATIVO DAS REGIÕES -->
+        <div class="region-plot-box">
+            <div class="controls-regions">
+                <button id="btn_r1" class="btn-toggle-region active-r1" onclick="toggleRegionState('R1')">Exibir R₁</button>
+                <button id="btn_r2" class="btn-toggle-region active-r2" onclick="toggleRegionState('R2')">Exibir R₂</button>
+                <button id="btn_r3" class="btn-toggle-region active-r3" onclick="toggleRegionState('R3')">Exibir R₃</button>
+            </div>
+            <div id="main_region_plot" style="width: 100%; max-width: 580px; height: 460px;"></div>
+        </div>
+
+        <div class="exercise-grid">
+
+            <!-- QUESTÃO 1 -->
+            <div class="exercise-card">
+                <div class="exercise-header">
+                    <div class="exercise-title">
+                        <strong>1.</strong> Encontre o volume gerado pela rotação da região <strong>$\mathcal{R}_1$</strong> em torno de <strong>$OA$</strong> (eixo $X$, $y = 0$).
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn-solution" onclick="toggleSolution('sol-1')">Ver solução</button>
+                    </div>
+                </div>
+                <div class="solution-container" id="sol-1">
+                    <h4>Solução Detalhada:</h4>
+                    <p class="step-title">Método dos Discos em $x$:</p>
+                    <p>O raio de rotação em função de $x$ é dado por $R(x) = x$, com $x \in [0,1]$.</p>
+                    $$V = \int_{0}^{1} \pi [R(x)]^2 dx = \pi \int_{0}^{1} x^2 dx = \pi \left[ \frac{x^3}{3} \right]_0^1 = \frac{\pi}{3}$$
+                    <div class="final-answer">Resultado Final: $V = \frac{\pi}{3}$ u.v.</div>
+                </div>
+            </div>
+
+            <!-- QUESTÃO 2 -->
+            <div class="exercise-card">
+                <div class="exercise-header">
+                    <div class="exercise-title">
+                        <strong>2.</strong> Encontre o volume gerado pela rotação da região <strong>$\mathcal{R}_1$</strong> em torno de <strong>$OC$</strong> (eixo $Y$, $x = 0$).
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn-solution" onclick="toggleSolution('sol-2')">Ver solução</button>
+                    </div>
+                </div>
+                <div class="solution-container" id="sol-2">
+                    <h4>Solução Detalhada:</h4>
+                    <p class="step-title">Método dos Anéis / Arruelas em $y$:</p>
+                    <p>Para $y \in [0,1]$, a região $\mathcal{R}_1$ vai da reta $x = y$ até a borda direita $x = 1$. Logo, o raio externo é $R(y) = 1$ e o raio interno é $r(y) = y$.</p>
+                    $$V = \pi \int_{0}^{1} \left[ 1^2 - y^2 \right] dy = \pi \left[ y - \frac{y^3}{3} \right]_0^1 = \pi \left( 1 - \frac{1}{3} \right) = \frac{2\pi}{3}$$
+                    <div class="final-answer">Resultado Final: $V = \frac{2\pi}{3}$ u.v.</div>
+                </div>
+            </div>
+
+            <!-- QUESTÃO 3 -->
+            <div class="exercise-card">
+                <div class="exercise-header">
+                    <div class="exercise-title">
+                        <strong>3.</strong> Encontre o volume gerado pela rotação da região <strong>$\mathcal{R}_1$</strong> em torno de <strong>$AB$</strong> (reta vertical $x = 1$).
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn-solution" onclick="toggleSolution('sol-3')">Ver solução</button>
+                    </div>
+                </div>
+                <div class="solution-container" id="sol-3">
+                    <h4>Solução Detalhada:</h4>
+                    <p class="step-title">Método dos Discos em $y$:</p>
+                    <p>A distância de um ponto na reta $x = y$ até o eixo de rotação $x = 1$ é dada por $R(y) = 1 - y$. Integrando de $y = 0$ até $y = 1$:</p>
+                    $$V = \pi \int_{0}^{1} (1 - y)^2 dy = \pi \left[ -\frac{(1 - y)^3}{3} \right]_0^1 = \pi \left( 0 - \left(-\frac{1}{3}\right) \right) = \frac{\pi}{3}$$
+                    <div class="final-answer">Resultado Final: $V = \frac{\pi}{3}$ u.v.</div>
+                </div>
+            </div>
+
+            <!-- QUESTÃO 4 -->
+            <div class="exercise-card">
+                <div class="exercise-header">
+                    <div class="exercise-title">
+                        <strong>4.</strong> Encontre o volume gerado pela rotação da região <strong>$\mathcal{R}_1$</strong> em torno de <strong>$BC$</strong> (reta horizontal $y = 1$).
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn-solution" onclick="toggleSolution('sol-4')">Ver solução</button>
+                    </div>
+                </div>
+                <div class="solution-container" id="sol-4">
+                    <h4>Solução Detalhada:</h4>
+                    <p class="step-title">Método das Arruelas em $x$:</p>
+                    <p>O eixo de rotação é $y = 1$. O raio externo até $y = 0$ é $R(x) = 1 - 0 = 1$. O raio interno até $y = x$ é $r(x) = 1 - x$.</p>
+                    $$V = \pi \int_{0}^{1} \left[ 1^2 - (1 - x)^2 \right] dx = \pi \int_{0}^{1} \left[ 1 - (1 - 2x + x^2) \right] dx = \pi \int_{0}^{1} (2x - x^2) dx$$
+                    $$V = \pi \left[ x^2 - \frac{x^3}{3} \right]_0^1 = \pi \left( 1 - \frac{1}{3} \right) = \frac{2\pi}{3}$$
+                    <div class="final-answer">Resultado Final: $V = \frac{2\pi}{3}$ u.v.</div>
+                </div>
+            </div>
+
+            <!-- QUESTÃO 5 -->
+            <div class="exercise-card">
+                <div class="exercise-header">
+                    <div class="exercise-title">
+                        <strong>5.</strong> Encontre o volume gerado pela rotação da região <strong>$\mathcal{R}_2$</strong> em torno de <strong>$OA$</strong> (eixo $X$, $y = 0$).
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn-solution" onclick="toggleSolution('sol-5')">Ver solução</button>
+                    </div>
+                </div>
+                <div class="solution-container" id="sol-5">
+                    <h4>Solução Detalhada:</h4>
+                    <p class="step-title">Método das Arruelas em $x$:</p>
+                    <p>Para $x \in [0,1]$, a região fica entre $y = \sqrt[4]{x} = x^{1/4}$ e $y = 1$. Portanto, $R(x) = 1$ e $r(x) = x^{1/4}$.</p>
+                    $$V = \pi \int_{0}^{1} \left[ 1^2 - \left(x^{1/4}\right)^2 \right] dx = \pi \int_{0}^{1} (1 - x^{1/2}) dx = \pi \left[ x - \frac{2}{3}x^{3/2} \right]_0^1 = \pi \left( 1 - \frac{2}{3} \right) = \frac{\pi}{3}$$
+                    <div class="final-answer">Resultado Final: $V = \frac{\pi}{3}$ u.v.</div>
+                </div>
+            </div>
+
+            <!-- QUESTÃO 6 -->
+            <div class="exercise-card">
+                <div class="exercise-header">
+                    <div class="exercise-title">
+                        <strong>6.</strong> Encontre o volume gerado pela rotação da região <strong>$\mathcal{R}_2$</strong> em torno de <strong>$OC$</strong> (eixo $Y$, $x = 0$).
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn-solution" onclick="toggleSolution('sol-6')">Ver solução</button>
+                    </div>
+                </div>
+                <div class="solution-container" id="sol-6">
+                    <h4>Solução Detalhada:</h4>
+                    <p class="step-title">Método dos Discos em $y$:</p>
+                    <p>Isolando $x$ na curva $y = \sqrt[4]{x}$, obtemos $x = y^4$. Para cada $y \in [0,1]$, o raio do disco em relação ao eixo $Y$ é $R(y) = y^4$.</p>
+                    $$V = \pi \int_{0}^{1} (y^4)^2 dy = \pi \int_{0}^{1} y^8 dy = \pi \left[ \frac{y^9}{9} \right]_0^1 = \frac{\pi}{9}$$
+                    <div class="final-answer">Resultado Final: $V = \frac{\pi}{9}$ u.v.</div>
+                </div>
+            </div>
+
+            <!-- QUESTÃO 7 -->
+            <div class="exercise-card">
+                <div class="exercise-header">
+                    <div class="exercise-title">
+                        <strong>7.</strong> Encontre o volume gerado pela rotação da região <strong>$\mathcal{R}_2$</strong> em torno de <strong>$AB$</strong> (reta vertical $x = 1$).
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn-solution" onclick="toggleSolution('sol-7')">Ver solução</button>
+                    </div>
+                </div>
+                <div class="solution-container" id="sol-7">
+                    <h4>Solução Detalhada:</h4>
+                    <p class="step-title">Método das Arruelas em $y$:</p>
+                    <p>Girando em torno de $x = 1$, o raio externo vai de $x = 0$ até $x = 1$, ou seja, $R(y) = 1 - 0 = 1$. O raio interno vai da curva $x = y^4$ até $x = 1$, ou seja, $r(y) = 1 - y^4$.</p>
+                    $$V = \pi \int_{0}^{1} \left[ 1^2 - (1 - y^4)^2 \right] dy = \pi \int_{0}^{1} \left[ 1 - (1 - 2y^4 + y^8) \right] dy = \pi \int_{0}^{1} (2y^4 - y^8) dy$$
+                    $$V = \pi \left[ \frac{2y^5}{5} - \frac{y^9}{9} \right]_0^1 = \pi \left( \frac{2}{5} - \frac{1}{9} \right) = \pi \left( \frac{18 - 5}{45} \right) = \frac{13\pi}{45}$$
+                    <div class="final-answer">Resultado Final: $V = \frac{13\pi}{45}$ u.v.</div>
+                </div>
+            </div>
+
+            <!-- QUESTÃO 8 -->
+            <div class="exercise-card">
+                <div class="exercise-header">
+                    <div class="exercise-title">
+                        <strong>8.</strong> Encontre o volume gerado pela rotação da região <strong>$\mathcal{R}_2$</strong> em torno de <strong>$BC$</strong> (reta horizontal $y = 1$).
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn-solution" onclick="toggleSolution('sol-8')">Ver solução</button>
+                    </div>
+                </div>
+                <div class="solution-container" id="sol-8">
+                    <h4>Solução Detalhada:</h4>
+                    <p class="step-title">Método dos Discos em $x$:</p>
+                    <p>O raio da secção circular em relação à reta $y = 1$ é a distância vertical $R(x) = 1 - \sqrt[4]{x} = 1 - x^{1/4}$.</p>
+                    $$V = \pi \int_{0}^{1} (1 - x^{1/4})^2 dx = \pi \int_{0}^{1} (1 - 2x^{1/4} + x^{1/2}) dx$$
+                    $$V = \pi \left[ x - 2 \cdot \frac{4}{5}x^{5/4} + \frac{2}{3}x^{3/2} \right]_0^1 = \pi \left( 1 - \frac{8}{5} + \frac{2}{3} \right) = \pi \left( \frac{15 - 24 + 10}{15} \right) = \frac{\pi}{15}$$
+                    <div class="final-answer">Resultado Final: $V = \frac{\pi}{15}$ u.v.</div>
+                </div>
+            </div>
+
+            <!-- QUESTÃO 9 -->
+            <div class="exercise-card">
+                <div class="exercise-header">
+                    <div class="exercise-title">
+                        <strong>9.</strong> Encontre o volume gerado pela rotação da região <strong>$\mathcal{R}_3$</strong> em torno de <strong>$OA$</strong> (eixo $X$, $y = 0$).
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn-solution" onclick="toggleSolution('sol-9')">Ver solução</button>
+                    </div>
+                </div>
+                <div class="solution-container" id="sol-9">
+                    <h4>Solução Detalhada:</h4>
+                    <p class="step-title">Método das Arruelas em $x$:</p>
+                    <p>A região $\mathcal{R}_3$ fica entre a curva superior $y = \sqrt[4]{x}$ e a curva inferior $y = x$. Assim, $R(x) = x^{1/4}$ e $r(x) = x$.</p>
+                    $$V = \pi \int_{0}^{1} \left[ (x^{1/4})^2 - x^2 \right] dx = \pi \int_{0}^{1} (x^{1/2} - x^2) dx = \pi \left[ \frac{2}{3}x^{3/2} - \frac{x^3}{3} \right]_0^1 = \pi \left( \frac{2}{3} - \frac{1}{3} \right) = \frac{\pi}{3}$$
+                    <div class="final-answer">Resultado Final: $V = \frac{\pi}{3}$ u.v.</div>
+                </div>
+            </div>
+
+            <!-- QUESTÃO 10 -->
+            <div class="exercise-card">
+                <div class="exercise-header">
+                    <div class="exercise-title">
+                        <strong>10.</strong> Encontre o volume gerado pela rotação da região <strong>$\mathcal{R}_3$</strong> em torno de <strong>$OC$</strong> (eixo $Y$, $x = 0$).
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn-solution" onclick="toggleSolution('sol-10')">Ver solução</button>
+                    </div>
+                </div>
+                <div class="solution-container" id="sol-10">
+                    <h4>Solução Detalhada:</h4>
+                    <p class="step-title">Método das Arruelas em $y$:</p>
+                    <p>Em $y \in [0,1]$, a curva mais distante do eixo $Y$ é $x = y$ e a mais próxima é $x = y^4$. Logo, $R(y) = y$ e $r(y) = y^4$.</p>
+                    $$V = \pi \int_{0}^{1} \left[ y^2 - (y^4)^2 \right] dy = \pi \int_{0}^{1} (y^2 - y^8) dy = \pi \left[ \frac{y^3}{3} - \frac{y^9}{9} \right]_0^1 = \pi \left( \frac{1}{3} - \frac{1}{9} \right) = \frac{2\pi}{9}$$
+                    <div class="final-answer">Resultado Final: $V = \frac{2\pi}{9}$ u.v.</div>
+                </div>
+            </div>
+
+            <!-- QUESTÃO 11 -->
+            <div class="exercise-card">
+                <div class="exercise-header">
+                    <div class="exercise-title">
+                        <strong>11.</strong> Encontre o volume gerado pela rotação da região <strong>$\mathcal{R}_3$</strong> em torno de <strong>$AB$</strong> (reta vertical $x = 1$).
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn-solution" onclick="toggleSolution('sol-11')">Ver solução</button>
+                    </div>
+                </div>
+                <div class="solution-container" id="sol-11">
+                    <h4>Solução Detalhada:</h4>
+                    <p class="step-title">Método das Arruelas em $y$:</p>
+                    <p>A rotação ocorre em torno da reta $x = 1$. O raio externo é a distância até a curva da esquerda $x = y^4$, resultando em $R(y) = 1 - y^4$. O raio interno é a distância até a reta da direita $x = y$, resultando em $r(y) = 1 - y$.</p>
+                    $$V = \pi \int_{0}^{1} \left[ (1 - y^4)^2 - (1 - y)^2 \right] dy = \pi \int_{0}^{1} \left[ (1 - 2y^4 + y^8) - (1 - 2y + y^2) \right] dy$$
+                    $$V = \pi \int_{0}^{1} (2y - y^2 - 2y^4 + y^8) dy = \pi \left[ y^2 - \frac{y^3}{3} - \frac{2y^5}{5} + \frac{y^9}{9} \right]_0^1$$
+                    $$V = \pi \left( 1 - \frac{1}{3} - \frac{2}{5} + \frac{1}{9} \right) = \pi \left( \frac{45 - 15 - 18 + 5}{45} \right) = \frac{17\pi}{45}$$
+                    <div class="final-answer">Resultado Final: $V = \frac{17\pi}{45}$ u.v.</div>
+                </div>
+            </div>
+
+            <!-- QUESTÃO 12 -->
+            <div class="exercise-card">
+                <div class="exercise-header">
+                    <div class="exercise-title">
+                        <strong>12.</strong> Encontre o volume gerado pela rotação da região <strong>$\mathcal{R}_3$</strong> em torno de <strong>$BC$</strong> (reta horizontal $y = 1$).
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn-solution" onclick="toggleSolution('sol-12')">Ver solução</button>
+                    </div>
+                </div>
+                <div class="solution-container" id="sol-12">
+                    <h4>Solução Detalhada:</h4>
+                    <p class="step-title">Método das Arruelas em $x$:</p>
+                    <p>Girando em torno de $y = 1$, o raio externo é a distância até a curva inferior $y = x$, ou seja, $R(x) = 1 - x$. O raio interno é a distância até a curva superior $y = \sqrt[4]{x}$, ou seja, $r(x) = 1 - x^{1/4}$.</p>
+                    $$V = \pi \int_{0}^{1} \left[ (1 - x)^2 - (1 - x^{1/4})^2 \right] dx$$
+                    $$V = \pi \int_{0}^{1} \left[ (1 - 2x + x^2) - (1 - 2x^{1/4} + x^{1/2}) \right] dx = \pi \int_{0}^{1} (2x^{1/4} - x^{1/2} - 2x + x^2) dx$$
+                    $$V = \pi \left[ 2 \cdot \frac{4}{5}x^{5/4} - \frac{2}{3}x^{3/2} - x^2 + \frac{x^3}{3} \right]_0^1 = \pi \left( \frac{8}{5} - \frac{2}{3} - 1 + \frac{1}{3} \right) = \pi \left( \frac{8}{5} - \frac{1}{3} - 1 \right)$$
+                    $$V = \pi \left( \frac{24 - 5 - 15}{15} \right) = \frac{4\pi}{15}$$
+                    <div class="final-answer">Resultado Final: $V = \frac{4\pi}{15}$ u.v.</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Estado inicial dos três seletores
+    let regionStates = {
+        R1: true,
+        R2: true,
+        R3: true
+    };
+
+    function toggleRegionState(region) {
+        regionStates[region] = !regionStates[region];
+        
+        const btn = document.getElementById(`btn_${region.toLowerCase()}`);
+        if (regionStates[region]) {
+            btn.classList.add(`active-${region.toLowerCase()}`);
+        } else {
+            btn.classList.remove(`active-${region.toLowerCase()}`);
+        }
+
+        renderMainRegionPlot();
+    }
+
+    function renderMainRegionPlot() {
+        const numPts = 100;
+        let xVals = [], yLine = [], yCurve = [];
+        for (let i = 0; i <= numPts; i++) {
+            let x = i / numPts;
+            xVals.push(x);
+            yLine.push(x);
+            yCurve.push(Math.pow(x, 0.25));
+        }
+
+        // Região R1 (Azul): entre y = 0 e y = x
+        const traceR1 = {
+            x: [...xVals, ...xVals.slice().reverse()],
+            y: [...yLine, ...xVals.map(() => 0)],
+            fill: 'toself',
+            fillcolor: 'rgba(186, 230, 253, 0.85)',
+            line: { width: 0 },
+            visible: regionStates.R1 ? true : false,
+            hoverinfo: 'none',
+            showlegend: false
+        };
+
+        // Região R2 (Verde): entre y = x^(1/4) e y = 1
+        const traceR2 = {
+            x: [...xVals, ...xVals.slice().reverse()],
+            y: [...xVals.map(() => 1), ...yCurve.slice().reverse()],
+            fill: 'toself',
+            fillcolor: 'rgba(187, 247, 208, 0.85)',
+            line: { width: 0 },
+            visible: regionStates.R2 ? true : false,
+            hoverinfo: 'none',
+            showlegend: false
+        };
+
+        // Região R3 (Laranja/Ciano suave): entre y = x e y = x^(1/4)
+        const traceR3 = {
+            x: [...xVals, ...xVals.slice().reverse()],
+            y: [...yCurve, ...yLine.slice().reverse()],
+            fill: 'toself',
+            fillcolor: 'rgba(254, 215, 170, 0.85)',
+            line: { width: 0 },
+            visible: regionStates.R3 ? true : false,
+            hoverinfo: 'none',
+            showlegend: false
+        };
+
+        // Curva y = x^(1/4)
+        const traceCurve = {
+            x: xVals, y: yCurve,
+            mode: 'lines',
+            line: { color: '#059669', width: 2.5 },
+            showlegend: false
+        };
+
+        // Reta y = x
+        const traceLine = {
+            x: xVals, y: yLine,
+            mode: 'lines',
+            line: { color: '#0284c7', width: 2.5 },
+            showlegend: false
+        };
+
+        // Borda do quadrado unitário
+        const traceSquare = {
+            x: [0, 1, 1, 0, 0],
+            y: [0, 0, 1, 1, 0],
+            mode: 'lines',
+            line: { color: '#1e293b', width: 2 },
+            showlegend: false
+        };
+
+        // Rótulos ajustados sem sobreposição:
+        // - R2 reposicionado mais ao alto/esquerda (x=0.25, y=0.88)
+        // - Equação y = ⁴√x posicionada ao longo da curva mais à direita (x=0.52, y=0.88)
+        let annotX = [0.03, 0.97, 0.97, 0.03];
+        let annotY = [-0.05, -0.05, 1.05, 1.05];
+        let annotText = ['<b>O</b>', '<b>A(1,0)</b>', '<b>B(1,1)</b>', '<b>C(0,1)</b>'];
+        let annotPos = ['top left', 'top right', 'bottom right', 'bottom left'];
+
+        if (regionStates.R1) {
+            annotX.push(0.65); annotY.push(0.25);
+            annotText.push('<b style="font-size:18px; color:#0369a1;">R₁</b>');
+            annotPos.push('middle center');
+        }
+        if (regionStates.R2) {
+            annotX.push(0.25); annotY.push(0.88);
+            annotText.push('<b style="font-size:18px; color:#15803d;">R₂</b>');
+            annotPos.push('middle center');
+        }
+        if (regionStates.R3) {
+            annotX.push(0.22); annotY.push(0.45);
+            annotText.push('<b style="font-size:18px; color:#c2410c;">R₃</b>');
+            annotPos.push('middle center');
+        }
+
+        // Adiciona o rótulo da equação separado do texto R2
+        annotX.push(0.55); annotY.push(0.78);
+        annotText.push('<b style="color:#047857;">y = ⁴√x</b>');
+        annotPos.push('bottom right');
+
+        const traceAnnotations = {
+            x: annotX,
+            y: annotY,
+            mode: 'text',
+            text: annotText,
+            textposition: annotPos,
+            textfont: { family: 'Segoe UI, sans-serif', size: 14 },
+            showlegend: false
+        };
+
+        const layout = {
+            margin: { l: 45, r: 35, t: 25, b: 45 },
+            xaxis: { title: 'x', range: [-0.15, 1.2], zeroline: true, zerolinecolor: '#94a3b8' },
+            yaxis: { title: 'y', range: [-0.15, 1.2], zeroline: true, zerolinecolor: '#94a3b8' },
+            showlegend: false,
+            hovermode: false
+        };
+
+        Plotly.react('main_region_plot', [traceR1, traceR2, traceR3, traceCurve, traceLine, traceSquare, traceAnnotations], layout, { displayModeBar: false, responsive: true });
+    }
+
+    // Função para mostrar/ocultar a solução e acionar a renderização do MathJax
+    function toggleSolution(id) {
+        const solBox = document.getElementById(id);
+        const isVisible = solBox.style.display === 'block';
+        solBox.style.display = isVisible ? 'none' : 'block';
+        
+        if (!isVisible && window.MathJax && window.MathJax.typesetPromise) {
+            MathJax.typesetPromise([solBox]);
+        }
+    }
+
+    // Inicialização do gráfico ao carregar a página
+    window.addEventListener('load', renderMainRegionPlot);
+</script>

@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo 2: Resumo Comparativo dos Métodos de Volume</title>
+    
+    <!-- Configuração do MathJax -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <!-- Biblioteca Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e293b;
+            --accent-color: #059669;
+            --purple-accent: #7c3aed;
+            --amber-accent: #d97706;
+            --magenta-accent: #c026d3;
+            --rose-accent: #e11d48;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #334155;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        p, li {
+            text-align: justify;
+            font-size: 1.05rem;
+            margin-bottom: 16px;
+        }
+
+        .navbar {
+            background-color: var(--secondary-color);
+            padding: 15px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: #93c5fd;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .navbar a:hover {
+            color: #ffffff;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .content-section {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 35px;
+            margin-bottom: 35px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-left: 6px solid var(--primary-color);
+        }
+
+        h1 {
+            color: var(--secondary-color);
+            font-size: 1.8rem;
+            margin-top: 0;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 1.3rem;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        .simulation-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 850px) {
+            .simulation-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .plot-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .plot-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--secondary-color);
+            margin-bottom: 8px;
+        }
+
+        .controls-bar {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-top: 15px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        button.btn-anim {
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-magenta { background-color: var(--magenta-accent); }
+        .btn-magenta:hover { background-color: #a21caf; }
+
+        .btn-rose { background-color: var(--rose-accent); }
+        .btn-rose:hover { background-color: #be123c; }
+
+        .btn-purple { background-color: var(--purple-accent); }
+        .btn-purple:hover { background-color: #6d28d9; }
+
+        .volume-display-card {
+            background-color: #fdf4ff;
+            border: 1px solid #f5d0fe;
+            border-left: 5px solid var(--magenta-accent);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .volume-display-card.rose-theme {
+            background-color: #fff1f2;
+            border: 1px solid #fecdd3;
+            border-left-color: var(--rose-accent);
+        }
+
+        .volume-display-card.purple-theme {
+            background-color: #f3e8ff;
+            border: 1px solid #e9d5ff;
+            border-left-color: var(--purple-accent);
+        }
+
+        .volume-value {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #701a75;
+            margin-top: 5px;
+        }
+
+        .volume-display-card.rose-theme .volume-value {
+            color: #881337;
+        }
+
+        .volume-display-card.purple-theme .volume-value {
+            color: #581c87;
+        }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+
+        .summary-table th, .summary-table td {
+            border: 1px solid var(--border-color);
+            padding: 12px 15px;
+            text-align: center;
+        }
+
+        .summary-table th {
+            background-color: #f1f5f9;
+            color: var(--secondary-color);
+            font-weight: 700;
+        }
+
+        .summary-table tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        /* Estilo do botão de lista de exercícios */
+        .btn-exercise-list {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(5, 150, 105, 0.2);
+        }
+
+        .btn-exercise-list:hover {
+            background-color: #047857;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="etapa2.html">← Voltar ao Menu Principal</a>
+        <span>Cálculo 2 - Resumo dos Métodos de Volume</span>
+    </div>
+
+    <div class="container">
+
+        <!-- QUADRO RESUMO DOS TRÊS MÉTODOS -->
+        <div class="content-section" style="border-left-color: var(--primary-color);">
+            <h1 style="color: var(--primary-color);">Resumo Comparativo dos Métodos de Revolução</h1>
+            
+            <p>
+                A escolha entre os métodos de integração depende da orientação do elemento representativo (retângulo) em relação ao eixo de rotação:
+            </p>
+
+            <table class="summary-table">
+                <thead>
+                    <tr>
+                        <th>Método</th>
+                        <th>Orientação da Faixa</th>
+                        <th>Seção Transversal 3D</th>
+                        <th>Fórmula (Rotação Eixo X / Horiz.)</th>
+                        <th>Fórmula (Rotação Eixo Y / Vert.)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Discos</strong></td>
+                        <td>Perpendicular ao eixo</td>
+                        <td>Disco maciço $A = \pi R^2$</td>
+                        <td>$V = \int_a^b \pi [f(x)]^2 dx$</td>
+                        <td>$V = \int_c^d \pi [g(y)]^2 dy$</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Anéis / Arruelas</strong></td>
+                        <td>Perpendicular ao eixo</td>
+                        <td>Anel com furo $A = \pi (R^2 - r^2)$</td>
+                        <td>$V = \int_a^b \pi ([R(x)]^2 - [r(x)]^2) dx$</td>
+                        <td>$V = \int_c^d \pi ([R(y)]^2 - [r(y)]^2) dy$</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cascas Cilíndricas</strong></td>
+                        <td>Paralela ao eixo</td>
+                        <td>Cilindro oco $V = 2\pi r h \, \Delta r$</td>
+                        <td>$V = \int_c^d 2\pi y \, g(y) \, dy$</td>
+                        <td>$V = \int_a^b 2\pi x \, f(x) \, dx$</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 1. VISUALIZAÇÃO INTERATIVA COM ANIMAÇÃO: MÉTODO DOS DISCOS -->
+        <div class="content-section" style="border-left-color: var(--magenta-accent);">
+            <h1 style="color: var(--magenta-accent);">1. Método dos Discos</h1>
+
+            <p>
+                Visualização do sólido gerado pela rotação da região delimitada por $y = x^3$, $y = 8$ e $x = 0$ em torno do eixo $Y$. Como a faixa é perpendicular ao eixo de rotação, cada elemento gera um <strong>disco circular maciço</strong> na altura $y$.
+            </p>
+
+            <div class="simulation-container">
+                <div class="plot-box">
+                    <div class="plot-title">Região no Plano XY (Faixa Perpendicular em $y$)</div>
+                    <div id="plot2d_disk" style="width: 100%; height: 380px;"></div>
+                </div>
+
+                <div class="plot-box">
+                    <div class="plot-title">Sólido 3D com Disco Formado em Destaque</div>
+                    <div id="plot3d_disk" style="width: 100%; height: 380px;"></div>
+                </div>
+            </div>
+
+            <div class="controls-bar">
+                <button id="btnPlayDisk" class="btn-anim btn-magenta" onclick="toggleDiskAnimation()">
+                    ▶ Iniciar Rotação (Formar Disco)
+                </button>
+                
+                <div class="control-group">
+                    <label for="sliderDiskAngle">Ângulo ($\theta$):</label>
+                    <input type="range" id="sliderDiskAngle" min="0" max="360" value="0" step="5" style="width: 180px;" oninput="updateDiskRotation()">
+                    <span id="textDiskAngle" style="font-weight: 700; color: #c026d3; min-width: 45px;">0°</span>
+                </div>
+            </div>
+
+            <!-- VALOR DO VOLUME DESTACADO (DISCOS) -->
+            <div class="volume-display-card">
+                <div style="font-weight: 600; color: #4c1d95;">Volume do Sólido de Revolução:</div>
+                <div class="volume-value">$$V = \int_{0}^{8} \pi \left(\sqrt[3]{y}\right)^2 dy = \frac{96\pi}{5} \approx 60{,}32 \text{ u.v.}$$</div>
+            </div>
+        </div>
+
+        <!-- 2. VISUALIZAÇÃO INTERATIVA COM ANIMAÇÃO: MÉTODO DOS ANÉIS / ARRUELAS -->
+        <div class="content-section" style="border-left-color: var(--rose-accent);">
+            <h1 style="color: var(--rose-accent);">2. Método dos Anéis (Arruelas)</h1>
+
+            <p>
+                Visualização do sólido gerado pela rotação da região delimitada por $y = x$ e $y = x^2$ em torno do eixo $X$. A seção transversal perpendicular ao eixo de rotação possui o formato de uma <strong>arruela (anel)</strong> com raio externo $R(x) = x$ e raio interno $r(x) = x^2$.
+            </p>
+
+            <div class="simulation-container">
+                <div class="plot-box">
+                    <div class="plot-title">Região entre $y=x$ e $y=x^2$ no Plano XY</div>
+                    <div id="plot2d_washer" style="width: 100%; height: 380px;"></div>
+                </div>
+
+                <div class="plot-box">
+                    <div class="plot-title">Sólido 3D com Anel / Arruela Formado em Destaque</div>
+                    <div id="plot3d_washer" style="width: 100%; height: 380px;"></div>
+                </div>
+            </div>
+
+            <div class="controls-bar">
+                <button id="btnPlayWasher" class="btn-anim btn-rose" onclick="toggleWasherAnimation()">
+                    ▶ Iniciar Rotação (Formar Anel)
+                </button>
+                
+                <div class="control-group">
+                    <label for="sliderWasherAngle">Ângulo ($\theta$):</label>
+                    <input type="range" id="sliderWasherAngle" min="0" max="360" value="0" step="5" style="width: 180px;" oninput="updateWasherRotation()">
+                    <span id="textWasherAngle" style="font-weight: 700; color: var(--rose-accent); min-width: 45px;">0°</span>
+                </div>
+            </div>
+
+            <!-- VALOR DO VOLUME DESTACADO (ANÉIS) -->
+            <div class="volume-display-card rose-theme">
+                <div style="font-weight: 600; color: #881337;">Volume do Sólido de Revolução:</div>
+                <div class="volume-value">$$V = \int_{0}^{1} \pi \left[ (x)^2 - (x^2)^2 \right] dx = \pi \int_{0}^{1} (x^2 - x^4) \, dx = \frac{2\pi}{15} \approx 0{,}419 \text{ u.v.}$$</div>
+            </div>
+        </div>
+
+        <!-- 3. VISUALIZAÇÃO INTERATIVA COM ANIMAÇÃO: MÉTODO DAS CASCAS CILÍNDRICAS -->
+        <div class="content-section" style="border-left-color: var(--purple-accent);">
+            <h1 style="color: var(--purple-accent);">3. Método das Cascas Cilíndricas</h1>
+
+            <p>
+                Visualização do sólido gerado pela rotação da região delimitada por $y = 2x^2 - x^3$ e $y = 0$ em torno do eixo $Y$. Como a faixa vertical de largura $dx$ é paralela ao eixo de rotação, cada elemento gera uma <strong>casca cilíndrica concêntrica</strong> com raio $x$, altura $2x^2 - x^3$ e espessura $dx$.
+            </p>
+
+            <div class="simulation-container">
+                <div class="plot-box">
+                    <div class="plot-title">Região sob $y = 2x^2 - x^3$ (Faixa Paralela em $x$)</div>
+                    <div id="plot2d_shell" style="width: 100%; height: 380px;"></div>
+                </div>
+
+                <div class="plot-box">
+                    <div class="plot-title">Sólido 3D com Casca Cilíndrica Formada em Destaque</div>
+                    <div id="plot3d_shell" style="width: 100%; height: 380px;"></div>
+                </div>
+            </div>
+
+            <div class="controls-bar">
+                <button id="btnPlayShell" class="btn-anim btn-purple" onclick="toggleShellAnimation()">
+                    ▶ Iniciar Rotação (Formar Casca)
+                </button>
+                
+                <div class="control-group">
+                    <label for="sliderShellAngle">Ângulo ($\theta$):</label>
+                    <input type="range" id="sliderShellAngle" min="0" max="360" value="0" step="5" style="width: 180px;" oninput="updateShellRotation()">
+                    <span id="textShellAngle" style="font-weight: 700; color: var(--purple-accent); min-width: 45px;">0°</span>
+                </div>
+            </div>
+
+            <!-- VALOR DO VOLUME DESTACADO (CASCAS) -->
+            <div class="volume-display-card purple-theme">
+                <div style="font-weight: 600; color: #581c87;">Volume do Sólido de Revolução:</div>
+                <div class="volume-value">$$V = \int_{0}^{2} 2\pi x (2x^2 - x^3) \, dx = 2\pi \int_{0}^{2} (2x^3 - x^4) \, dx = \frac{16\pi}{5} \approx 10{,}05 \text{ u.v.}$$</div>
+            </div>
+        </div>
+
+        <!-- LISTA DE QUESTÕES (BOTÃO DE ACESSO À LISTA 6) -->
+        <div class="content-section" style="border-left-color: var(--accent-color); text-align: center; background-color: #f0fdf4;">
+            <h2 style="color: var(--accent-color); margin-bottom: 10px;">Pratique o Conteúdo</h2>
+            <p style="text-align: center; font-size: 1.1rem; margin-bottom: 25px;">
+                Acesse a lista completa de exercícios sobre Volume de Sólidos de Revolução com resoluções passo a passo.
+            </p>
+            <a href="listas/lista_6.html" class="btn-exercise-list">
+                📋 Acessar Lista de Exercícios
+            </a>
+        </div>
+
+    </div>
+
+    <script>
+        // FUNÇÃO AUXILIAR PARA EIXOS 3D
+        function createExplicitAxes3D(xPts, yPts, zPts) {
+            const traceX = {
+                type: 'scatter3d', mode: 'lines',
+                x: xPts, y: xPts.map(() => 0), z: xPts.map(() => 0),
+                line: { color: '#dc2626', width: 2.5 }, showlegend: false
+            };
+
+            const traceY = {
+                type: 'scatter3d', mode: 'lines',
+                x: yPts.map(() => 0), y: yPts.map(() => 0), z: zPts ? zPts : yPts,
+                line: { color: '#16a34a', width: 2.5 }, showlegend: false
+            };
+
+            return [traceX, traceY];
+        }
+
+        // ==========================================
+        // 1. LÓGICA DO GRÁFICO DO MÉTODO DOS DISCOS
+        // ==========================================
+        let isAnimatingDisk = false;
+        let timerDisk = null;
+
+        const yDisk = 4.5;
+        const rDisk = Math.cbrt(yDisk);
+        const dyDisk = 0.35;
+
+        function updateDiskRotation() {
+            const angleDeg = parseFloat(document.getElementById('sliderDiskAngle').value);
+            document.getElementById('textDiskAngle').textContent = angleDeg + '°';
+            render2DDisk();
+            render3DDisk(angleDeg);
+        }
+
+        function render2DDisk() {
+            let yVals = [], xVals = [];
+            for (let i = 0; i <= 100; i++) {
+                let y = (i / 100) * 8;
+                yVals.push(y);
+                xVals.push(Math.cbrt(y));
+            }
+
+            const curveTrace = { x: xVals, y: yVals, mode: 'lines', line: { color: '#0284c7', width: 3 } };
+            const fillArea = { x: [...xVals, 0, 0], y: [...yVals, 8, 0], fill: 'toself', fillcolor: 'rgba(56, 189, 248, 0.35)', mode: 'none' };
+
+            const horizontalStrip = {
+                x: [0, rDisk, rDisk, 0, 0],
+                y: [yDisk - dyDisk, yDisk - dyDisk, yDisk + dyDisk, yDisk + dyDisk, yDisk - dyDisk],
+                fill: 'toself', fillcolor: 'rgba(217, 70, 239, 0.75)',
+                line: { color: '#c026d3', width: 2 },
+                type: 'scatter', mode: 'lines'
+            };
+
+            const lineY8 = { x: [0, 2.3], y: [8, 8], mode: 'lines', line: { color: '#334155', width: 1.5, dash: 'dash' } };
+
+            const layout2D = {
+                margin: { l: 30, r: 20, t: 20, b: 30 },
+                xaxis: { title: 'x', range: [-0.2, 2.5], zeroline: true },
+                yaxis: { title: 'y', range: [-0.5, 9.0], zeroline: true },
+                showlegend: false
+            };
+
+            Plotly.react('plot2d_disk', [fillArea, curveTrace, lineY8, horizontalStrip], layout2D, { displayModeBar: false, responsive: true });
+        }
+
+        function render3DDisk(angleDeg) {
+            const maxThetaRad = (angleDeg * Math.PI) / 180.0;
+            const numY = 40, numTheta = 36;
+
+            let x3D = [], y3D = [], z3D = [];
+            for (let j = 0; j <= numTheta; j++) {
+                let theta = (j / numTheta) * 2 * Math.PI;
+                let cosT = Math.cos(theta), sinT = Math.sin(theta);
+                let xRow = [], yRow = [], zRow = [];
+                for (let i = 0; i <= numY; i++) {
+                    let y = (i / numY) * 8;
+                    let r = Math.cbrt(y);
+                    xRow.push(r * cosT);
+                    yRow.push(r * sinT);
+                    zRow.push(y);
+                }
+                x3D.push(xRow); y3D.push(yRow); z3D.push(zRow);
+            }
+
+            const solidMesh = {
+                type: 'surface', x: x3D, y: y3D, z: z3D,
+                colorscale: [[0, '#38bdf8'], [1, '#0284c7']],
+                showscale: false, opacity: 0.35, hoverinfo: 'none'
+            };
+
+            let diskX = [], diskY = [], diskZ = [];
+            for (let j = 0; j <= numTheta; j++) {
+                let theta = (j / numTheta) * maxThetaRad;
+                let cosT = Math.cos(theta), sinT = Math.sin(theta);
+
+                diskX.push([0, rDisk * cosT, rDisk * cosT, 0]);
+                diskY.push([0, rDisk * sinT, rDisk * sinT, 0]);
+                diskZ.push([yDisk - dyDisk, yDisk - dyDisk, yDisk + dyDisk, yDisk + dyDisk]);
+            }
+
+            const diskMesh = {
+                type: 'surface', x: diskX, y: diskY, z: diskZ,
+                colorscale: [[0, '#f472b6'], [0.5, '#c026d3'], [1, '#701a75']],
+                showscale: false, opacity: angleDeg === 0 ? 0.2 : 0.9,
+                lighting: { ambient: 0.7, diffuse: 0.8 }, hoverinfo: 'none'
+            };
+
+            const axes = createExplicitAxes3D([-2.5, 2.5], [0, 9.0]);
+
+            const layout3D = {
+                margin: { l: 0, r: 0, b: 0, t: 0 }, hovermode: false,
+                scene: {
+                    xaxis: { visible: false, range: [-2.5, 2.5] },
+                    yaxis: { visible: false, range: [-2.5, 2.5] },
+                    zaxis: { visible: false, range: [-0.5, 9.0] },
+                    aspectratio: { x: 1, y: 1, z: 1.2 },
+                    camera: { eye: { x: 1.4, y: -1.5, z: 0.9 } }
+                },
+                showlegend: false
+            };
+
+            Plotly.react('plot3d_disk', [solidMesh, diskMesh, ...axes], layout3D, { displayModeBar: false, responsive: true });
+        }
+
+        function toggleDiskAnimation() {
+            const btn = document.getElementById('btnPlayDisk');
+            const slider = document.getElementById('sliderDiskAngle');
+            if (isAnimatingDisk) {
+                clearInterval(timerDisk);
+                isAnimatingDisk = false;
+                btn.innerHTML = '▶ Iniciar Rotação (Formar Disco)';
+            } else {
+                isAnimatingDisk = true;
+                btn.innerHTML = '⏸ Pausar';
+                if (parseInt(slider.value) >= 360) slider.value = 0;
+                timerDisk = setInterval(() => {
+                    let currentAngle = parseInt(slider.value);
+                    if (currentAngle >= 360) {
+                        slider.value = 360;
+                        updateDiskRotation();
+                        clearInterval(timerDisk);
+                        isAnimatingDisk = false;
+                        btn.innerHTML = '▶ Iniciar Rotação (Formar Disco)';
+                    } else {
+                        slider.value = currentAngle + 5;
+                        updateDiskRotation();
+                    }
+                }, 50);
+            }
+        }
+
+        // ===============================================
+        // 2. LÓGICA DO GRÁFICO DO MÉTODO DOS ANÉIS (ARRUELAS)
+        // ===============================================
+        let isAnimatingWasher = false;
+        let timerWasher = null;
+
+        const xWasher = 0.6;
+        const R_washer = xWasher;              
+        const r_washer = xWasher * xWasher;    
+        const dxWasher = 0.04;
+
+        function updateWasherRotation() {
+            const angleDeg = parseFloat(document.getElementById('sliderWasherAngle').value);
+            document.getElementById('textWasherAngle').textContent = angleDeg + '°';
+            render2DWasher();
+            render3DWasher(angleDeg);
+        }
+
+        function render2DWasher() {
+            let xVals = [], y1Vals = [], y2Vals = [];
+            for (let i = 0; i <= 100; i++) {
+                let x = i / 100;
+                xVals.push(x);
+                y1Vals.push(x);       
+                y2Vals.push(x * x);   
+            }
+
+            const curveTrace1 = { x: xVals, y: y1Vals, mode: 'lines', line: { color: '#2563eb', width: 2.5 } };
+            const curveTrace2 = { x: xVals, y: y2Vals, mode: 'lines', line: { color: '#059669', width: 2.5 } };
+
+            const fillArea = {
+                x: [...xVals, ...xVals.slice().reverse()],
+                y: [...y1Vals, ...y2Vals.slice().reverse()],
+                fill: 'toself', fillcolor: 'rgba(56, 189, 248, 0.35)', mode: 'none'
+            };
+
+            const verticalStrip = {
+                x: [xWasher - dxWasher/2, xWasher + dxWasher/2, xWasher + dxWasher/2, xWasher - dxWasher/2, xWasher - dxWasher/2],
+                y: [r_washer, r_washer, R_washer, R_washer, r_washer],
+                fill: 'toself', fillcolor: 'rgba(225, 29, 72, 0.75)',
+                line: { color: '#be123c', width: 2 },
+                type: 'scatter', mode: 'lines'
+            };
+
+            const layout2D = {
+                margin: { l: 30, r: 20, t: 20, b: 30 },
+                xaxis: { title: 'x', range: [-0.1, 1.2], zeroline: true },
+                yaxis: { title: 'y', range: [-0.1, 1.2], zeroline: true },
+                showlegend: false
+            };
+
+            Plotly.react('plot2d_washer', [fillArea, curveTrace1, curveTrace2, verticalStrip], layout2D, { displayModeBar: false, responsive: true });
+        }
+
+        function render3DWasher(angleDeg) {
+            const maxThetaRad = (angleDeg * Math.PI) / 180.0;
+            const numX = 35, numTheta = 36;
+
+            let xOuter = [], yOuter = [], zOuter = [];
+            let xInner = [], yInner = [], zInner = [];
+
+            for (let j = 0; j <= numTheta; j++) {
+                let theta = (j / numTheta) * 2 * Math.PI;
+                let cosT = Math.cos(theta), sinT = Math.sin(theta);
+                
+                let xRowO = [], yRowO = [], zRowO = [];
+                let xRowI = [], yRowI = [], zRowI = [];
+
+                for (let i = 0; i <= numX; i++) {
+                    let x = i / numX;
+                    xRowO.push(x); yRowO.push(x * cosT); zRowO.push(x * sinT);
+                    xRowI.push(x); yRowI.push((x * x) * cosT); zRowI.push((x * x) * sinT);
+                }
+                xOuter.push(xRowO); yOuter.push(yRowO); zOuter.push(zRowO);
+                xInner.push(xRowI); yInner.push(yRowI); zInner.push(zRowI);
+            }
+
+            const outerMesh = {
+                type: 'surface', x: xOuter, y: yOuter, z: zOuter,
+                colorscale: [[0, '#38bdf8'], [1, '#0284c7']],
+                showscale: false, opacity: 0.3, hoverinfo: 'none'
+            };
+
+            const innerMesh = {
+                type: 'surface', x: xInner, y: yInner, z: zInner,
+                colorscale: [[0, '#cbd5e1'], [1, '#64748b']],
+                showscale: false, opacity: 0.4, hoverinfo: 'none'
+            };
+
+            let washerX = [], washerY = [], washerZ = [];
+            for (let j = 0; j <= numTheta; j++) {
+                let theta = (j / numTheta) * maxThetaRad;
+                let cosT = Math.cos(theta), sinT = Math.sin(theta);
+
+                washerX.push([xWasher - dxWasher/2, xWasher - dxWasher/2, xWasher + dxWasher/2, xWasher + dxWasher/2, xWasher - dxWasher/2]);
+                washerY.push([r_washer * cosT, R_washer * cosT, R_washer * cosT, r_washer * cosT, r_washer * cosT]);
+                washerZ.push([r_washer * sinT, R_washer * sinT, R_washer * sinT, r_washer * sinT, r_washer * sinT]);
+            }
+
+            const washerMesh = {
+                type: 'surface', x: washerX, y: washerY, z: washerZ,
+                colorscale: [[0, '#fda4af'], [0.5, '#e11d48'], [1, '#881337']],
+                showscale: false, opacity: angleDeg === 0 ? 0.2 : 0.9,
+                lighting: { ambient: 0.7, diffuse: 0.8 }, hoverinfo: 'none'
+            };
+
+            const axes = createExplicitAxes3D([0, 1.2], [-1.2, 1.2], [-1.2, 1.2]);
+
+            const layout3D = {
+                margin: { l: 0, r: 0, b: 0, t: 0 }, hovermode: false,
+                scene: {
+                    xaxis: { visible: false, range: [-0.1, 1.2] },
+                    yaxis: { visible: false, range: [-1.2, 1.2] },
+                    zaxis: { visible: false, range: [-1.2, 1.2] },
+                    aspectratio: { x: 1, y: 1, z: 1 },
+                    camera: { eye: { x: 1.4, y: -1.5, z: 1.0 } }
+                },
+                showlegend: false
+            };
+
+            Plotly.react('plot3d_washer', [outerMesh, innerMesh, washerMesh, ...axes], layout3D, { displayModeBar: false, responsive: true });
+        }
+
+        function toggleWasherAnimation() {
+            const btn = document.getElementById('btnPlayWasher');
+            const slider = document.getElementById('sliderWasherAngle');
+            if (isAnimatingWasher) {
+                clearInterval(timerWasher);
+                isAnimatingWasher = false;
+                btn.innerHTML = '▶ Iniciar Rotação (Formar Anel)';
+            } else {
+                isAnimatingWasher = true;
+                btn.innerHTML = '⏸ Pausar';
+                if (parseInt(slider.value) >= 360) slider.value = 0;
+                timerWasher = setInterval(() => {
+                    let currentAngle = parseInt(slider.value);
+                    if (currentAngle >= 360) {
+                        slider.value = 360;
+                        updateWasherRotation();
+                        clearInterval(timerWasher);
+                        isAnimatingWasher = false;
+                        btn.innerHTML = '▶ Iniciar Rotação (Formar Anel)';
+                    } else {
+                        slider.value = currentAngle + 5;
+                        updateWasherRotation();
+                    }
+                }, 50);
+            }
+        }
+
+        // ====================================================
+        // 3. LÓGICA DO GRÁFICO DO MÉTODO DAS CASCAS CILÍNDRICAS
+        // ====================================================
+        let isAnimatingShell = false;
+        let timerShell = null;
+
+        const xL_shell = 1.15, xR_shell = 1.35;
+        const xMid_shell = (xL_shell + xR_shell) / 2; // 1.25
+        const h_shell = 2 * (xMid_shell)**2 - (xMid_shell)**3; // y = 2x^2 - x^3 em x=1.25
+
+        function updateShellRotation() {
+            const angleDeg = parseFloat(document.getElementById('sliderShellAngle').value);
+            document.getElementById('textShellAngle').textContent = angleDeg + '°';
+            render2DShell();
+            render3DShell(angleDeg);
+        }
+
+        function render2DShell() {
+            let xVals = [], yVals = [];
+            for (let i = 0; i <= 100; i++) {
+                let x = (i / 100) * 2;
+                xVals.push(x); yVals.push(2 * x * x - x * x * x);
+            }
+
+            const curveTrace = { x: xVals, y: yVals, mode: 'lines', line: { color: '#0284c7', width: 3 } };
+            const fillArea = { x: xVals, y: yVals, fill: 'tozeroy', fillcolor: 'rgba(56, 189, 248, 0.35)', mode: 'none' };
+
+            const verticalStrip = {
+                x: [xL_shell, xR_shell, xR_shell, xL_shell, xL_shell],
+                y: [0, 0, h_shell, h_shell, 0],
+                fill: 'toself', fillcolor: 'rgba(124, 58, 237, 0.75)',
+                line: { color: '#6d28d9', width: 2 },
+                type: 'scatter', mode: 'lines'
+            };
+
+            const layout2D = {
+                margin: { l: 30, r: 20, t: 20, b: 30 },
+                xaxis: { title: 'x', range: [-0.2, 2.3], zeroline: true },
+                yaxis: { title: 'y', range: [-0.1, 1.4], zeroline: true },
+                showlegend: false
+            };
+
+            Plotly.react('plot2d_shell', [fillArea, curveTrace, verticalStrip], layout2D, { displayModeBar: false, responsive: true });
+        }
+
+        function render3DShell(angleDeg) {
+            const maxThetaRad = (angleDeg * Math.PI) / 180.0;
+            const numX = 40, numTheta = 36;
+
+            let x3D = [], y3D = [], z3D = [];
+            for (let j = 0; j <= numTheta; j++) {
+                let theta = (j / numTheta) * 2 * Math.PI;
+                let cosT = Math.cos(theta), sinT = Math.sin(theta);
+                let xRow = [], yRow = [], zRow = [];
+                for (let i = 0; i <= numX; i++) {
+                    let x = (i / numX) * 2;
+                    xRow.push(x * cosT);
+                    yRow.push(x * sinT);
+                    zRow.push(2 * x * x - x * x * x);
+                }
+                x3D.push(xRow); y3D.push(yRow); z3D.push(zRow);
+            }
+
+            const solidMesh = {
+                type: 'surface', x: x3D, y: y3D, z: z3D,
+                colorscale: [[0, '#38bdf8'], [1, '#0284c7']],
+                showscale: false, opacity: 0.35, hoverinfo: 'none'
+            };
+
+            let shellX = [], shellY = [], shellZ = [];
+            for (let j = 0; j <= numTheta; j++) {
+                let theta = (j / numTheta) * maxThetaRad;
+                let cosT = Math.cos(theta), sinT = Math.sin(theta);
+
+                shellX.push([xL_shell * cosT, xL_shell * cosT, xR_shell * cosT, xR_shell * cosT, xL_shell * cosT]);
+                shellY.push([xL_shell * sinT, xL_shell * sinT, xR_shell * sinT, xR_shell * sinT, xL_shell * sinT]);
+                shellZ.push([0, h_shell, h_shell, 0, 0]);
+            }
+
+            const shellMesh = {
+                type: 'surface', x: shellX, y: shellY, z: shellZ,
+                colorscale: [[0, '#c084fc'], [0.5, '#7c3aed'], [1, '#4c1d95']],
+                showscale: false, opacity: angleDeg === 0 ? 0.2 : 0.9,
+                lighting: { ambient: 0.7, diffuse: 0.8 }, hoverinfo: 'none'
+            };
+
+            const axes = createExplicitAxes3D([-2.2, 2.2], [-2.2, 2.2], [0, 1.6]);
+
+            const layout3D = {
+                margin: { l: 0, r: 0, b: 0, t: 0 }, hovermode: false,
+                scene: {
+                    xaxis: { visible: false, range: [-2.4, 2.4] },
+                    yaxis: { visible: false, range: [-2.4, 2.4] },
+                    zaxis: { visible: false, range: [-0.2, 1.6] },
+                    aspectratio: { x: 1.1, y: 1.1, z: 0.8 },
+                    camera: { eye: { x: 1.4, y: -1.5, z: 1.1 } }
+                },
+                showlegend: false
+            };
+
+            Plotly.react('plot3d_shell', [solidMesh, shellMesh, ...axes], layout3D, { displayModeBar: false, responsive: true });
+        }
+
+        function toggleShellAnimation() {
+            const btn = document.getElementById('btnPlayShell');
+            const slider = document.getElementById('sliderShellAngle');
+            if (isAnimatingShell) {
+                clearInterval(timerShell);
+                isAnimatingShell = false;
+                btn.innerHTML = '▶ Iniciar Rotação (Formar Casca)';
+            } else {
+                isAnimatingShell = true;
+                btn.innerHTML = '⏸ Pausar';
+                if (parseInt(slider.value) >= 360) slider.value = 0;
+                timerShell = setInterval(() => {
+                    let currentAngle = parseInt(slider.value);
+                    if (currentAngle >= 360) {
+                        slider.value = 360;
+                        updateShellRotation();
+                        clearInterval(timerShell);
+                        isAnimatingShell = false;
+                        btn.innerHTML = '▶ Iniciar Rotação (Formar Casca)';
+                    } else {
+                        slider.value = currentAngle + 5;
+                        updateShellRotation();
+                    }
+                }, 50);
+            }
+        }
+
+        // INICIALIZAÇÃO DA PÁGINA
+        window.addEventListener('load', () => {
+            updateDiskRotation();
+            updateWasherRotation();
+            updateShellRotation();
+        });
+    </script>
+</body>
+</html>
