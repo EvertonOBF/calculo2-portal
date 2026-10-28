@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo 2 - Lista: Aplicações da Integral (Trabalho)</title>
+    
+    <!-- Configuração do MathJax -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Plotly.js para os gráficos -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e293b;
+            --accent-color: #059669;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #334155;
+            --btn-hover: #1d4ed8;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        p, li {
+            text-align: justify;
+        }
+
+        p {
+            margin-bottom: 12px;
+        }
+
+        .navbar {
+            background-color: var(--secondary-color);
+            padding: 15px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: #93c5fd;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .content-section {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 35px;
+            margin-bottom: 35px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-left: 6px solid var(--primary-color);
+        }
+
+        h1 {
+            color: var(--secondary-color);
+            font-size: 2.2rem;
+            margin-top: 0;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        .exercise-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            margin-top: 25px;
+        }
+
+        .exercise-card {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+        }
+
+        .exercise-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+        }
+
+        .exercise-header {
+            padding: 20px 25px;
+            background: #f8fafc;
+        }
+
+        .exercise-title {
+            font-size: 1.05rem;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-solution {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-solution:hover {
+            background-color: var(--btn-hover);
+        }
+
+        .solution-container {
+            display: none;
+            padding: 25px;
+            background-color: #f0fdf4;
+            border-top: 2px dashed #86efac;
+            text-align: justify;
+        }
+
+        .solution-container h4 {
+            margin-top: 0;
+            color: var(--accent-color);
+            font-size: 1.15rem;
+            border-bottom: 1px solid #bbf7d0;
+            padding-bottom: 8px;
+            text-align: left;
+        }
+
+        .step-title {
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-top: 15px;
+            text-align: justify;
+        }
+
+        .final-answer {
+            background-color: #dcfce7;
+            border: 1px solid #86efac;
+            color: #166534;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.15rem;
+            margin-top: 20px;
+        }
+
+        .plot-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div>
+           <a href="../aula2_trabalho.html">← Voltar ao menu</a>
+        </div>
+        <span>Cálculo 2 - Aplicações da Integral</span>
+    </div>
+
+    <div class="container">
+
+        <div class="content-section">
+            <h1>Cálculo 2 – Trabalho</h1>
+            <p style="font-size: 1.15rem; font-weight: 500;">
+                Resolva as questões abaixo aplicando os conceitos de integral para o cálculo do trabalho realizado por forças constantes e variáveis.
+            </p>
+
+            <div class="exercise-grid">
+
+                <!-- QUESTÃO 1 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-title">
+                            <strong>1.</strong> Um gorila de $360\text{ lb}$ escala uma árvore a uma altura de $20\text{ pés}$. Encontre o trabalho realizado pelo gorila para alcançar esta altura em<br>
+                            (a) 10 segundos &nbsp;&nbsp;&nbsp;&nbsp; (b) 5 segundos
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-solution" onclick="toggleSolution('sol-1')">Ver solução</button>
+                        </div>
+                    </div>
+                    <div class="solution-container" id="sol-1">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Análise do problema</p>
+                        <p>O trabalho $W$ realizado para elevar um objeto é dado por $W = F \cdot d$, onde $F$ é a força peso (constante). O tempo gasto não afeta o trabalho total realizado (afeta apenas a potência).</p>
+                        <p class="step-title">Cálculo</p>
+                        $$W = 360\text{ lb} \times 20\text{ pés} = 7200\text{ ft-lb}$$
+                        <p>Como o tempo não altera o valor do trabalho, a resposta será a mesma para ambas as opções.</p>
+                        <div class="final-answer">Resultado Final: (a) 7200 ft-lb &nbsp; (b) 7200 ft-lb</div>
+                    </div>
+                </div>
+
+                <!-- QUESTÃO 2 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-title">
+                            <strong>2.</strong> Quanto trabalho é realizado quando um guindaste levanta uma pedra de $200\text{ kg}$ a uma altura de $3\text{ m}$?
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-solution" onclick="toggleSolution('sol-2')">Ver solução</button>
+                        </div>
+                    </div>
+                    <div class="solution-container" id="sol-2">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Passo 1: Encontrar a Força (Constante)</p>
+                        <p>A força necessária é igual ao peso da pedra: $F = m \cdot g = 200 \cdot 9,8 = 1960\text{ N}$.</p>
+                        <p class="step-title">Passo 2: Calcular o Trabalho</p>
+                        $$W = F \cdot d = 1960 \cdot 3 = 5880\text{ J}$$
+                        <div class="final-answer">Resultado Final: $W = 5880\text{ J}$</div>
+                    </div>
+                </div>
+
+                <!-- QUESTÃO 3 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-title">
+                            <strong>3.</strong> Uma partícula é movida ao longo do eixo $x$ por uma força que mede $10/(1 + x)^2\text{ libras}$ em um ponto a $x\text{ pés}$ da origem. Calcule o trabalho realizado ao mover a partícula da origem até a distância de $9\text{ pés}$.
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-solution" onclick="toggleSolution('sol-3', 'plot-q3')">Ver solução</button>
+                        </div>
+                    </div>
+                    <div class="solution-container" id="sol-3">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Gráfico da Força</p>
+                        <div id="plot-q3" class="plot-container"></div>
+                        <p class="step-title">Passo 1: Montar a integral de trabalho</p>
+                        $$W = \int_{0}^{9} \frac{10}{(1+x)^2} dx$$
+                        <p class="step-title">Passo 2: Calcular a integral</p>
+                        $$W = \left[ -\frac{10}{1+x} \right]_0^9 = \left(-\frac{10}{10}\right) - \left(-\frac{10}{1}\right) = -1 + 10 = 9$$
+                        <div class="final-answer">Resultado Final: $W = 9\text{ ft-lb}$</div>
+                    </div>
+                </div>
+
+                <!-- QUESTÃO 4 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-title">
+                            <strong>4.</strong> Quando uma partícula está localizada a uma distância de $x\text{ metros}$ da origem, uma força de $\cos(\pi x/3)\text{ newtons}$ atua sobre ela. Quanto trabalho é realizado ao mover a partícula de $x = 1$ até $x = 2$? Interprete a sua resposta considerando o trabalho realizado de $x = 1$ para $x = 1,5$ e de $x = 1,5$ para $x = 2$.
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-solution" onclick="toggleSolution('sol-4', 'plot-q4')">Ver solução</button>
+                        </div>
+                    </div>
+                    <div class="solution-container" id="sol-4">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Gráfico da Força</p>
+                        <div id="plot-q4" class="plot-container"></div>
+                        <p class="step-title">Passo 1: Calcular a integral de $x=1$ a $x=2$</p>
+                        $$W = \int_{1}^{2} \cos\left(\frac{\pi x}{3}\right) dx = \left[ \frac{3}{\pi} \sin\left(\frac{\pi x}{3}\right) \right]_1^2 = \frac{3}{\pi}\left(\sin\frac{2\pi}{3} - \sin\frac{\pi}{3}\right) = \frac{3}{\pi}\left(\frac{\sqrt{3}}{2} - \frac{\sqrt{3}}{2}\right) = 0$$
+                        <p class="step-title">Passo 2: Interpretação</p>
+                        <p>De $x=1$ até $x=1,5$, o trabalho é positivo (a área acima do eixo x, indicando que a força atua no sentido do movimento). De $x=1,5$ até $x=2$, a força se torna negativa (área abaixo do eixo x), realizando trabalho negativo que cancela exatamente o trabalho anterior, resultando num trabalho líquido zero.</p>
+                        <div class="final-answer">Resultado Final: $W = 0\text{ J}$</div>
+                    </div>
+                </div>
+
+                <!-- QUESTÃO 5 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-title">
+                            <strong>5.</strong> A figura a seguir mostra o gráfico de uma função força (em newtons) que cresce até seu máximo valor e depois permanece constante. Quanto trabalho é realizado pela força ao mover um objeto a uma distância de $8\text{ m}$?
+                            <br><br>
+                            <!-- Gráfico no enunciado -->
+                            <div id="plot-q5-main" class="plot-container"></div>
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-solution" onclick="toggleSolution('sol-5', 'plot-q5-sol')">Ver solução</button>
+                        </div>
+                    </div>
+                    <div class="solution-container" id="sol-5">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Gráfico da Força (Área = Trabalho)</p>
+                        <div id="plot-q5-sol" class="plot-container"></div>
+                        <p class="step-title">Passo 1: Calcular a área sob a curva</p>
+                        <p>O trabalho é a área do gráfico de força vs. distância.</p>
+                        <p>Área do triângulo ($x=0$ a $x=4$): $\frac{4 \cdot 30}{2} = 60\text{ J}$</p>
+                        <p>Área do retângulo ($x=4$ a $x=8$): $4 \cdot 30 = 120\text{ J}$</p>
+                        <p class="step-title">Passo 2: Somar as áreas</p>
+                        $$W = 60 + 120 = 180\text{ J}$$
+                        <div class="final-answer">Resultado Final: $W = 180\text{ J}$</div>
+                    </div>
+                </div>
+
+                <!-- QUESTÃO 6 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-title">
+                            <strong>6.</strong> Uma força de $10\text{ lb}$ é necessária para manter uma mola esticada $4\text{ pol}$ além do seu comprimento natural. Quanto trabalho é realizado para esticá-la do seu comprimento natural até $6\text{ pol}$ além do seu tamanho natural?
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-solution" onclick="toggleSolution('sol-6', 'plot-q6')">Ver solução</button>
+                        </div>
+                    </div>
+                    <div class="solution-container" id="sol-6">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Gráfico da Força</p>
+                        <div id="plot-q6" class="plot-container"></div>
+                        <p class="step-title">Passo 1: Encontrar a constante da mola ($k$)</p>
+                        <p>Pela Lei de Hooke, $F(x) = kx \implies 10 = k(4) \implies k = 2,5\text{ lb/pol}$.</p>
+                        <p class="step-title">Passo 2: Calcular o trabalho</p>
+                        $$W = \int_{0}^{6} 2,5x \, dx = 2,5 \left[ \frac{x^2}{2} \right]_0^6 = 2,5 \cdot \frac{36}{2} = 45\text{ in-lb}$$
+                        <div class="final-answer">Resultado Final: $W = 45\text{ in-lb}$</div>
+                    </div>
+                </div>
+
+                <!-- QUESTÃO 7 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-title">
+                            <strong>7.</strong> Uma mola tem comprimento natural de $20\text{ cm}$. Se uma força de $25\text{ N}$ é necessária para mantê-la esticada a um comprimento de $30\text{ cm}$, qual o trabalho necessário para esticá-la de $20\text{ cm}$ a $25\text{ cm}$?
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-solution" onclick="toggleSolution('sol-7', 'plot-q7')">Ver solução</button>
+                        </div>
+                    </div>
+                    <div class="solution-container" id="sol-7">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Gráfico da Força (Em metros)</p>
+                        <div id="plot-q7" class="plot-container"></div>
+                        <p class="step-title">Passo 1: Encontrar a constante ($k$) no SI (metros)</p>
+                        <p>O deslocamento para $30\text{ cm}$ é $0,10\text{ m}$. $F = kx \implies 25 = k(0,10) \implies k = 250\text{ N/m}$.</p>
+                        <p class="step-title">Passo 2: Integrar para achar o trabalho</p>
+                        <p>Esticar de $20\text{ cm}$ a $25\text{ cm}$ significa deslocar a extremidade da mola de $x = 0$ a $x = 0,05\text{ m}$.</p>
+                        $$W = \int_{0}^{0,05} 250x \, dx = 250 \left[ \frac{x^2}{2} \right]_0^{0,05} = 125 \cdot (0,0025) = 0,3125\text{ J}$$
+                        <div class="final-answer">Resultado Final: $W = 0,3125\text{ J}$</div>
+                    </div>
+                </div>
+
+                <!-- QUESTÃO 8 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-title">
+                            <strong>8.</strong> Uma corda pesada, com $50\text{ pés}$ de comprimento, pesa $0,5\text{ lb-pé}$ e está pendurada sobre a borda de um edifício com $120\text{ pés}$ de altura.<br>
+                            (a) Qual o trabalho necessário para puxar a corda até o topo do edifício?<br>
+                            (b) Qual o trabalho necessário para puxar metade da corda até o topo do edifício?
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-solution" onclick="toggleSolution('sol-8', 'plot-q8')">Ver solução</button>
+                        </div>
+                    </div>
+                    <div class="solution-container" id="sol-8">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Gráfico da Força (Peso da corda suspensa)</p>
+                        <div id="plot-q8" class="plot-container"></div>
+                        <p class="step-title">Passo 1: Parte (a) - Puxar toda a corda</p>
+                        <p>A força necessária em um dado momento é igual ao peso da parte da corda que ainda está pendurada, $F(x) = 0,5x$, onde $x$ é o comprimento pendurado.</p>
+                        $$W_a = \int_{0}^{50} 0,5x \, dx = 0,5 \left[ \frac{x^2}{2} \right]_0^{50} = 0,25(2500) = 625\text{ ft-lb}$$
+                        <p class="step-title">Passo 2: Parte (b) - Puxar metade da corda</p>
+                        <p>Puxar metade ($25\text{ pés}$) eleva a metade superior integrando a força e eleva o restante da corda inferior de $25\text{ pés}$ como um peso fixo que não muda de tamanho durante esse trajeto.</p>
+                        $$W_b = \int_{0}^{25} 0,5x \, dx + (\text{peso de } 25\text{ pés}) \cdot 25 = 0,25(625) + (12,5 \cdot 25) = 156,25 + 312,5 = 468,75\text{ ft-lb}$$
+                        <div class="final-answer">Resultado Final: (a) $625\text{ ft-lb}$ &nbsp; (b) $468,75\text{ ft-lb}$</div>
+                    </div>
+                </div>
+
+                <!-- QUESTÃO 9 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-title">
+                            <strong>9.</strong> Uma corrente estendida no chão tem $10\text{ m}$ de comprimento e sua massa é $80\text{ kg}$. Qual a quantidade de trabalho necessária para levantar uma extremidade da corrente a uma altura de $6\text{ m}$?
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-solution" onclick="toggleSolution('sol-9', 'plot-q9')">Ver solução</button>
+                        </div>
+                    </div>
+                    <div class="solution-container" id="sol-9">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Gráfico da Força (Peso da porção elevada)</p>
+                        <div id="plot-q9" class="plot-container"></div>
+                        <p class="step-title">Passo 1: Densidade Linear e Força</p>
+                        <p>Densidade linear $\rho = \frac{80}{10} = 8\text{ kg/m}$.</p>
+                        <p>Ao levantar a corrente, a força necessária é o peso da parte que está suspensa. A uma altura $y$, a massa suspensa é $8y$, e a força é $F(y) = 8y \cdot 9,8 = 78,4y\text{ N}$.</p>
+                        <p class="step-title">Passo 2: Integrar o peso levantado</p>
+                        $$W = \int_{0}^{6} 78,4y \, dy = 78,4 \left[ \frac{y^2}{2} \right]_0^6 = 78,4 \cdot 18 = 1411,2\text{ J}$$
+                        <div class="final-answer">Resultado Final: $W = 1411,2\text{ J}$</div>
+                    </div>
+                </div>
+
+                <!-- QUESTÃO 10 -->
+                <div class="exercise-card">
+                    <div class="exercise-header">
+                        <div class="exercise-title">
+                            <strong>10.</strong> Um balde de $10\text{ kg}$, furado, é levantado do chão até uma altura de $12\text{ m}$ a uma velocidade constante, por uma corda que pesa $0,8\text{ kg/m}$. Inicialmente o balde contém $36\text{ kg}$ de água, mas a água vaza a uma taxa constante e o balde acaba vazio exatamente quando atinge a altura de $12\text{ m}$. Quanto trabalho foi realizado?
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-solution" onclick="toggleSolution('sol-10', 'plot-q10')">Ver solução</button>
+                        </div>
+                    </div>
+                    <div class="solution-container" id="sol-10">
+                        <h4>Solução Detalhada:</h4>
+                        <p class="step-title">Gráfico da Força Total</p>
+                        <div id="plot-q10" class="plot-container"></div>
+                        <p class="step-title">Passo 1: Expressar a força peso em função da altura $y$</p>
+                        <p>Massa do balde = $10\text{ kg}$ (constante).</p>
+                        <p>Massa da corda dependente = $0,8(12 - y)$.</p>
+                        <p>Massa da água vaza uniformemente (perde $36\text{ kg}$ em $12\text{ m}$): $M_{água}(y) = 36 - \left(\frac{36}{12}\right)y = 36 - 3y$.</p>
+                        <p class="step-title">Passo 2: Integrar o trabalho total</p>
+                        $$W = \int_{0}^{12} g \cdot \left[ 10 + 0,8(12 - y) + (36 - 3y) \right] dy$$
+                        $$W = 9,8 \int_{0}^{12} (55,6 - 3,8y) dy = 9,8 \left[ 55,6y - 1,9y^2 \right]_0^{12}$$
+                        $$W = 9,8 (667,2 - 273,6) = 9,8(393,6) = 3857,28\text{ J}$$
+                        <div class="final-answer">Resultado Final: $W \approx 3857\text{ J}$</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Configuração padrão dos gráficos Plotly
+        const defaultLayout = {
+            height: 250,
+            margin: { t: 20, b: 40, l: 60, r: 20 },
+            xaxis: { title: 'Distância' },
+            yaxis: { title: 'Força' },
+            showlegend: false
+        };
+        const defaultConfig = { displayModeBar: false };
+
+        // Função para desenhar gráficos via Plotly
+        function renderPlot(plotId) {
+            let trace = { type: 'scatter', mode: 'lines', fill: 'tozeroy', line: { color: '#2563eb' } };
+            let layout = Object.assign({}, defaultLayout);
+            let x = [], y = [];
+
+            if (plotId === 'plot-q3') {
+                for(let i=0; i<=9; i+=0.1) { x.push(i); y.push(10/Math.pow(1+i, 2)); }
+                layout.xaxis.title = 'Distância (pés)'; layout.yaxis.title = 'Força (lb)';
+            } 
+            else if (plotId === 'plot-q4') {
+                // Integral e gráfico de 1 a 2 
+                for(let i=1; i<=2; i+=0.02) { x.push(i); y.push(Math.cos(Math.PI * i / 3)); }
+                layout.xaxis.title = 'Distância x (m)'; layout.yaxis.title = 'Força (N)';
+            } 
+            else if (plotId === 'plot-q5-main' || plotId === 'plot-q5-sol') {
+                x = [0, 4, 8]; y = [0, 30, 30];
+                layout.xaxis.title = 'Distância (m)'; layout.yaxis.title = 'Força (N)';
+                if(plotId === 'plot-q5-main') trace.fill = 'none'; // Apenas linha para o enunciado
+            }
+            else if (plotId === 'plot-q6') {
+                x = [0, 6]; y = [0, 15]; // F(x) = 2.5x -> 2.5*6=15
+                layout.xaxis.title = 'Deslocamento (pol)'; layout.yaxis.title = 'Força (lb)';
+            }
+            else if (plotId === 'plot-q7') {
+                x = [0, 0.05]; y = [0, 12.5]; // F(x) = 250x -> 250*0.05=12.5
+                layout.xaxis.title = 'Deslocamento (m)'; layout.yaxis.title = 'Força (N)';
+            }
+            else if (plotId === 'plot-q8') {
+                x = [0, 50]; y = [0, 25]; // F(x) = 0.5x 
+                layout.xaxis.title = 'Corda pendurada (pés)'; layout.yaxis.title = 'Força/Peso (lb)';
+            }
+            else if (plotId === 'plot-q9') {
+                x = [0, 6]; y = [0, 470.4]; // F(y) = 78.4y -> 78.4*6
+                layout.xaxis.title = 'Altura levantada (m)'; layout.yaxis.title = 'Força/Peso (N)';
+            }
+            else if (plotId === 'plot-q10') {
+                for(let i=0; i<=12; i+=0.5) { x.push(i); y.push(9.8*(55.6 - 3.8*i)); }
+                layout.xaxis.title = 'Altura (m)'; layout.yaxis.title = 'Força Total (N)';
+            }
+
+            trace.x = x;
+            trace.y = y;
+            Plotly.newPlot(plotId, [trace], layout, defaultConfig);
+        }
+
+        // Renderizar o gráfico do enunciado da Q5 assim que a página carregar
+        document.addEventListener("DOMContentLoaded", () => {
+            renderPlot('plot-q5-main');
+        });
+
+        // Toggle solution visibility and render specific plot if needed
+        function toggleSolution(id, plotId) {
+            const solBox = document.getElementById(id);
+            const isVisible = solBox.style.display === 'block';
+            solBox.style.display = isVisible ? 'none' : 'block';
+            
+            // Caso seja visível agora, renderiza o MathJax e o Gráfico (se ainda não renderizado)
+            if (!isVisible) {
+                if (window.MathJax && window.MathJax.typesetPromise) {
+                    MathJax.typesetPromise([solBox]);
+                }
+                if (plotId) {
+                    const plotElement = document.getElementById(plotId);
+                    if (plotElement && !plotElement.hasAttribute('data-plotted')) {
+                        renderPlot(plotId);
+                        plotElement.setAttribute('data-plotted', 'true');
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>

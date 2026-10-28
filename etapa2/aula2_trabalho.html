@@ -139,6 +139,25 @@
             padding: 15px 20px; margin-top: 15px; display: flex; gap: 20px; align-items: center; justify-content: center; flex-wrap: wrap;
         }
 
+        /* Estilo do botão de exercícios */
+        .btn-exercise-list {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(5, 150, 105, 0.2);
+        }
+
+        .btn-exercise-list:hover {
+            background-color: #047857;
+            transform: translateY(-2px);
+        }
+
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -290,6 +309,18 @@
                 </div>
             </div>
         </div>
+
+        <!-- LISTA DE QUESTÕES -->
+        <div class="content-section" style="border-left-color: var(--accent-color); text-align: center; background-color: #f0fdf4;">
+            <h2 style="color: var(--accent-color); margin-bottom: 10px;">Pratique o Conteúdo</h2>
+            <p style="text-align: center; font-size: 1.1rem; margin-bottom: 25px;">
+                Lista de exercícios.
+            </p>
+            <a href="listas/lista_5.html" class="btn-exercise-list">
+                📋 Acessar Lista de Exercícios
+            </a>
+        </div>
+
     </div>
 
     <script>
